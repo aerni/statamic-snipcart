@@ -2,6 +2,8 @@
 
 namespace Aerni\Snipcart;
 
+use Statamic\Facades\CP\Nav;
+use Statamic\Statamic;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -10,15 +12,25 @@ class ServiceProvider extends AddonServiceProvider
         SnipcartTags::class
     ];
 
+    protected $routes = [
+        'cp'  => __DIR__ . '/../routes/cp.php',
+    ];
+
     public function boot()
     {
         parent::boot();
 
-        $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
-
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'snipcart');
+        
         $this->publishes([
             __DIR__.'/../config/snipcart.php' => config_path('snipcart.php'),
         ]);
+
+        $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
+
+        Statamic::booted(function () {
+            $this->createNavigation();
+        });
     }
 
     public function register()
@@ -32,6 +44,16 @@ class ServiceProvider extends AddonServiceProvider
             ];
 
             return new SnipcartTags($config);
+        });
+    }
+
+    protected function createNavigation()
+    {
+        Nav::extend(function ($nav) {
+            $nav->create('Products')
+                ->section('Snipcart')
+                ->route('products.index')
+                ->icon('drawer-file');
         });
     }
 }
