@@ -1,0 +1,55 @@
+{
+    "name": "aerni/statamic-snipcart",
+    "description": "A Snipcart addon for Statamic",
+    "keywords": [
+        "statamic",
+        "snipcart"
+    ],
+    "homepage": "https://github.com/aerni/statamic-snipcart",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Michael Aerni",
+            "email": "hello@michaelaerni.ch",
+            "homepage": "https://www.michaelaerni.ch",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2.5",
+        "statamic/cms": "^3.0@beta"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "nunomaduro/collision": "^5.0",
+        "orchestra/testbench": "^5.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aerni\\Snipcart\\": "src"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "statamic": {
+            "name": "Snipcart",
+            "description": "A Snipcart addon for Statamic"
+        },
+        "laravel": {
+            "providers": [
+                "Aerni\\Snipcart\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
