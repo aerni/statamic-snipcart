@@ -1,0 +1,200 @@
+title: 'Snipcart: Products'
+sections:
+  main:
+    display: Main
+    fields:
+      -
+        handle: title
+        field:
+          type: text
+          localizable: false
+          listable: hidden
+          display: Title
+          instructions: 'The name of the product.'
+          validate: required|string
+      -
+        handle: price
+        field:
+          type: text
+          localizable: false
+          listable: hidden
+          display: Price
+          instructions: 'The price of the product.'
+          validate: required|numeric
+      -
+        handle: description
+        field:
+          type: textarea
+          localizable: false
+          listable: hidden
+          instructions: 'A short description of the product. This will show in the cart.'
+          display: Description
+      -
+        handle: images
+        field:
+          mode: grid
+          container: assets
+          restrict: false
+          allow_uploads: true
+          type: assets
+          localizable: false
+          listable: hidden
+          display: Images
+          instructions: 'The first image will show in the cart.'
+      -
+        handle: metadata
+        field:
+          type: yaml
+          localizable: false
+          listable: hidden
+          display: Metadata
+          instructions: 'Define some optional metadata for this product.'
+      -
+        handle: categories
+        field:
+          mode: select
+          taxonomies:
+            - snipcart_categories
+          type: taxonomy
+          localizable: false
+          listable: hidden
+          display: Categories
+  dimensions:
+    display: Dimensions
+    fields:
+      -
+        handle: weight
+        field:
+          type: integer
+          localizable: false
+          listable: hidden
+          display: Weight
+          instructions: 'The weight of the product in `grams`. Mandatory if you use any integrated shipping provider we support.'
+      -
+        handle: length
+        field:
+          type: integer
+          localizable: false
+          listable: hidden
+          display: Length
+          instructions: 'The length of the product in `centimeters`. This optional attribute will be used if you enabled an integrated shipping provider.'
+      -
+        handle: height
+        field:
+          type: integer
+          localizable: false
+          listable: hidden
+          display: Height
+          instructions: 'The height of the product in `centimeters`. This optional attribute will be used if you enabled an integrated shipping provider.'
+      -
+        handle: width
+        field:
+          type: integer
+          localizable: false
+          listable: hidden
+          display: Width
+          instructions: 'The width of the product in `centimeters`. This optional attribute will be used if you enabled an integrated shipping provider.'
+  quantity:
+    display: Quantity
+    fields:
+      -
+        handle: quantity
+        field:
+          type: integer
+          instructions: 'Use this to set the default quantity of a product. If specified, its value will be used to set the initial quantity of the item in the cart. If the product is added to the cart again, its quantity will increase by the value set in this attribute. But, if the customer increases the quantity within the cart with the + and - buttons, the quantity will change by 1 (except when "Quantity step" described below is specified).'
+          localizable: false
+          listable: hidden
+          display: Quantity
+      -
+        handle: max_quantity
+        field:
+          type: integer
+          instructions: 'Use this attribute if you want to set a maximum allowed quantity of your product. For instance, if you set it to 5, your customers will not be able to add more than 5 occurrences of your product in their cart. Handy if you have limited stocks of a product or wish to limit the quantity per customer. A good practice would be to set it to the quantity you have available in your inventory.'
+          localizable: false
+          listable: hidden
+          display: 'Max Quantity'
+      -
+        handle: min_quantity
+        field:
+          type: integer
+          instructions: 'Use this attribute if you want to set the minimum allowed quantity for your product. For instance, if you set this attribute to 3 for your product A, when your customer adds product A to cart for the first time, the quantity will be automatically set to 3, not 1. If the customer increases the quantity within the cart with the + and - buttons, the quantity will change by 1. However, if they decrease its quantity lower than the minimal allowed quantity set, the product will be removed from the cart.'
+          localizable: false
+          listable: hidden
+          display: 'Min Quantity'
+      -
+        handle: stackable
+        field:
+          options:
+            auto: Auto
+            never: Never
+            always: Always
+          default: auto
+          clearable: false
+          multiple: false
+          searchable: false
+          taggable: false
+          push_tags: false
+          cast_booleans: false
+          type: select
+          instructions: 'When you set this attribute to never, adding the same product to the cart will result in two distinct items in the cart, instead of simply increasing the quantity. For instance, when your customers click twice on the same buy button, they will have two entries of the product in their cart, instead of having a quantity of 2 for the same entry. This is useful when you have a product with specific custom fields requiring different information for each occurrence. For instance, if you’re allowing your customer to engrave a message on your product, this will allow them to specify a different message for every item. When not defined, this property is considered to be auto by default. If you set it to always then the products will always stack, even if they have custom fields.'
+          localizable: false
+          listable: hidden
+          display: Stackable
+      -
+        handle: quantity_step
+        field:
+          type: integer
+          instructions: 'By default, the quantity of an item increments by 1 when using the + and - buttons. Use this attribute if you want to override it. For instance, if you set it to 2, the quantity will increment from 2 to 4 to 6.'
+          localizable: false
+          listable: hidden
+          display: 'Quantity Step'
+  shipping:
+    display: Shipping
+    fields:
+      -
+        handle: shippable
+        field:
+          type: toggle
+          instructions: 'Flags an item as a product that you do not ship. All shipping options will be removed from the cart if you only have non-shippable items in it.'
+          localizable: false
+          listable: hidden
+          display: Shippable
+  taxes:
+    display: Taxes
+    fields:
+      -
+        handle: taxable
+        field:
+          type: toggle
+          instructions: 'Set this option to false when you want to exclude this particular item from the taxes calculation. The default value is true.'
+          localizable: false
+          listable: hidden
+          display: Taxable
+      -
+        handle: taxes
+        field:
+          type: tags
+          instructions: 'Using this option, you can define which taxes will be applied on a particular item. Useful when you have products exempted from a specific tax. The usage is data-item-taxes="TPS|TVQ". Each tax is separated by a pipe |. The value must be the same name that is defined in the dashboard. You can also use your tax''s unique ID that is generated by your tax rule, available in the URL when editing a tax in the dashboard. Note that the tax unique IDs will not be the same in Live and Test modes.'
+          localizable: false
+          listable: hidden
+          display: Taxes
+      -
+        handle: has_taxes_included
+        field:
+          type: toggle
+          instructions: 'Set this flag to true if taxes defined are included in your product prices.'
+          localizable: false
+          listable: hidden
+          display: 'Has taxes included'
+  digital_goods:
+    display: 'Digital Goods'
+    fields:
+      -
+        handle: file_guid
+        field:
+          input_type: text
+          type: text
+          instructions: 'Use this attribute if your product is related to a digital good uploaded via our dashboard. You will find the file GUID in the dashboard once the digital good is created.'
+          localizable: false
+          listable: hidden
+          display: 'File GUID'
