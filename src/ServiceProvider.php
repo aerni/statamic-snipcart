@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Commands\InstallSnipcart;
 use Aerni\Snipcart\Tags\SnipcartTags;
 use Statamic\Facades\CP\Nav;
 use Statamic\Statamic;
@@ -9,6 +10,10 @@ use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $commands = [
+        InstallSnipcart::class,
+    ];
+
     protected $tags = [
         SnipcartTags::class
     ];
