@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Tags\SnipcartTags;
 use Statamic\Facades\CP\Nav;
 use Statamic\Statamic;
 use Statamic\Providers\AddonServiceProvider;
