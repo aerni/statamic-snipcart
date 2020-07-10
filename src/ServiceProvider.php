@@ -26,7 +26,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->publishVendorStuff();
+        $this->publishVendorFiles();
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'snipcart');
@@ -55,14 +55,9 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
-    protected function publishVendorStuff(): void
+    protected function publishVendorFiles(): void
     {
         if ($this->app->runningInConsole()) {
-
-            // Blueprints
-            $this->publishes([
-                __DIR__.'/../resources/blueprints' => resource_path('blueprints'),
-            ]);
 
             // Config
             $this->publishes([
