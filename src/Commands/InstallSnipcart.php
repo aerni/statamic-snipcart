@@ -6,6 +6,7 @@ use Aerni\Snipcart\Blueprints\ProductBlueprint;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection;
 use Statamic\Console\RunsInPlease;
 
@@ -26,7 +27,7 @@ class InstallSnipcart extends Command
      *
      * @var string
      */
-    protected $description = 'Let Statamic Snipcart help you through the setup process.';
+    protected $description = 'Install Snipcart';
 
     /**
      * The default blueprint title.
@@ -49,9 +50,10 @@ class InstallSnipcart extends Command
      */
     public function handle(): void
     {
-        $this->makeBlueprint();
-        $this->makeCollection();
+        $this->createBlueprint("Name your blueprint. If you leave this empty we'll call it '{$this->blueprintTitle}'", true);
+        $this->createCollection("Name your collection. If you leave this empty we'll call it '{$this->collectionTitle}'.", true);
         $this->publishVendorFiles();
+        $this->finalInfo();
     }
 
     /**
@@ -59,13 +61,25 @@ class InstallSnipcart extends Command
      *
      * @return void
      */
-    protected function makeBlueprint(): void
+    protected function createBlueprint(string $question, bool $showTitle): void
     {
-        $this->info('---  STEP 1 | CREATE A BLUEPRINT  ---');
+        $this->title("---  STEP 1 | CREATE A BLUEPRINT  ---", $showTitle);
 
-        $this->blueprintTitle = $this->ask("Name your blueprint. If you leave this empty we'll call it", $this->blueprintTitle);
+        $this->blueprintTitle = $this->ask($question, $this->blueprintTitle);
 
-        new ProductBlueprint($this->blueprintTitle);
+        if ($this->hasBlueprint(Str::snake($this->blueprintTitle))) {
+
+            $this->error("A blueprint with the name '{$this->blueprintTitle}' already exists.");
+
+            if ($this->confirm("Do you want to override the existing blueprint?")) {
+                $this->makeBlueprint();
+            } else {
+                $this->createBlueprint("Name your blueprint. Remember, the default name '{$this->blueprintTitle}' is already taken", false);
+            }
+
+        } else {
+            $this->makeBlueprint();
+        }
     }
 
     /**
@@ -73,19 +87,25 @@ class InstallSnipcart extends Command
      *
      * @return void
      */
-    protected function makeCollection(): void
+    protected function createCollection(string $question, bool $showTitle): void
     {
-        $this->info('---  STEP 2 | CREATE A COLLECTION  ---');
+        $this->title("---  STEP 2 | CREATE A COLLECTION  ---", $showTitle);
 
-        $this->collectionTitle = $this->ask("Name your collection. If you leave this empty we'll call it", $this->collectionTitle);
+        $this->collectionTitle = $this->ask($question, $this->collectionTitle);
 
-        Collection::make(Str::snake($this->collectionTitle))
-            ->title($this->collectionTitle)
-            ->revisionsEnabled(false)
-            ->pastDateBehavior('public')
-            ->futureDateBehavior('private')
-            ->entryBlueprints(Str::snake($this->blueprintTitle))
-            ->save();
+        if ($this->hasCollection(Str::snake($this->collectionTitle))) {
+
+            $this->error("A collection with the name '{$this->collectionTitle}' already exists.");
+
+            if ($this->confirm("Do you want to override the existing collection?")) {
+                $this->makeCollection();
+            } else {
+                $this->createCollection("Name your collection. Remember, the default name '{$this->collectionTitle}' is already taken", false);
+            }
+
+        } else {
+            $this->makeCollection();
+        }
     }
 
     /**
@@ -103,10 +123,90 @@ class InstallSnipcart extends Command
                 '--provider' => 'Aerni\Snipcart\ServiceProvider',
                 '--force' => true,
             ]);
-    
-            $this->info('Config: config/snipcart.php');
-            $this->info('Lang: resources/lang/vendor/snipcart/');
 
         }
+    }
+
+    /**
+     * The final information after a successful installation.
+     *
+     * @return void
+     */
+    protected function finalInfo(): void
+    {
+        $this->info('---  INSTALLATION COMPLETE  ----');
+        $this->info('');
+
+        $this->info("The installation was successful! Make sure to read the documentation on how to set up your views and use the Snipcart tags.");
+    }
+
+    /**
+     * Make a blueprint
+     *
+     * @return void
+     */
+    protected function makeBlueprint(): void
+    {
+        ProductBlueprint::make($this->blueprintTitle);
+    }
+
+    /**
+     * Make a collection.
+     *
+     * @return void
+     */
+    protected function makeCollection(): void
+    {
+        Collection::make(Str::snake($this->collectionTitle))
+            ->title($this->collectionTitle)
+            ->revisionsEnabled(false)
+            ->pastDateBehavior('public')
+            ->futureDateBehavior('private')
+            ->entryBlueprints(Str::snake($this->blueprintTitle))
+            ->save();
+    }
+
+    /**
+     * Return an info with the given $title if $show is true.
+     *
+     * @param string $title
+     * @param boolean $show
+     * @return mixed
+     */
+    protected function title(string $title, bool $show)
+    {
+        if ($show === true) {
+            return $this->info($title);
+        }
+    }
+
+    /**
+     * Check if a blueprint with the given $handle already exists.
+     *
+     * @param string $handle
+     * @return boolean
+     */
+    protected function hasBlueprint(string $handle): bool
+    {
+        if (is_null(Blueprint::find($handle))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if a collection with the given $handle already exists.
+     *
+     * @param string $handle
+     * @return boolean
+     */
+    protected function hasCollection(string $handle): bool
+    {
+        if (is_null(Collection::findByHandle($handle))) {
+            return false;
+        }
+
+        return true;
     }
 }

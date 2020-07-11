@@ -8,7 +8,13 @@ use Illuminate\Support\Str;
 
 class ProductBlueprint
 {
-    public function __construct(string $title)
+    /**
+     * Make the product blueprint with the given $title.
+     *
+     * @param string $title
+     * @return void
+     */
+    public static function make(string $title): void
     {
         $blueprintYaml = file_get_contents(__DIR__ . '/../../resources/blueprints/product.yaml');
         $parsedYaml = YAML::parse($blueprintYaml);
