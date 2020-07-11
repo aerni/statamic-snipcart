@@ -197,6 +197,20 @@ trait ProcessesData
     }
 
     /**
+     * Return true if results are found in the context.
+     *
+     * @return boolean
+     */
+    protected function hasResults(): bool
+    {
+        if ($this->context->has('no_results')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get the Snipcart attributes from the tag.
      *
      * @return Collection

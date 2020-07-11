@@ -140,14 +140,18 @@ class SnipcartTags extends Tags
      */
     public function button()
     {   
-        $class = $this->params->get('class');
-        $dataAttributes = $this->dataAttributes();
-        $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
+        if ($this->hasResults()) {
 
-        return 
-            "<button class='snipcart-add-item {$class}' {$dataAttributes}>
-                {$text}
-            </button>";
+            $class = $this->params->get('class');
+            $dataAttributes = $this->dataAttributes();
+            $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
+    
+            return 
+                "<button class='snipcart-add-item {$class}' {$dataAttributes}>
+                    {$text}
+                </button>";
+
+        }
     }
 
     /**
