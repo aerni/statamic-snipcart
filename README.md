@@ -82,17 +82,17 @@ The products are stored in a regular Statamic collection. You can access the pro
 
 ## Tags
 
-This addon provides a couple of useful tags to render Snipcart specific HTML elements with all the necesarry attributes to make them work.
+There's a couple of useful tags to render Snipcart specific HTML elements with all the necesarry attributes to make them work.
 
 ### Product Button
 
-This tag will output a Snipcart product button. The `data-item-*` attributes are generated based on the fields in the product's `.md` file.
+This tag will output a Snipcart product button. The required `data-item-*` attributes are generated based on the fields in the product's `.md` file.
 
 ```template
 {{ snipcart:button }}
 ```
 
-You may override any `data-item-*` attribute directly on the tag.
+You may override any attribute directly on the tag.
 
 ```template
 {{ snipcart:button id="{{ increment }}" name="{{ some_variable }}" }}
