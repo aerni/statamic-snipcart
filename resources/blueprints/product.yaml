@@ -54,7 +54,7 @@ sections:
         field:
           mode: select
           taxonomies:
-            - snipcart_categories
+            - categories
           type: taxonomy
           localizable: false
           listable: hidden

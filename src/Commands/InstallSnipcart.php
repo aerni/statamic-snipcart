@@ -7,9 +7,10 @@ use Aerni\Snipcart\Blueprints\ProductBlueprint;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection;
-use Statamic\Console\RunsInPlease;
+use Statamic\Facades\Taxonomy;
 
 class InstallSnipcart extends Command
 {
@@ -30,18 +31,18 @@ class InstallSnipcart extends Command
     protected $description = 'Install Snipcart';
 
     /**
-     * The default product blueprint title.
+     * The default collection blueprint title.
      *
      * @var string
      */
-    protected $productBlueprintTitle = 'Product';
+    protected $collectionBlueprintTitle = 'Product';
 
     /**
-     * The default category blueprint title.
+     * The default taxonomy blueprint title.
      *
      * @var string
      */
-    protected $categoryBlueprintTitle = 'Category';
+    protected $taxonomyBlueprintTitle = 'Category';
 
     /**
      * The default collection title.
@@ -49,6 +50,13 @@ class InstallSnipcart extends Command
      * @var string
      */
     protected $collectionTitle = 'Products';
+    
+    /**
+     * The default taxonomy title.
+     *
+     * @var string
+     */
+    protected $taxonomyTitle = 'Categories';
 
     /**
      * Execute the console command.
@@ -58,7 +66,7 @@ class InstallSnipcart extends Command
     public function handle(): void
     {
         $this->createBlueprints();
-        $this->createCollection("Name your collection. Default is '{$this->collectionTitle}'.", true);
+        $this->createContent();
         $this->publishVendorFiles();
         $this->finalInfo();
     }
@@ -67,8 +75,16 @@ class InstallSnipcart extends Command
     {
         $this->info("---  STEP 1 | CREATE THE BLUEPRINTS  ---");
         
-        $this->createProductBlueprint("Name the product blueprint. Default is '{$this->productBlueprintTitle}'.");
-        $this->createCategoryBlueprint("Name the category blueprint. Default is '{$this->categoryBlueprintTitle}'.");
+        $this->createProductBlueprint("Name the product blueprint. Default is '{$this->collectionBlueprintTitle}'.");
+        $this->createCategoryBlueprint("Name the category blueprint. Default is '{$this->taxonomyBlueprintTitle}'.");
+    }
+
+    protected function createContent(): void
+    {
+        $this->info("---  STEP 2 | CREATE A COLLECTION AND TAXONOMY  ---");
+
+        $this->createCollection("Name the collection. Default is '{$this->collectionTitle}'.");
+        $this->createTaxonomy("Name the taxonomy. Default is '{$this->taxonomyTitle}'.");
     }
 
     /**
@@ -78,16 +94,16 @@ class InstallSnipcart extends Command
      */
     protected function createProductBlueprint(string $question): void
     {
-        $this->productBlueprintTitle = $this->ask($question, $this->productBlueprintTitle);
+        $this->collectionBlueprintTitle = $this->ask($question, $this->collectionBlueprintTitle);
 
-        if ($this->hasBlueprint(Str::snake($this->productBlueprintTitle))) {
+        if ($this->hasBlueprint(Str::snake($this->collectionBlueprintTitle))) {
 
-            $this->error("A blueprint with the name '{$this->productBlueprintTitle}' already exists.");
+            $this->error("A blueprint with the name '{$this->collectionBlueprintTitle}' already exists.");
 
             if ($this->confirm("Do you want to override the existing blueprint?")) {
                 $this->makeProductBlueprint();
             } else {
-                $this->createProductBlueprint("Name the product blueprint. Remember, the default name '{$this->productBlueprintTitle}' is already taken.");
+                $this->createProductBlueprint("Name the product blueprint. Remember, the default name '{$this->collectionBlueprintTitle}' is already taken.");
             }
 
         } else {
@@ -102,16 +118,16 @@ class InstallSnipcart extends Command
      */
     protected function createCategoryBlueprint(string $question): void
     {
-        $this->categoryBlueprintTitle = $this->ask($question, $this->categoryBlueprintTitle);
+        $this->taxonomyBlueprintTitle = $this->ask($question, $this->taxonomyBlueprintTitle);
 
-        if ($this->hasBlueprint(Str::snake($this->categoryBlueprintTitle))) {
+        if ($this->hasBlueprint(Str::snake($this->taxonomyBlueprintTitle))) {
 
-            $this->error("A blueprint with the name '{$this->categoryBlueprintTitle}' already exists.");
+            $this->error("A blueprint with the name '{$this->taxonomyBlueprintTitle}' already exists.");
 
             if ($this->confirm("Do you want to override the existing blueprint?")) {
                 $this->makeCategoryBlueprint();
             } else {
-                $this->createCategoryBlueprint("Name the category blueprint. Remember, the default name '{$this->categoryBlueprintTitle}' is already taken.");
+                $this->createCategoryBlueprint("Name the category blueprint. Remember, the default name '{$this->taxonomyBlueprintTitle}' is already taken.");
             }
 
         } else {
@@ -124,10 +140,8 @@ class InstallSnipcart extends Command
      *
      * @return void
      */
-    protected function createCollection(string $question, bool $showTitle): void
+    protected function createCollection(string $question): void
     {
-        $this->title("---  STEP 2 | CREATE A COLLECTION  ---", $showTitle);
-
         $this->collectionTitle = $this->ask($question, $this->collectionTitle);
 
         if ($this->hasCollection(Str::snake($this->collectionTitle))) {
@@ -137,11 +151,35 @@ class InstallSnipcart extends Command
             if ($this->confirm("Do you want to override the existing collection?")) {
                 $this->makeCollection();
             } else {
-                $this->createCollection("Name your collection. Remember, the default name '{$this->collectionTitle}' is already taken", false);
+                $this->createCollection("Name your collection. Remember, the default name '{$this->collectionTitle}' is already taken.");
             }
 
         } else {
             $this->makeCollection();
+        }
+    }
+
+    /**
+     * Create the taxonomy.
+     *
+     * @return void
+     */
+    protected function createTaxonomy(string $question): void
+    {
+        $this->taxonomyTitle = $this->ask($question, $this->taxonomyTitle);
+
+        if ($this->hasTaxonomy(Str::snake($this->taxonomyTitle))) {
+
+            $this->error("A taxonomy with the name '{$this->taxonomyTitle}' already exists.");
+
+            if ($this->confirm("Do you want to override the existing taxonomy?")) {
+                $this->makeTaxonomy();
+            } else {
+                $this->createTaxonomy("Name your taxonomy. Remember, the default name '{$this->taxonomyTitle}' is already taken.");
+            }
+
+        } else {
+            $this->makeTaxonomy();
         }
     }
 
@@ -185,7 +223,7 @@ class InstallSnipcart extends Command
     protected function makeProductBlueprint(): void
     {
         $blueprint = new ProductBlueprint();
-        $blueprint->make($this->productBlueprintTitle);
+        $blueprint->make($this->collectionBlueprintTitle);
     }
 
     /**
@@ -196,7 +234,7 @@ class InstallSnipcart extends Command
     protected function makeCategoryBlueprint(): void
     {
         $blueprint = new CategoryBlueprint();
-        $blueprint->make($this->categoryBlueprintTitle);
+        $blueprint->make($this->taxonomyBlueprintTitle);
     }
 
     /**
@@ -211,7 +249,21 @@ class InstallSnipcart extends Command
             ->revisionsEnabled(false)
             ->pastDateBehavior('public')
             ->futureDateBehavior('private')
-            ->entryBlueprints(Str::snake($this->productBlueprintTitle))
+            ->entryBlueprints(Str::snake($this->collectionBlueprintTitle))
+            ->save();
+    }
+
+    /**
+     * Make a taxonomy.
+     *
+     * @return void
+     */
+    protected function makeTaxonomy(): void
+    {
+        Taxonomy::make(Str::snake($this->taxonomyTitle))
+            ->title($this->taxonomyTitle)
+            ->termBlueprints(Str::snake($this->taxonomyBlueprintTitle))
+            ->collection(Str::snake($this->collectionTitle))
             ->save();
     }
 
@@ -253,6 +305,21 @@ class InstallSnipcart extends Command
     protected function hasCollection(string $handle): bool
     {
         if (is_null(Collection::findByHandle($handle))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if a taxonomy with the given $handle already exists.
+     *
+     * @param string $handle
+     * @return boolean
+     */
+    protected function hasTaxonomy(string $handle): bool
+    {
+        if (is_null(Taxonomy::findByHandle($handle))) {
             return false;
         }
 
