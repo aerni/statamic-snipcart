@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart\Commands;
 
+use Aerni\Snipcart\Blueprints\CategoryBlueprint;
 use Aerni\Snipcart\Blueprints\ProductBlueprint;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -9,7 +10,6 @@ use Illuminate\Support\Str;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection;
 use Statamic\Console\RunsInPlease;
-
 
 class InstallSnipcart extends Command
 {
@@ -30,11 +30,18 @@ class InstallSnipcart extends Command
     protected $description = 'Install Snipcart';
 
     /**
-     * The default blueprint title.
+     * The default product blueprint title.
      *
      * @var string
      */
-    protected $blueprintTitle = 'Product';
+    protected $productBlueprintTitle = 'Product';
+
+    /**
+     * The default category blueprint title.
+     *
+     * @var string
+     */
+    protected $categoryBlueprintTitle = 'Category';
 
     /**
      * The default collection title.
@@ -50,35 +57,65 @@ class InstallSnipcart extends Command
      */
     public function handle(): void
     {
-        $this->createBlueprint("Name your blueprint. If you leave this empty we'll call it '{$this->blueprintTitle}'", true);
-        $this->createCollection("Name your collection. If you leave this empty we'll call it '{$this->collectionTitle}'.", true);
+        $this->createBlueprints();
+        $this->createCollection("Name your collection. Default is '{$this->collectionTitle}'.", true);
         $this->publishVendorFiles();
         $this->finalInfo();
     }
 
+    protected function createBlueprints(): void
+    {
+        $this->info("---  STEP 1 | CREATE THE BLUEPRINTS  ---");
+        
+        $this->createProductBlueprint("Name the product blueprint. Default is '{$this->productBlueprintTitle}'.");
+        $this->createCategoryBlueprint("Name the category blueprint. Default is '{$this->categoryBlueprintTitle}'.");
+    }
+
     /**
-     * Create the blueprint.
+     * Create the product blueprint.
      *
      * @return void
      */
-    protected function createBlueprint(string $question, bool $showTitle): void
+    protected function createProductBlueprint(string $question): void
     {
-        $this->title("---  STEP 1 | CREATE A BLUEPRINT  ---", $showTitle);
+        $this->productBlueprintTitle = $this->ask($question, $this->productBlueprintTitle);
 
-        $this->blueprintTitle = $this->ask($question, $this->blueprintTitle);
+        if ($this->hasBlueprint(Str::snake($this->productBlueprintTitle))) {
 
-        if ($this->hasBlueprint(Str::snake($this->blueprintTitle))) {
-
-            $this->error("A blueprint with the name '{$this->blueprintTitle}' already exists.");
+            $this->error("A blueprint with the name '{$this->productBlueprintTitle}' already exists.");
 
             if ($this->confirm("Do you want to override the existing blueprint?")) {
-                $this->makeBlueprint();
+                $this->makeProductBlueprint();
             } else {
-                $this->createBlueprint("Name your blueprint. Remember, the default name '{$this->blueprintTitle}' is already taken", false);
+                $this->createProductBlueprint("Name the product blueprint. Remember, the default name '{$this->productBlueprintTitle}' is already taken.");
             }
 
         } else {
-            $this->makeBlueprint();
+            $this->makeProductBlueprint();
+        }
+    }
+
+    /**
+     * Create the category blueprint.
+     *
+     * @return void
+     */
+    protected function createCategoryBlueprint(string $question): void
+    {
+        $this->categoryBlueprintTitle = $this->ask($question, $this->categoryBlueprintTitle);
+
+        if ($this->hasBlueprint(Str::snake($this->categoryBlueprintTitle))) {
+
+            $this->error("A blueprint with the name '{$this->categoryBlueprintTitle}' already exists.");
+
+            if ($this->confirm("Do you want to override the existing blueprint?")) {
+                $this->makeCategoryBlueprint();
+            } else {
+                $this->createCategoryBlueprint("Name the category blueprint. Remember, the default name '{$this->categoryBlueprintTitle}' is already taken.");
+            }
+
+        } else {
+            $this->makeCategoryBlueprint();
         }
     }
 
@@ -141,13 +178,25 @@ class InstallSnipcart extends Command
     }
 
     /**
-     * Make a blueprint
+     * Make a product blueprint
      *
      * @return void
      */
-    protected function makeBlueprint(): void
+    protected function makeProductBlueprint(): void
     {
-        ProductBlueprint::make($this->blueprintTitle);
+        $blueprint = new ProductBlueprint();
+        $blueprint->make($this->productBlueprintTitle);
+    }
+
+    /**
+     * Make a category blueprint
+     *
+     * @return void
+     */
+    protected function makeCategoryBlueprint(): void
+    {
+        $blueprint = new CategoryBlueprint();
+        $blueprint->make($this->categoryBlueprintTitle);
     }
 
     /**
@@ -162,7 +211,7 @@ class InstallSnipcart extends Command
             ->revisionsEnabled(false)
             ->pastDateBehavior('public')
             ->futureDateBehavior('private')
-            ->entryBlueprints(Str::snake($this->blueprintTitle))
+            ->entryBlueprints(Str::snake($this->productBlueprintTitle))
             ->save();
     }
 
