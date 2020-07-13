@@ -1,4 +1,4 @@
-title: 'Product'
+title: Product
 sections:
   main:
     display: Main
@@ -21,6 +21,7 @@ sections:
           display: Price
           instructions: 'The price of the product.'
           validate: required|numeric
+          prepend: USD
       -
         handle: description
         field:
@@ -48,20 +49,18 @@ sections:
           localizable: false
           listable: hidden
           display: Metadata
-          instructions: 'Define some optional metadata for this product.'
-      -
-        handle: categories
-        field:
-          mode: select
-          taxonomies:
-            - categories
-          type: taxonomy
-          localizable: false
-          listable: hidden
-          display: Categories
+          instructions: 'Define some optional metadata for the product.'
   dimensions:
     display: Dimensions
     fields:
+      -
+        handle: product_dimensions_section
+        field:
+          type: section
+          instructions: 'If you need to offer different shipping prices depending on product dimensions, these attributes will help.'
+          localizable: false
+          listable: hidden
+          display: 'Product Dimensions'
       -
         handle: weight
         field:
@@ -69,7 +68,7 @@ sections:
           localizable: false
           listable: hidden
           display: Weight
-          instructions: 'The weight of the product in `grams`. Mandatory if you use any integrated shipping provider we support.'
+          instructions: 'The weight of the product in `grams`. This is **mandatory** if you use any integrated shipping provider.'
       -
         handle: length
         field:
@@ -77,7 +76,7 @@ sections:
           localizable: false
           listable: hidden
           display: Length
-          instructions: 'The length of the product in `centimeters`. This optional attribute will be used if you enabled an integrated shipping provider.'
+          instructions: 'The length of the product in `centimeters`.'
       -
         handle: height
         field:
@@ -85,7 +84,7 @@ sections:
           localizable: false
           listable: hidden
           display: Height
-          instructions: 'The height of the product in `centimeters`. This optional attribute will be used if you enabled an integrated shipping provider.'
+          instructions: 'The height of the product in `centimeters`.'
       -
         handle: width
         field:
@@ -93,10 +92,18 @@ sections:
           localizable: false
           listable: hidden
           display: Width
-          instructions: 'The width of the product in `centimeters`. This optional attribute will be used if you enabled an integrated shipping provider.'
+          instructions: 'The width of the product in `centimeters`.'
   quantity:
     display: Quantity
     fields:
+      -
+        handle: quantity_section
+        field:
+          type: section
+          instructions: 'These attributes make it possible to change how the quantity can be updated.'
+          localizable: false
+          listable: hidden
+          display: 'Product Quantity'
       -
         handle: quantity
         field:
@@ -198,3 +205,26 @@ sections:
           localizable: false
           listable: hidden
           display: 'File GUID'
+  sidebar:
+    display: Sidebar
+    fields:
+      -
+        handle: slug
+        field:
+          generate: true
+          type: slug
+          instructions: 'The slug and unique ID of the product.'
+          localizable: false
+          listable: hidden
+          display: 'Slug / ID'
+      -
+        handle: categories
+        field:
+          mode: select
+          taxonomies:
+            - categories
+          type: taxonomy
+          localizable: false
+          listable: hidden
+          display: Categories
+          instructions: The categories of the product.
