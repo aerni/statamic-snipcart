@@ -64,7 +64,7 @@ trait ProcessesData
             $data = $product->data();
 
             $data->put('url', Request::url());
-            $data->put('id', $product->id());
+            $data->put('id', $product->slug());
             
             return $this->transformAttributes($data);
 
