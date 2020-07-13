@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Blueprints;
 
-class CategoryBlueprint extends Blueprints
+class CategoryBlueprint extends Blueprint
 {
     public function __construct()
     {
-        $this->handle = 'category';
+        parent::__construct('category');
     }
 }
