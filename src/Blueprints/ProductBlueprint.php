@@ -24,7 +24,7 @@ class ProductBlueprint extends Blueprint
 
     public function currency(string $currency): self
     {
-        $this->blueprint['sections']['product']['fields'][4]['field']['prepend'] = $currency;
+        $this->blueprint['sections']['product']['fields'][3]['field']['prepend'] = $currency;
         $this->blueprint['sections']['custom_fields']['fields'][0]['field']['sets']['dropdown']['fields'][1]['field']['fields'][1]['field']['prepend'] = $currency;
 
         return $this;

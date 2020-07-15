@@ -32,14 +32,6 @@ sections:
           display: 'Slug / ID'
           width: 50
       -
-        handle: description
-        field:
-          type: textarea
-          localizable: false
-          listable: hidden
-          instructions: 'A short description of the product. This will show in the cart.'
-          display: Description
-      -
         handle: price
         field:
           type: text
@@ -49,6 +41,14 @@ sections:
           instructions: 'The price of the product.'
           validate: required|numeric
           prepend: USD
+      -
+        handle: description
+        field:
+          type: textarea
+          localizable: false
+          listable: hidden
+          instructions: 'A short description of the product. This will show in the cart.'
+          display: Description
       -
         handle: images
         field:
