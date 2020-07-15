@@ -26,7 +26,7 @@ trait ProcessesData
      * @var array
      */
     protected static $optionalAttributes = [
-        'description', 'image', 'categories', 'metadata', 'weight', 'length', 'height', 'width', 'quantity', 'max-quantity', 'min-quantity', 'stackable', 'quantity-step', 'shippable', 'taxable', 'taxes', 'has-taxes-included', 'file-guid'
+        'description', 'image', 'categories', 'metadata', 'weight', 'length', 'height', 'width', 'quantity', 'max-quantity', 'min-quantity', 'stackable', 'quantity-step', 'shippable', 'taxable', 'taxes', 'has-taxes-included', 'file-guid',
     ];
 
     /**
@@ -49,6 +49,7 @@ trait ProcessesData
     protected function attributes(): Collection
     {
         $attributes = $this->productAttributes()->merge($this->tagAttributes());
+
         return $this->validateAttributes($attributes);
     }
 
@@ -59,8 +60,7 @@ trait ProcessesData
      */
     protected function productAttributes(): Collection
     {
-        if (!is_null($this->currentEntry())) {
-
+        if (! is_null($this->currentEntry())) {
             $product = $this->currentEntry();
             $data = $product->data();
             
@@ -68,7 +68,6 @@ trait ProcessesData
             $data->put('id', $product->slug());
 
             return $this->transformAttributes($data);
-
         }
 
         return collect();
@@ -83,7 +82,6 @@ trait ProcessesData
     protected function transformAttributes(Collection $attributes): Collection
     {
         $transformedAttributes = $attributes->mapWithKeys(function ($item, $key) {
-
             if ($key === 'title') {
                 return ['name' => $item];
             }
@@ -109,7 +107,6 @@ trait ProcessesData
             }
 
             return [$key => $item];
-
         });
 
         return $this->filterValidAttributes($transformedAttributes);
@@ -139,10 +136,9 @@ trait ProcessesData
     protected function mapCustomFields(array $customFields): Collection
     {
         $customFields = collect($customFields)->map(function ($item, $key) {
-
             $key++;
 
-            if (!$item['enabled']) {
+            if (! $item['enabled']) {
                 return;
             }
 
@@ -161,7 +157,6 @@ trait ProcessesData
             if ($item['type'] === 'text' && $item['field_type'] === 'textarea') {
                 return $this->mapTextarea($item, $key);
             }
-
         })->filter()->values();
 
         return $this->reassignFieldIndex($customFields);
@@ -176,14 +171,13 @@ trait ProcessesData
     protected function reassignFieldIndex(Collection $customFields): Collection
     {
         return $customFields->flatMap(function ($item, $index) {
-
             $index++;
 
             return collect($item)->mapWithKeys(function ($item, $key) use ($index) {
                 $newKey = preg_replace("/[0-9]/", $index, $key);
+
                 return [$newKey => $item];
             });
-
         });
     }
 
@@ -197,7 +191,6 @@ trait ProcessesData
     protected function mapDropdown(array $item, string $key): array
     {
         $options = collect($item['options'])->map(function ($item) {
-            
             $name = $item['name'];
             $price = $item['price'];
 
@@ -210,7 +203,6 @@ trait ProcessesData
             }
             
             return "{$name}[{$price}]";
-            
         })->implode('|');
 
         return [
@@ -281,11 +273,9 @@ trait ProcessesData
         $blueprint = $this->currentEntry()->blueprint()->contents()['sections'];
 
         $imageField = collect($blueprint)->flatMap(function ($item) {
-
             return collect($item['fields'])->first(function ($item) {
                 return $item['handle'] === 'images';
             });
-            
         });
 
         $assetContainer = $imageField['field']['container'];
@@ -316,7 +306,7 @@ trait ProcessesData
      * Return true if the key is a valid Snipcart product attribute key.
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     protected function isValidAttributeKey(string $key): bool
     {
@@ -338,7 +328,7 @@ trait ProcessesData
     /**
      * Return true if results are found in the context.
      *
-     * @return boolean
+     * @return bool
      */
     protected function hasResults(): bool
     {

@@ -120,12 +120,10 @@ class InstallSnipcart extends Command
         $this->info('---  STEP 3 | PUBLISH THE VENDOR FILES  ---');
 
         if ($this->confirm('We need to publish the vendor files. Please confirm.')) {
-            
-            Artisan::call('vendor:publish',[
+            Artisan::call('vendor:publish', [
                 '--provider' => 'Aerni\Snipcart\ServiceProvider',
                 '--force' => true,
             ]);
-
         }
     }
 
@@ -152,13 +150,11 @@ class InstallSnipcart extends Command
         $this->productCollectionTitle = $this->ask($question, $this->productCollectionTitle);
 
         if ($this->hasCollection(Str::snake($this->productCollectionTitle))) {
-
             $this->error("A collection with the name '{$this->productCollectionTitle}' already exists.");
 
-            if (!$this->confirm("Do you want to override the existing collection?")) {
+            if (! $this->confirm("Do you want to override the existing collection?")) {
                 $this->nameProductCollection($question);
             }
-
         }
     }
 
@@ -172,13 +168,11 @@ class InstallSnipcart extends Command
         $this->productBlueprintTitle = $this->ask($question, $this->productBlueprintTitle);
 
         if ($this->hasBlueprint(Str::snake($this->productBlueprintTitle))) {
-
             $this->error("A blueprint with the name '{$this->productBlueprintTitle}' already exists.");
 
-            if (!$this->confirm("Do you want to override the existing blueprint?")) {
+            if (! $this->confirm("Do you want to override the existing blueprint?")) {
                 $this->nameProductBlueprint($question);
             }
-
         }
     }
 
@@ -192,13 +186,11 @@ class InstallSnipcart extends Command
         $this->categoryTaxonomyTitle = $this->ask($question, $this->categoryTaxonomyTitle);
 
         if ($this->hasTaxonomy(Str::snake($this->categoryTaxonomyTitle))) {
-
             $this->error("A taxonomy with the name '{$this->categoryTaxonomyTitle}' already exists.");
 
-            if (!$this->confirm("Do you want to override the existing taxonomy?")) {
+            if (! $this->confirm("Do you want to override the existing taxonomy?")) {
                 $this->nameCategoryTaxonomy($question);
             }
-
         }
     }
 
@@ -212,13 +204,11 @@ class InstallSnipcart extends Command
         $this->categoryBlueprintTitle = $this->ask($question, $this->categoryBlueprintTitle);
 
         if ($this->hasBlueprint(Str::snake($this->categoryBlueprintTitle))) {
-
             $this->error("A blueprint with the name '{$this->categoryBlueprintTitle}' already exists.");
 
-            if (!$this->confirm("Do you want to override the existing blueprint?")) {
-                $this->nameCategoryBlueprint($question);   
+            if (! $this->confirm("Do you want to override the existing blueprint?")) {
+                $this->nameCategoryBlueprint($question);
             }
-
         }
     }
 
@@ -280,7 +270,7 @@ class InstallSnipcart extends Command
      * Check if a blueprint with the given $handle already exists.
      *
      * @param string $handle
-     * @return boolean
+     * @return bool
      */
     protected function hasBlueprint(string $handle): bool
     {
@@ -295,7 +285,7 @@ class InstallSnipcart extends Command
      * Check if a collection with the given $handle already exists.
      *
      * @param string $handle
-     * @return boolean
+     * @return bool
      */
     protected function hasCollection(string $handle): bool
     {
@@ -310,7 +300,7 @@ class InstallSnipcart extends Command
      * Check if a taxonomy with the given $handle already exists.
      *
      * @param string $handle
-     * @return boolean
+     * @return bool
      */
     protected function hasTaxonomy(string $handle): bool
     {

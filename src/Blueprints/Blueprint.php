@@ -2,9 +2,9 @@
 
 namespace Aerni\Snipcart\Blueprints;
 
+use Illuminate\Support\Str;
 use Statamic\Facades\Blueprint as BlueprintFacade;
 use Statamic\Facades\YAML;
-use Illuminate\Support\Str;
 
 class Blueprint
 {
@@ -53,6 +53,7 @@ class Blueprint
     protected function parseBlueprintYaml(string $handle): array
     {
         $blueprintYaml = file_get_contents(__DIR__ . "/../../resources/blueprints/{$handle}.yaml");
+
         return YAML::parse($blueprintYaml);
     }
 
@@ -65,6 +66,7 @@ class Blueprint
     protected function title(string $title): self
     {
         $this->blueprint['title'] = $title;
+
         return $this;
     }
 }

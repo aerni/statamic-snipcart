@@ -13,7 +13,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $tags = [
-        SnipcartTags::class
+        SnipcartTags::class,
     ];
 
     public function boot(): void
@@ -24,7 +24,6 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
-
     }
 
     public function register(): void
@@ -49,7 +48,6 @@ class ServiceProvider extends AddonServiceProvider
             $this->publishes([
                 __DIR__ . '/../resources/lang' => resource_path('lang/vendor/snipcart'),
             ]);
-
         }
     }
 }

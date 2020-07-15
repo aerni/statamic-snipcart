@@ -18,6 +18,7 @@ class ProductBlueprint extends Blueprint
     public function taxonomy(string $taxonomy): self
     {
         $this->blueprint['sections']['product']['fields'][7]['field']['taxonomies'][0] = $taxonomy;
+
         return $this;
     }
 
@@ -25,6 +26,7 @@ class ProductBlueprint extends Blueprint
     {
         $this->blueprint['sections']['product']['fields'][4]['field']['prepend'] = $currency;
         $this->blueprint['sections']['custom_fields']['fields'][0]['field']['sets']['dropdown']['fields'][1]['field']['fields'][1]['field']['prepend'] = $currency;
+
         return $this;
     }
 }

@@ -41,7 +41,7 @@ class SnipcartTags extends Tags
     /**
      * Loop through the Snipcart products collection.
      * {{ snipcart }} ... {{ /snipcart }}
-     * 
+     *
      * @return EntryCollection
      */
     public function index(): EntryCollection
@@ -59,7 +59,7 @@ class SnipcartTags extends Tags
      */
     public function preconnect(): string
     {
-        return 
+        return
             "<link rel='preconnect' href='https://app.snipcart.com'>
             <link rel='preconnect' href='https://cdn.snipcart.com'>";
     }
@@ -89,7 +89,7 @@ class SnipcartTags extends Tags
         $behaviour = $this->config['behaviour'];
         $currency = $this->config['currency'];
 
-        return 
+        return
             "<div hidden id='snipcart' 
                 data-api-key='{$key}' 
                 data-config-add-product-behavior='{$behaviour}' 
@@ -129,7 +129,7 @@ class SnipcartTags extends Tags
      */
     public function body(): string
     {
-        return "{$this->container()} {$this->script()}";    
+        return "{$this->container()} {$this->script()}";
     }
 
     /**
@@ -139,18 +139,16 @@ class SnipcartTags extends Tags
      * @return string
      */
     public function button()
-    {   
+    {
         if ($this->hasResults()) {
-
             $class = $this->params->get('class');
             $dataAttributes = $this->dataAttributes();
             $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
     
-            return 
+            return
                 "<button class='snipcart-add-item {$class}' {$dataAttributes}>
                     {$text}
                 </button>";
-
         }
     }
 
@@ -165,7 +163,7 @@ class SnipcartTags extends Tags
         $class = $this->params->get('class');
         $text = $this->params->get('text') ?? __('snipcart::product.show_cart');
 
-        return 
+        return
             "<button class='snipcart-checkout {$class}'>
                 {$text}
             </button>";
@@ -182,7 +180,7 @@ class SnipcartTags extends Tags
         $class = $this->params->get('class');
         $text = $this->params->get('text') ?? __('snipcart::product.signin');
 
-        return 
+        return
             "<button class='snipcart-customer-signin {$class}'>
                 {$text}
             </button>";
