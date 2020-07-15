@@ -4,7 +4,7 @@
 # Snipcart
 This addon makes the setup of your Snipcart shop on Statamic a breeze.
 
-⚙️ Simple installation and setup    
+⚙️ Simple installation and setup  
 🛒 Automatically generated product attributes  
 📋 Optimized blueprint with all the fields accepted by Snipcart
 
@@ -29,6 +29,14 @@ php please snipcart:install
 ```
 
 ### Step 3
+
+Add your Snipcart API Key to your .env file.
+
+```env
+SNIPCART_API_KEY=************************************************************************
+```
+
+### Step 4
 
 Review the config published to `config/snipcart.php` and customize to your liking.
 
@@ -147,11 +155,17 @@ There's a couple of optional parameters you may use on the tags.
 
 ***
 
-## Custom Fields
-To add a custom attribute, create a new field in the blueprint and set the handle to `custom_{number}_{type}`e.g. `custom_1_name`. This will make the custom attributes available in the `{{ snipcart:button }}` tag.
+## Customize Blueprint
+
+Feel free to add your own fields to the generated blueprints. This might be useful if you want to add more content about a product.
+>**Important:** Make sure to `NOT` change any handles of existing fields. If you do, things will blow up.
+
+### Image Asset Container
+
+The assets container for the images defaults to `assets`. You may change the asset container to your liking.
 
 ***
 
-## Customize Default Text
+## Default Button Text
 
 You may customize the default text of buttons in the language files located in `resources/lang/vendor/snipcart`.

@@ -46,5 +46,20 @@ return [
     */
 
     'behaviour' => env('SNIPCART_BEHAVIOUR', null),
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Image Manipulation Settings
+    |--------------------------------------------------------------------------
+    |
+    | Define a Glide preset to be applied on the product image that shows 
+    | in the cart. You may also turn the manipulation off (not recommended).
+    |
+    */
+
+    'image' => [
+        'manipulation' => true,
+        'preset' => ['w' => 240, 'q' => 75],
+    ]
 
 ];
