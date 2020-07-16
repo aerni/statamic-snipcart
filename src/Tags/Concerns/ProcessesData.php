@@ -2,7 +2,6 @@
 
 namespace Aerni\Snipcart\Tags\Concerns;
 
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
@@ -10,25 +9,10 @@ use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Collection as StatamicCollection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Image;
+use Aerni\Snipcart\Validator;
 
 trait ProcessesData
 {
-    /**
-     * All mandatory Snipcart product attributes.
-     *
-     * @var array
-     */
-    protected static $requiredAttributes = ['name', 'id', 'price', 'url'];
-
-    /**
-     * All optional Snipcart product attributes.
-     *
-     * @var array
-     */
-    protected static $optionalAttributes = [
-        'description', 'image', 'categories', 'metadata', 'weight', 'length', 'height', 'width', 'quantity', 'max-quantity', 'min-quantity', 'stackable', 'quantity-step', 'shippable', 'taxable', 'taxes', 'has-taxes-included', 'file-guid',
-    ];
-
     /**
      * Join all the Snipcart attributes to an HTML-ready string.
      *
@@ -49,8 +33,7 @@ trait ProcessesData
     protected function attributes(): Collection
     {
         $attributes = $this->productAttributes()->merge($this->tagAttributes());
-
-        return $this->validateAttributes($attributes);
+        return $this->validAttributes($attributes);
     }
 
     /**
@@ -120,22 +103,24 @@ trait ProcessesData
             return [$key => $item];
         });
 
-        return $this->filterValidAttributes($transformedAttributes);
+        return $transformedAttributes;
     }
 
     /**
-     * Filter the attributes to only return valid attributes.
+     * Get validated attributes that are supported by Snipcart.
      *
      * @param Collection $attributes
      * @return Collection
      */
-    protected function filterValidAttributes(Collection $attributes): Collection
+    protected function validAttributes(Collection $attributes): Collection
     {
-        return $attributes->filter(function ($item, $key) {
-            if ($this->isValidAttributeKey($key)) {
+        $validAttributes = $attributes->filter(function ($item, $key) {
+            if (Validator::isValidAttribute($key)) {
                 return $item;
             }
         });
+
+        return Validator::validateAttributes($validAttributes);
     }
 
     /**
@@ -314,29 +299,6 @@ trait ProcessesData
     }
 
     /**
-     * Return true if the key is a valid Snipcart product attribute key.
-     *
-     * @param string $key
-     * @return bool
-     */
-    protected function isValidAttributeKey(string $key): bool
-    {
-        if (in_array($key, Self::$requiredAttributes)) {
-            return true;
-        }
-
-        if (in_array($key, Self::$optionalAttributes)) {
-            return true;
-        }
-
-        if (Str::startsWith($key, 'custom')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Return true if results are found in the context.
      *
      * @return bool
@@ -358,21 +320,6 @@ trait ProcessesData
     protected function tagAttributes(): Collection
     {
         return $this->params->except(['class', 'text']);
-    }
-
-    /**
-     * Check if the attributes include Snipcart's mandatory product attributes.
-     *
-     * @param Collection $attributes
-     * @return Collection
-     */
-    protected function validateAttributes(Collection $attributes): Collection
-    {
-        if ($attributes->has(Self::$requiredAttributes)) {
-            return $attributes;
-        };
-
-        throw new Exception("Please make sure that your products include the mandatory Snipcart attributes: [name], [id], [price], [url]");
     }
 
     /**
