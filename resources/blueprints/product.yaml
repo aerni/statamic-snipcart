@@ -407,3 +407,11 @@ sections:
           listable: hidden
           display: ID
           instructions: 'Define a product ID. This is optional.'
+      -
+        handle: is_snipcart_product
+        field:
+          type: hidden
+          localizable: false
+          listable: hidden
+          display: 'Is Snipcart Product'
+          default: true

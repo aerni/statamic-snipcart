@@ -2,12 +2,12 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Aerni\Snipcart\Tags\Concerns;
+use Aerni\Snipcart\Tags\Concerns\ProcessesData;
 use Statamic\Tags\Tags;
 
 class SnipcartTags extends Tags
 {
-    use Concerns\ProcessesData;
+    use ProcessesData;
 
     /**
      * The handle of the tag.
@@ -30,6 +30,11 @@ class SnipcartTags extends Tags
      */
     protected $config = [];
 
+    /**
+     * Construct the class.
+     *
+     * @param array $config
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -124,16 +129,14 @@ class SnipcartTags extends Tags
      */
     public function button()
     {
-        if ($this->hasResults()) {
-            $class = $this->params->get('class');
-            $dataAttributes = $this->dataAttributes();
-            $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
-    
-            return
-                "<button class='snipcart-add-item {$class}' {$dataAttributes}>
-                    {$text}
-                </button>";
-        }
+        $class = $this->params->get('class');
+        $dataAttributes = $this->dataAttributes();
+        $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
+
+        return
+            "<button class='snipcart-add-item {$class}' {$dataAttributes}>
+                {$text}
+            </button>";
     }
 
     /**
