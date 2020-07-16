@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Statamic\Entries\Entry;
@@ -80,7 +81,7 @@ class Product
             }
 
             if ($key === 'images' && is_array($item)) {
-                return ['image' => $this->glideImagePath($item[0])];
+                return ['image' => $this->imagePath($item[0])];
             }
 
             if ($key === 'categories' && is_array($item)) {
@@ -247,35 +248,42 @@ class Product
      */
     protected function imagePath(string $image): string
     {
-        $blueprint = $this->product->blueprint()->contents()['sections'];
-
-        $imageField = collect($blueprint)->flatMap(function ($item) {
-            return collect($item['fields'])->first(function ($item) {
-                return $item['handle'] === 'images';
-            });
-        });
-
-        $assetContainer = $imageField['field']['container'];
-
-        $containerPath = AssetContainer::find($assetContainer)->url();
-
-        return "{$containerPath}/$image";
-    }
-
-    /**
-     * Get the glide path for an image.
-     *
-     * @param string $image
-     * @return string
-     */
-    protected function glideImagePath(string $image): string
-    {
-        $imagePath = $this->imagePath($image);
+        $imagePath = $this->assetContainerPath() . '/' . $image;
 
         if (config('snipcart.image.manipulation')) {
             return Image::manipulate($imagePath, config('snipcart.image.preset'));
         }
 
         return $imagePath;
+    }
+
+    /**
+     * Get the path of the asset container.
+     *
+     * @return string
+     */
+    protected function assetContainerPath(): string
+    {
+        return Cache::remember('asset_container_path', 3600, function () {
+            return AssetContainer::find($this->assetContainer())->url();
+        });
+    }
+
+    /**
+     * Get the asset container from the blueprint.
+     *
+     * @return string
+     */
+    protected function assetContainer(): string
+    {
+        $blueprintFields = $this->product->blueprint()->contents()['sections'];
+
+        $imageField = collect($blueprintFields)->flatMap(function ($item) {
+            return collect($item['fields'])->first(function ($item) {
+                return $item['handle'] === 'images';
+            });
+        });
+
+        return $imageField['field']['container'];
     }
 }
