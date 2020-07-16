@@ -30,6 +30,14 @@
             "Aerni\\Snipcart\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Aerni\\Snipcart\\Tests\\": "tests"
+        },
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
     "scripts": {
         "test": "vendor/bin/phpunit",
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"

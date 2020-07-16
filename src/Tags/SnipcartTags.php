@@ -1,12 +1,14 @@
 <?php
 
-namespace Aerni\Snipcart;
+namespace Aerni\Snipcart\Tags;
 
-use Illuminate\Support\Collection;
+use Aerni\Snipcart\Tags\Concerns\ProcessesData;
 use Statamic\Tags\Tags;
 
 class SnipcartTags extends Tags
 {
+    use ProcessesData;
+
     /**
      * The handle of the tag.
      *
@@ -28,6 +30,11 @@ class SnipcartTags extends Tags
      */
     protected $config = [];
 
+    /**
+     * Construct the class.
+     *
+     * @param array $config
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -35,53 +42,66 @@ class SnipcartTags extends Tags
 
     /**
      * Return the Snipcart preconnect hints.
+     * {{ snipcart:preconnect }}
      *
      * @return string
      */
     public function preconnect(): string
     {
-        return 
+        return
             "<link rel='preconnect' href='https://app.snipcart.com'>
             <link rel='preconnect' href='https://cdn.snipcart.com'>";
     }
 
     /**
      * Return the Snipcart stylesheet.
+     * {{ snipcart:stylesheet }}
      *
      * @return string
      */
     public function stylesheet(): string
     {
-        return "<link rel='stylesheet' href='https://cdn.snipcart.com/themes/v{$this->config['version']}/default/snipcart.css' />";
+        $version = $this->config['version'];
+
+        return "<link rel='stylesheet' href='https://cdn.snipcart.com/themes/v{$version}/default/snipcart.css' />";
     }
 
     /**
      * Return the Snipcart container.
+     * {{ snipcart:container }}
      *
      * @return string
      */
     public function container(): string
     {
-        return 
+        $key = $this->config['key'];
+        $behaviour = $this->config['behaviour'];
+        $currency = $this->config['currency'];
+
+        return
             "<div hidden id='snipcart' 
-                data-api-key='{$this->config['key']}' 
-                data-config-add-product-behavior='{$this->params->get('behaviour')}' 
-                data-currency='{$this->params->get('currency')}'>
+                data-api-key='{$key}' 
+                data-config-add-product-behavior='{$behaviour}' 
+                data-currency='{$currency}'>
             </div>";
     }
 
     /**
      * Return the Snipcart script.
+     * {{ snipcart:script }}
      *
      * @return string
      */
     public function script(): string
     {
-        return "<script src='https://cdn.snipcart.com/themes/v{$this->config['version']}/default/snipcart.js'></script>";
+        $version = $this->config['version'];
+
+        return "<script src='https://cdn.snipcart.com/themes/v{$version}/default/snipcart.js'></script>";
     }
 
     /**
      * Return the Snipcart preconnect hints and the stylesheet.
+     * {{ snipcart:head }}
      *
      * @return string
      */
@@ -92,94 +112,90 @@ class SnipcartTags extends Tags
 
     /**
      * Return the Snipcart container and the script.
+     * {{ snipcart:body }}
      *
      * @return string
      */
     public function body(): string
     {
-        return "{$this->container()} {$this->script()}";    
+        return "{$this->container()} {$this->script()}";
     }
 
     /**
      * Return a Snipcart product button.
+     * {{ snipcart:button }}
      *
      * @return string
      */
-    public function product(): string
+    public function button()
     {
-        return 
-            "<button class='snipcart-add-item {$this->params->get('class')}' {$this->dataAttributes()}>
-                {$this->params->get('text')}
+        $class = $this->params->get('class');
+        $dataAttributes = $this->dataAttributes();
+        $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
+
+        return
+            "<button class='snipcart-add-item {$class}' {$dataAttributes}>
+                {$text}
             </button>";
     }
 
     /**
      * Return a Snipcart cart button.
+     * {{ snipcart:cart }}
      *
      * @return string
      */
     public function cart(): string
-    {        
-        return 
-            "<button class='snipcart-checkout {$this->params->get('class')}'>
-                {$this->params->get('text')}
+    {
+        $class = $this->params->get('class');
+        $text = $this->params->get('text') ?? __('snipcart::product.show_cart');
+
+        return
+            "<button class='snipcart-checkout {$class}'>
+                {$text}
             </button>";
     }
 
     /**
      * Return a Snipcart customer signin button.
+     * {{ snipcart:signin }}
      *
      * @return string
      */
     public function signin(): string
     {
-        return 
-            "<button class='snipcart-customer-signin {$this->params->get('class')}'>
-                {$this->params->get('text')}
+        $class = $this->params->get('class');
+        $text = $this->params->get('text') ?? __('snipcart::product.signin');
+
+        return
+            "<button class='snipcart-customer-signin {$class}'>
+                {$text}
             </button>";
     }
 
     /**
      * Return the number of items in the cart.
+     * {{ snipcart:items }}
      *
      * @return string
      */
     public function items(): string
     {
-        return "<span class='snipcart-items-count {$this->params->get('class')}'></span>";
+        $class = $this->params->get('class');
+        
+        return "<span class='snipcart-items-count {$class}'></span>";
     }
 
     /**
      * Return the total price of all the items in the cart.
+     * {{ snipcart:total }}
      *
      * @return string
      */
     public function total(): string
     {
-        return "<span class='snipcart-total-price {$this->params->get('class')}'></span>";
+        $class = $this->params->get('class');
+
+        return "<span class='snipcart-total-price {$class}'></span>";
     }
-
-    /**
-     * Get the Snipcart attributes from the tag.
-     *
-     * @return Collection
-     */
-    protected function attributes(): Collection
-    {
-        return $this->params->except(['class', 'text']);
-    }
-
-    /**
-     * Join all the Snipcart attributes to an HTML-ready string.
-     *
-     * @return string
-     */
-    protected function dataAttributes(): string
-    {
-        return $this->attributes()->map(function ($value, $key) {
-            return "data-item-{$key}='{$value}'";
-        })->implode(' ');
-    }
-
-
 }

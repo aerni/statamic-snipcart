@@ -2,36 +2,52 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Commands\InstallSnipcart;
+use Aerni\Snipcart\Tags\SnipcartTags;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $tags = [
-        SnipcartTags::class
+    protected $commands = [
+        InstallSnipcart::class,
     ];
 
-    public function boot()
+    protected $tags = [
+        SnipcartTags::class,
+    ];
+
+    public function boot(): void
     {
         parent::boot();
 
-        $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
+        $this->publishVendorFiles();
 
-        $this->publishes([
-            __DIR__.'/../config/snipcart.php' => config_path('snipcart.php'),
-        ]);
+        $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
     }
 
-    public function register()
+    public function register(): void
     {
         parent::register();
 
         $this->app->bind(SnipcartTags::class, function () {
-            $config = [
-                'key' => config('snipcart.key'),
-                'version' => config('snipcart.version'),
-            ];
-
-            return new SnipcartTags($config);
+            return new SnipcartTags(config('snipcart'));
         });
+    }
+
+    protected function publishVendorFiles(): void
+    {
+        if ($this->app->runningInConsole()) {
+
+            // Config
+            $this->publishes([
+                __DIR__.'/../config/snipcart.php' => config_path('snipcart.php'),
+            ]);
+
+            // Lang
+            $this->publishes([
+                __DIR__ . '/../resources/lang' => resource_path('lang/vendor/snipcart'),
+            ]);
+        }
     }
 }
