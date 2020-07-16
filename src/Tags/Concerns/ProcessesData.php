@@ -63,14 +63,25 @@ trait ProcessesData
         if (! is_null($this->currentEntry())) {
             $product = $this->currentEntry();
             $data = $product->data();
-            
+
             $data->put('url', Request::url());
-            $data->put('id', $product->slug());
+            $data->put('id', $this->productId($product));
 
             return $this->transformAttributes($data);
         }
 
         return collect();
+    }
+
+    /**
+     * Get the product's ID.
+     *
+     * @param \Statamic\Entries\Entry $product
+     * @return string
+     */
+    protected function productId(\Statamic\Entries\Entry $product): string
+    {
+        return $product->data()->get('product_id') ?? $product->id();
     }
 
     /**

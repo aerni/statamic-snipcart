@@ -1,7 +1,7 @@
 title: Product
 sections:
   product:
-    display: 'Product'
+    display: Product
     fields:
       -
         handle: basic_information_section
@@ -22,16 +22,6 @@ sections:
           validate: required|string
           width: 50
       -
-        handle: slug
-        field:
-          generate: true
-          type: slug
-          instructions: 'The slug and unique ID of the product.'
-          localizable: false
-          listable: hidden
-          display: 'Slug / ID'
-          width: 50
-      -
         handle: price
         field:
           type: text
@@ -41,6 +31,7 @@ sections:
           instructions: 'The price of the product.'
           validate: required|numeric
           prepend: USD
+          width: 50
       -
         handle: description
         field:
@@ -219,7 +210,7 @@ sections:
           display: 'CUSTOM FIELDS'
           instructions: 'Collect additional information or define product variations for things like shape, size and color. <a href="https://docs.snipcart.com/v3/setup/products#custom-fields">Learn more</a>'
   settings:
-    display: 'Settings'
+    display: Settings
     fields:
       -
         handle: dimensions_section
@@ -235,7 +226,7 @@ sections:
           type: integer
           localizable: false
           listable: hidden
-          display: 'Weight'
+          display: Weight
           instructions: '`grams`'
       -
         handle: length
@@ -343,7 +334,7 @@ sections:
           instructions: 'Set this flag to false if this is a product that you do not ship.'
           localizable: false
           listable: hidden
-          display: 'Shippable'
+          display: Shippable
           default: true
       -
         handle: taxes_section
@@ -395,3 +386,24 @@ sections:
           localizable: false
           listable: hidden
           display: 'File GUID'
+  sidebar:
+    display: Sidebar
+    fields:
+      -
+        handle: slug
+        field:
+          generate: true
+          type: slug
+          instructions: 'The slug of the product.'
+          localizable: false
+          listable: hidden
+          display: Slug
+      -
+        handle: product_id
+        field:
+          input_type: text
+          type: text
+          localizable: false
+          listable: hidden
+          display: ID
+          instructions: 'Define a product ID. This is optional.'
