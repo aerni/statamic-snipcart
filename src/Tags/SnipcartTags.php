@@ -2,15 +2,12 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Aerni\Snipcart\Tags\Concerns as SnipcartConcerns;
-use Statamic\Entries\EntryCollection;
-use Statamic\Tags\Concerns;
+use Aerni\Snipcart\Tags\Concerns;
 use Statamic\Tags\Tags;
 
 class SnipcartTags extends Tags
 {
-    use Concerns\OutputsItems;
-    use SnipcartConcerns\ProcessesData;
+    use Concerns\ProcessesData;
 
     /**
      * The handle of the tag.
@@ -36,19 +33,6 @@ class SnipcartTags extends Tags
     public function __construct(array $config)
     {
         $this->config = $config;
-    }
-
-    /**
-     * Loop through the Snipcart products collection.
-     * {{ snipcart }} ... {{ /snipcart }}
-     *
-     * @return EntryCollection
-     */
-    public function index(): EntryCollection
-    {
-        return $this->output(
-            $this->products()->get()
-        );
     }
 
     /**
