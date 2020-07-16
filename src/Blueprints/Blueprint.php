@@ -9,13 +9,6 @@ use Statamic\Facades\YAML;
 class Blueprint
 {
     /**
-     * The handle of the blueprint to copy and parse.
-     *
-     * @var string
-     */
-    protected $handle = '';
-
-    /**
      * The parsed blueprint.
      *
      * @var array
