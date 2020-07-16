@@ -2,7 +2,6 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Attributes;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

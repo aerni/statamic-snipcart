@@ -46,6 +46,7 @@ trait ProcessesData
     {
         if ($this->isProduct()) {
             $productAttributes = (new Product($this->context))->attributes();
+
             return $this->onlyValidAttributes($productAttributes);
         }
 

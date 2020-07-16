@@ -4,11 +4,11 @@ namespace Aerni\Snipcart;
 
 trait Attributes
 {
-   /**
-     * All the mandatory Snipcart product attributes.
-     *
-     * @var array
-     */
+    /**
+      * All the mandatory Snipcart product attributes.
+      *
+      * @var array
+      */
     protected static $requiredAttributes = ['name', 'id', 'price', 'url'];
 
     /**
