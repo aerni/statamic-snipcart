@@ -201,7 +201,6 @@ class Product
         return [
             "custom{$key}-name" => $item['name'],
             "custom{$key}-type" => 'checkbox',
-            "custom{$key}-value" => json_encode($item['default']),
         ];
     }
 
