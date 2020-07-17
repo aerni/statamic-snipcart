@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\YAML;
 
-class Blueprint
+abstract class Blueprint
 {
     /**
      * The parsed blueprint.
