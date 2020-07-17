@@ -5,10 +5,10 @@ namespace Aerni\Snipcart;
 use Aerni\Snipcart\Commands\InstallSnipcart;
 use Aerni\Snipcart\Fieldtypes\MoneyFieldtype;
 use Aerni\Snipcart\Repositories\CurrencyRepository;
-use Aerni\Snipcart\Tags\SnipcartTags;
 use Aerni\Snipcart\Tags\CurrencyTags;
-use Statamic\Statamic;
+use Aerni\Snipcart\Tags\SnipcartTags;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {

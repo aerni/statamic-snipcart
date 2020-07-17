@@ -73,23 +73,23 @@ class Product
                 return ['id' => $item];
             }
 
-            if ($key === 'images' && !empty($item)) {
+            if ($key === 'images' && ! empty($item)) {
                 return ['image' => $this->imagePath($item[0])];
             }
 
-            if ($key === 'categories' && !empty($item)) {
+            if ($key === 'categories' && ! empty($item)) {
                 return [$key => implode('|', $item)];
             }
 
-            if ($key === 'taxes' && !empty($item)) {
+            if ($key === 'taxes' && ! empty($item)) {
                 return [$key => implode('|', $item)];
             }
             
-            if ($key === 'custom_fields' && !empty($item)) {
+            if ($key === 'custom_fields' && ! empty($item)) {
                 return $this->mapCustomFields($item);
             }
 
-            if ($key === 'metadata' && !empty($item)) {
+            if ($key === 'metadata' && ! empty($item)) {
                 return [$key => json_encode($item)];
             }
 
@@ -238,7 +238,6 @@ class Product
     protected function calcPriceDifference($price)
     {
         if (array_key_exists('price', $this->product->data()->toArray())) {
-
             $originalPrice = $this->product->data()['price'];
             $priceDifference = $price - $originalPrice;
 
@@ -250,12 +249,11 @@ class Product
                 return null;
             }
     
-            if (!Str::startsWith($priceDifference, '-')) {
+            if (! Str::startsWith($priceDifference, '-')) {
                 return "+{$priceDifference}";
             }
             
             return $priceDifference;
-
         }
     }
 
