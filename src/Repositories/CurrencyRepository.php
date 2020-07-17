@@ -4,6 +4,7 @@ namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
 use Aerni\Snipcart\Models\Currency;
+use Illuminate\Support\Str;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
@@ -46,5 +47,24 @@ class CurrencyRepository implements CurrencyRepositoryContract
     public function symbol(): string
     {
         return $this->default()['symbol'];
+    }
+
+    /**
+     * Parse the price to two decimal places.
+     *
+     * @param mixed $price
+     * @return mixed
+     */
+    public static function parse($price)
+    {
+        if (Str::startsWith($price, '-')) {
+            return '0.00';
+        }
+
+        if (is_null($price)) {
+            return null;
+        }
+
+        return number_format(floatval($price), 2, '.', '');
     }
 }

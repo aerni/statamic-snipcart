@@ -164,14 +164,10 @@ class Product
     {
         $options = collect($item['options'])->map(function ($item) {
             $name = $item['name'];
-            $price = $item['price'];
+            $price = $this->calcPriceDifference($item['price']);
 
             if (empty($price)) {
                 return $name;
-            }
-            
-            if (! Str::startsWith($price, ['+', '-'])) {
-                $price = "+{$price}";
             }
             
             return "{$name}[{$price}]";
@@ -231,6 +227,36 @@ class Product
             "custom{$key}-placeholder" => $item['placeholder'],
             "custom{$key}-required" => json_encode($item['required']),
         ];
+    }
+
+    /**
+     * Calculate the price difference between the original price and a variant price.
+     *
+     * @param mixed $price
+     * @return mixed
+     */
+    protected function calcPriceDifference($price)
+    {
+        if (array_key_exists('price', $this->product->data()->toArray())) {
+
+            $originalPrice = $this->product->data()['price'];
+            $priceDifference = $price - $originalPrice;
+
+            if (is_null($price)) {
+                return null;
+            }
+
+            if ($originalPrice === $price) {
+                return null;
+            }
+    
+            if (!Str::startsWith($priceDifference, '-')) {
+                return "+{$priceDifference}";
+            }
+            
+            return $priceDifference;
+
+        }
     }
 
     /**

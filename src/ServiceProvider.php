@@ -3,8 +3,10 @@
 namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Commands\InstallSnipcart;
-use Aerni\Snipcart\Tags\CurrencyTags;
+use Aerni\Snipcart\Fieldtypes\MoneyFieldtype;
+use Aerni\Snipcart\Repositories\CurrencyRepository;
 use Aerni\Snipcart\Tags\SnipcartTags;
+use Aerni\Snipcart\Tags\CurrencyTags;
 use Statamic\Statamic;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -12,6 +14,14 @@ class ServiceProvider extends AddonServiceProvider
 {
     protected $commands = [
         InstallSnipcart::class,
+    ];
+
+    protected $fieldtypes = [
+        MoneyFieldtype::class,
+    ];
+
+    protected $scripts = [
+        __DIR__.'/../resources/dist/js/cp.js',
     ];
 
     protected $tags = [
@@ -60,7 +70,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function bindRepositories()
     {
-        $this->app->bind('Currency', Repositories\CurrencyRepository::class);
+        $this->app->bind('Currency', CurrencyRepository::class);
 
         return $this;
     }
