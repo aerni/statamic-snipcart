@@ -88,9 +88,9 @@ The products are stored in a regular Statamic collection. You can access the pro
 
 ***
 
-## Tags
+## Snipcart Tags
 
-There's a couple of useful tags to render Snipcart specific HTML elements with all the necesarry attributes to make them work.
+There are a couple of useful tags to render Snipcart specific HTML elements with all the necesarry attributes to make them work.
 
 ### Product Button
 
@@ -151,6 +151,26 @@ There's a couple of optional parameters you may use on the tags.
 
 ```template
 {{ snipcart:cart class="p-2 bg-gray-100" text="Checkout" }}
+```
+
+***
+
+## Currency Tags
+
+There are a handful of tags to get currency related data of the `default_currency` defined in the config.
+
+```template
+{{ currency:code }} // e.g. 'USD'
+{{ currency:name }} e.g. 'US Dollar'
+{{ currency:symbol }} // e.g. '$'
+```
+
+You may also access this information with a tag pair.
+
+```template
+{{ currency }}
+    {{ code }} {{ name }} {{ symbol }}
+{{ /currency }}
 ```
 
 ***
