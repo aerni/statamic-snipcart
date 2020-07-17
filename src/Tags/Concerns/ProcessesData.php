@@ -2,15 +2,12 @@
 
 namespace Aerni\Snipcart\Tags\Concerns;
 
-use Aerni\Snipcart\Attributes;
 use Aerni\Snipcart\Product;
 use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
 
 trait ProcessesData
 {
-    use Attributes;
-
     /**
      * Get all the Snipcart attributes as an HTML-ready string.
      *
@@ -45,9 +42,7 @@ trait ProcessesData
     protected function productAttributes(): Collection
     {
         if ($this->isProduct()) {
-            $productAttributes = (new Product($this->context))->attributes();
-
-            return $this->onlyValidAttributes($productAttributes);
+            return (new Product($this->context))->attributes();
         }
 
         return collect();
@@ -60,22 +55,7 @@ trait ProcessesData
      */
     protected function tagAttributes(): Collection
     {
-        return $this->onlyValidAttributes($this->params);
-    }
-
-    /**
-     * Only get valid attributes.
-     *
-     * @param Collection $attributes
-     * @return Collection
-     */
-    protected function onlyValidAttributes(Collection $attributes): Collection
-    {
-        return $attributes->filter(function ($item, $key) {
-            if (Validator::isValidAttribute($key)) {
-                return $item;
-            }
-        });
+        return Validator::onlyValidAttributes($this->params);
     }
 
     /**

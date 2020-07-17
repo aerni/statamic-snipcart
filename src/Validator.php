@@ -26,7 +26,22 @@ class Validator
     }
 
     /**
-     * Return true if the key is a valid Snipcart attribute.
+     * Filter invalid attributes.
+     *
+     * @param Collection $attributes
+     * @return Collection
+     */
+    public static function onlyValidAttributes(Collection $attributes): Collection
+    {
+        return $attributes->map(function ($item, $key) {
+            if (Self::isValidAttribute($key)) {
+                return trim($item);
+            }
+        })->filter();
+    }
+
+    /**
+     * Check if the key is a valid Snipcart attribute.
      *
      * @param string $key
      * @return bool

@@ -50,60 +50,53 @@ class Product
     public function attributes(): Collection
     {
         $data = $this->product->data();
-
-        $data->put('url', Request::url());
-        $data->put('id', $this->productId());
-
-        return $this->transformAttributes($data);
+        $attributes = $this->mapAttributes($data);
+        $attributes->put('url', Request::url());
+        
+        return Validator::onlyValidAttributes($attributes);
     }
 
     /**
-     * Get the product's ID.
+     * Map the attributes to match the format that Snipcart expects.
      *
-     * @return string
-     */
-    protected function productId(): string
-    {
-        return $this->product->data()->get('product_id') ?? $this->product->id();
-    }
-
-    /**
-     * Transform the attributes to match the format that Snipcart expects.
-     *
-     * @param Collection $attributes
+     * @param Collection $data
      * @return Collection
      */
-    protected function transformAttributes(Collection $attributes): Collection
+    protected function mapAttributes(Collection $data): Collection
     {
-        $transformedAttributes = $attributes->mapWithKeys(function ($item, $key) {
+        $mappedAttributes = $data->mapWithKeys(function ($item, $key) {
             if ($key === 'title') {
                 return ['name' => $item];
             }
 
-            if ($key === 'images' && is_array($item)) {
+            if ($key === 'sku') {
+                return ['id' => $item];
+            }
+
+            if ($key === 'images' && !empty($item)) {
                 return ['image' => $this->imagePath($item[0])];
             }
 
-            if ($key === 'categories' && is_array($item)) {
+            if ($key === 'categories' && !empty($item)) {
                 return [$key => implode('|', $item)];
             }
 
-            if ($key === 'taxes' && is_array($item)) {
+            if ($key === 'taxes' && !empty($item)) {
                 return [$key => implode('|', $item)];
             }
             
-            if ($key === 'custom_fields' && is_array($item)) {
+            if ($key === 'custom_fields' && !empty($item)) {
                 return $this->mapCustomFields($item);
             }
 
-            if ($key === 'metadata' && is_array($item)) {
+            if ($key === 'metadata' && !empty($item)) {
                 return [$key => json_encode($item)];
             }
 
             return [$key => $item];
         });
 
-        return $transformedAttributes;
+        return $mappedAttributes;
     }
 
     /**
