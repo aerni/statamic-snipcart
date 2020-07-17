@@ -76,7 +76,7 @@ class SnipcartTags extends Tags
     {
         $key = $this->config['key'];
         $behaviour = $this->config['behaviour'];
-        $currency = $this->config['currency'];
+        $currency = $this->config['default_currency'];
 
         return
             "<div hidden id='snipcart' 
@@ -129,14 +129,16 @@ class SnipcartTags extends Tags
      */
     public function button()
     {
-        $class = $this->params->get('class');
-        $dataAttributes = $this->dataAttributes();
-        $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
-
-        return
-            "<button class='snipcart-add-item {$class}' {$dataAttributes}>
-                {$text}
-            </button>";
+        if ($this->hasResults()) {
+            $class = $this->params->get('class');
+            $dataAttributes = $this->dataAttributes();
+            $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
+    
+            return
+                "<button class='snipcart-add-item {$class}' {$dataAttributes}>
+                    {$text}
+                </button>";
+        }
     }
 
     /**

@@ -237,7 +237,6 @@ class InstallSnipcart extends Command
     {
         (new ProductBlueprint())
             ->taxonomy(Str::snake($this->categoryTaxonomyTitle))
-            ->currency(config('snipcart.currency'))
             ->make($this->productBlueprintTitle);
     }
 
