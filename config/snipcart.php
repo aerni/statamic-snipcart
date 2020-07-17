@@ -26,14 +26,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Currency
+    | Default Currency
     |--------------------------------------------------------------------------
     |
-    | The currency you want to use.
+    | The default currency you want to use.
     |
     */
 
-    'currency' => env('SNIPCART_CURRENCY', 'USD'),
+    'default_currency' => 'USD',
     
     /*
     |--------------------------------------------------------------------------

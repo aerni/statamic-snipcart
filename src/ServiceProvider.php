@@ -3,7 +3,9 @@
 namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Commands\InstallSnipcart;
+use Aerni\Snipcart\Tags\CurrencyTags;
 use Aerni\Snipcart\Tags\SnipcartTags;
+use Statamic\Statamic;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -13,6 +15,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $tags = [
+        CurrencyTags::class,
         SnipcartTags::class,
     ];
 
@@ -24,6 +27,10 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
+
+        Statamic::booted(function () {
+            $this->bindRepositories();
+        });
     }
 
     public function register(): void
@@ -49,5 +56,12 @@ class ServiceProvider extends AddonServiceProvider
                 __DIR__ . '/../resources/lang' => resource_path('lang/vendor/snipcart'),
             ]);
         }
+    }
+
+    protected function bindRepositories()
+    {
+        $this->app->bind('Currency', Repositories\CurrencyRepository::class);
+
+        return $this;
     }
 }
