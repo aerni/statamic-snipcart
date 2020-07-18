@@ -24,7 +24,7 @@ sections:
       -
         handle: price
         field:
-          type: money
+          type: currency
           localizable: false
           listable: hidden
           display: Price
@@ -115,11 +115,11 @@ sections:
                       -
                         handle: price
                         field:
-                          type: money
+                          type: currency
                           instructions: 'Define a different price for this product option.'
                           localizable: false
                           listable: hidden
-                          display: 'Price'
+                          display: Price
                           validate: numeric
                     mode: table
                     reorderable: true
@@ -220,37 +220,33 @@ sections:
       -
         handle: weight
         field:
-          type: integer
+          type: weight
           localizable: false
           listable: hidden
           display: Weight
-          instructions: '`grams`'
       -
         handle: length
         field:
-          type: integer
+          type: length
           localizable: false
           listable: hidden
           display: Length
-          instructions: '`centimeters`'
           width: 33
       -
         handle: height
         field:
-          type: integer
+          type: length
           localizable: false
           listable: hidden
           display: Height
-          instructions: '`centimeters`'
           width: 33
       -
         handle: width
         field:
-          type: integer
+          type: length
           localizable: false
           listable: hidden
           display: Width
-          instructions: '`centimeters`'
           width: 33
       -
         handle: quantity_section
