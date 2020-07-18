@@ -15,8 +15,15 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function default(): array
     {
-        return Currency::firstWhere('code', config('snipcart.default_currency'))
-            ->only(['code', 'name', 'symbol']);
+        $defaultCurrencyCode = config('snipcart.default_currency');
+
+        $currency = Currency::where('code', $defaultCurrencyCode)->first();
+
+        if (!is_null($currency)) {
+            return $currency->only(['code', 'name', 'symbol']);
+        }
+
+        return ['code' => $defaultCurrencyCode];
     }
 
     /**
@@ -36,7 +43,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function name(): string
     {
-        return $this->default()['name'];
+        return $this->default()['name'] ?? '';
     }
 
     /**
@@ -46,7 +53,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function symbol(): string
     {
-        return $this->default()['symbol'];
+        return $this->default()['symbol'] ?? '';
     }
 
     /**

@@ -17,7 +17,7 @@
         mixins: [Fieldtype],
         data() {
             return {
-                symbol: this.meta.symbol,
+                symbol: this.meta.symbol ?? this.meta.code,
             }
         }
     };
