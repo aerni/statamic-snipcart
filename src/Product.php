@@ -11,6 +11,8 @@ use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Tags\Context;
+use Aerni\Snipcart\Facades\Length;
+use Aerni\Snipcart\Facades\Weight;
 
 class Product
 {
@@ -91,6 +93,22 @@ class Product
 
             if ($key === 'metadata' && ! empty($item)) {
                 return [$key => json_encode($item)];
+            }
+
+            if ($key === 'weight' && ! empty($item)) {
+                return [$key => Weight::toGrams($item)];
+            }
+
+            if ($key === 'length' && ! empty($item)) {
+                return [$key => Length::toCentimeters($item)];
+            }
+
+            if ($key === 'height' && ! empty($item)) {
+                return [$key => Length::toCentimeters($item)];
+            }
+
+            if ($key === 'width' && ! empty($item)) {
+                return [$key => Length::toCentimeters($item)];
             }
 
             return [$key => $item];

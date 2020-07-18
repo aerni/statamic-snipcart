@@ -157,7 +157,7 @@ There's a couple of optional parameters you may use on the tags.
 
 ## Currency Tags
 
-There are a handful of tags to get currency related data of the `default_currency` defined in the config.
+There are a handful of tags to get currency related data of the `currency` defined in the config.
 
 ```template
 {{ currency:code }} // e.g. 'USD'
@@ -171,6 +171,46 @@ You may also access this information with a tag pair.
 {{ currency }}
     {{ code }} {{ name }} {{ symbol }}
 {{ /currency }}
+```
+
+***
+
+## Length Tags
+
+There are a handful of tags to get length related data of the `length` defined in the config.
+
+```template
+{{ length:abbr }} // e.g. 'cm'
+{{ length:singular }} e.g. 'Centimeter'
+{{ length:plural }} // e.g. 'Centimeters'
+```
+
+You may also access this information with a tag pair.
+
+```template
+{{ length }}
+    {{ abbr }} {{ singular }} {{ plural }}
+{{ /length }}
+```
+
+***
+
+## Weight Tags
+
+There are a handful of tags to get weight related data of the `weight` defined in the config.
+
+```template
+{{ weight:abbr }} // e.g. 'kg'
+{{ weight:singular }} e.g. 'Kilogram'
+{{ weight:plural }} // e.g. 'Kilograms'
+```
+
+You may also access this information with a tag pair.
+
+```template
+{{ weight }}
+    {{ abbr }} {{ singular }} {{ plural }}
+{{ /weight }}
 ```
 
 ***

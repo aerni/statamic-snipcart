@@ -4,10 +4,23 @@ namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
 use Aerni\Snipcart\Models\Currency;
+use Exception;
 use Illuminate\Support\Str;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
+    /**
+     * The currency from the config.
+     *
+     * @var string
+     */
+    protected $unit;
+
+    public function __construct()
+    {
+        $this->unit = config('snipcart.currency');
+    }
+
     /**
      * Get an array of the default currency.
      *
@@ -15,15 +28,13 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function default(): array
     {
-        $defaultCurrencyCode = config('snipcart.default_currency');
+        $unit = Currency::firstWhere('code', $this->unit);
 
-        $currency = Currency::where('code', $defaultCurrencyCode)->first();
-
-        if (!is_null($currency)) {
-            return $currency->only(['code', 'name', 'symbol']);
+        if (!is_null($unit)) {
+            return $unit->only(['code', 'name', 'symbol']);
         }
 
-        return ['code' => $defaultCurrencyCode];
+        throw new Exception('This currency is not supported. Please make sure to set a supported currency in your config.');
     }
 
     /**
@@ -43,7 +54,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function name(): string
     {
-        return $this->default()['name'] ?? '';
+        return $this->default()['name'];
     }
 
     /**
@@ -53,7 +64,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function symbol(): string
     {
-        return $this->default()['symbol'] ?? '';
+        return $this->default()['symbol'];
     }
 
     /**
@@ -62,7 +73,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * @param mixed $price
      * @return mixed
      */
-    public static function parse($price)
+    public function parse($price)
     {
         if (Str::startsWith($price, '-')) {
             return '0.00';
