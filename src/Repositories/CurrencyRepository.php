@@ -30,7 +30,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     {
         $unit = Currency::firstWhere('code', $this->unit);
 
-        if (!is_null($unit)) {
+        if (! is_null($unit)) {
             return $unit->only(['code', 'name', 'symbol']);
         }
 

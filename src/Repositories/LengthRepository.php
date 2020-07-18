@@ -29,7 +29,7 @@ class LengthRepository
     {
         $unit = Length::firstWhere('abbr', $this->unit);
         
-        if (!is_null($unit)) {
+        if (! is_null($unit)) {
             return $unit->only(['abbr', 'singular', 'plural']);
         }
 
