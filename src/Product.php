@@ -2,6 +2,8 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Facades\Length;
+use Aerni\Snipcart\Facades\Weight;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
@@ -11,8 +13,6 @@ use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Tags\Context;
-use Aerni\Snipcart\Facades\Length;
-use Aerni\Snipcart\Facades\Weight;
 
 class Product
 {
