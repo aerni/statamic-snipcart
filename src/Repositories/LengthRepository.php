@@ -2,11 +2,12 @@
 
 namespace Aerni\Snipcart\Repositories;
 
+use Aerni\Snipcart\Contracts\LengthRepository as LengthRepositoryContract;
 use Aerni\Snipcart\Models\Length;
 use Exception;
 use Illuminate\Support\Str;
 
-class LengthRepository
+class LengthRepository implements LengthRepositoryContract
 {
     /**
      * The length unit from the config.
@@ -15,6 +16,11 @@ class LengthRepository
      */
     protected $unit;
 
+    /**
+     * Create a new repository instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->unit = config('snipcart.length');
@@ -67,26 +73,26 @@ class LengthRepository
     }
 
     /**
-     * Convert the given number to Centimeters.
+     * Convert the given value to Centimeters.
      *
-     * @param string $data
+     * @param string $value
      * @return string
      */
-    public function toCentimeters(string $number): string
+    public function toCentimeters(string $value): string
     {
         if ($this->unit === 'm') {
-            return $number * 100;
+            return $value * 100;
         }
 
         if ($this->unit === 'in') {
-            return round($number / 0.3937007874, 2);
+            return round($value / 0.3937007874, 2);
         }
 
         if ($this->unit === 'ft') {
-            return round($number / 0.032808399, 2);
+            return round($value / 0.032808399, 2);
         }
         
-        return $number;
+        return $value;
     }
 
     /**

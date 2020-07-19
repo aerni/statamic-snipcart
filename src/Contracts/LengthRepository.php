@@ -1,0 +1,18 @@
+<?php
+
+namespace Aerni\Snipcart\Contracts;
+
+interface LengthRepository
+{
+    public function default(): array;
+
+    public function abbr(): string;
+
+    public function singular(): string;
+
+    public function plural(): string;
+
+    public function toCentimeters(string $value): string;
+
+    public function parse($length);
+}

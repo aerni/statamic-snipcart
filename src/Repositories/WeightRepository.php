@@ -2,11 +2,12 @@
 
 namespace Aerni\Snipcart\Repositories;
 
+use Aerni\Snipcart\Contracts\WeightRepository as WeightRepositoryContract;
 use Aerni\Snipcart\Models\Weight;
 use Exception;
 use Illuminate\Support\Str;
 
-class WeightRepository
+class WeightRepository implements WeightRepositoryContract
 {
     /**
      * The weight unit from the config.
@@ -15,6 +16,11 @@ class WeightRepository
      */
     protected $unit;
 
+    /**
+     * Create a new repository instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->unit = config('snipcart.weight');
@@ -67,26 +73,26 @@ class WeightRepository
     }
 
     /**
-     * Convert the given number to Grams.
+     * Convert the given value to Grams.
      *
-     * @param string $data
+     * @param string $value
      * @return string
      */
-    public function toGrams(string $number): string
+    public function toGrams(string $value): string
     {
         if ($this->unit === 'kg') {
-            return $number * 1000;
+            return $value * 1000;
         }
 
         if ($this->unit === 'oz') {
-            return round($number / 0.03527396195, 2);
+            return round($value / 0.03527396195, 2);
         }
 
         if ($this->unit === 'lb') {
-            return round($number / 0.00220462262185, 2);
+            return round($value / 0.00220462262185, 2);
         }
         
-        return $number;
+        return $value;
     }
 
     /**

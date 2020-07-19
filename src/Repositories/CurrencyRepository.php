@@ -14,11 +14,16 @@ class CurrencyRepository implements CurrencyRepositoryContract
      *
      * @var string
      */
-    protected $unit;
+    protected $currency;
 
+    /**
+     * Create a new repository instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
-        $this->unit = config('snipcart.currency');
+        $this->currency = config('snipcart.currency');
     }
 
     /**
@@ -28,10 +33,10 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function default(): array
     {
-        $unit = Currency::firstWhere('code', $this->unit);
+        $currency = Currency::firstWhere('code', $this->currency);
 
-        if (! is_null($unit)) {
-            return $unit->only(['code', 'name', 'symbol']);
+        if (! is_null($currency)) {
+            return $currency->only(['code', 'name', 'symbol']);
         }
 
         throw new Exception('This currency is not supported. Please make sure to set a supported currency in your config.');
@@ -68,21 +73,21 @@ class CurrencyRepository implements CurrencyRepositoryContract
     }
 
     /**
-     * Parse the price to two decimal places.
+     * Parse the amount to two decimal places.
      *
-     * @param mixed $price
+     * @param mixed $amount
      * @return mixed
      */
-    public function parse($price)
+    public function parse($amount)
     {
-        if (Str::startsWith($price, '-')) {
+        if (Str::startsWith($amount, '-')) {
             return '0.00';
         }
 
-        if (is_null($price)) {
+        if (is_null($amount)) {
             return null;
         }
 
-        return number_format(floatval($price), 2, '.', '');
+        return number_format(floatval($amount), 2, '.', '');
     }
 }
