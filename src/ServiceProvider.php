@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Commands\InstallSnipcart;
+use Aerni\Snipcart\Commands\SetupSnipcart;
 use Aerni\Snipcart\Fieldtypes\CurrencyFieldtype;
 use Aerni\Snipcart\Fieldtypes\LengthFieldtype;
 use Aerni\Snipcart\Fieldtypes\WeightFieldtype;
@@ -19,7 +19,7 @@ use Statamic\Statamic;
 class ServiceProvider extends AddonServiceProvider
 {
     protected $commands = [
-        InstallSnipcart::class,
+        SetupSnipcart::class,
     ];
 
     protected $fieldtypes = [

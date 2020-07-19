@@ -22,10 +22,10 @@ composer require aerni/statamic-snipcart
 
 ### Step 2
 
-Run the installation command. It will guide you through the setup.
+Run the setup command. It will guide you through the setup.
 
 ```bash
-php please snipcart:install
+php please snipcart:setup
 ```
 
 ### Step 3
