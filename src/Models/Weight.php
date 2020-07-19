@@ -13,25 +13,25 @@ class Weight extends Model
     {
         return [
             [
-                'abbr' => 'g', 
-                'singular' => __('snipcart::units.gram'), 
-                'plural' => __('snipcart::units.grams')
+                'abbr' => 'g',
+                'singular' => __('snipcart::units.gram'),
+                'plural' => __('snipcart::units.grams'),
             ],
             [
-                'abbr' => 'kg', 
-                'singular' => __('snipcart::units.kilogram'), 
-                'plural' => __('snipcart::units.kilograms')
+                'abbr' => 'kg',
+                'singular' => __('snipcart::units.kilogram'),
+                'plural' => __('snipcart::units.kilograms'),
             ],
             [
-                'abbr' => 'oz', 
-                'singular' => __('snipcart::units.ounce'), 
-                'plural' => __('snipcart::units.ounces')
+                'abbr' => 'oz',
+                'singular' => __('snipcart::units.ounce'),
+                'plural' => __('snipcart::units.ounces'),
             ],
             [
-                'abbr' => 'lb', 
-                'singular' => __('snipcart::units.pound'), 
-                'plural' => __('snipcart::units.pounds')
-            ]
+                'abbr' => 'lb',
+                'singular' => __('snipcart::units.pound'),
+                'plural' => __('snipcart::units.pounds'),
+            ],
         ];
     }
 }
