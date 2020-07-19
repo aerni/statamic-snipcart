@@ -137,7 +137,7 @@ This tag will output the number of items in the cart.
 This tag will output the total price of all the items in the cart.
 
 ```template
-{{ snipcart:total }}
+{{ snipcart:price }}
 ```
 
 ### Optional Parameters
@@ -146,7 +146,7 @@ There's a couple of optional parameters you may use on the tags.
 
 | Parameter | Description | Supported by Tag |
 |-----------|-------------|--------------|
-`class` | Add additional classes to the HTML element | `button`, `cart`, `signin`, `items`, `total`
+`class` | Add additional classes to the HTML element | `button`, `cart`, `signin`, `items`, `price`
 `text`  | Override the default text of the HTML element | `button`, `cart`, `signin`
 
 ```template

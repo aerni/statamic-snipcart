@@ -190,11 +190,11 @@ class SnipcartTags extends Tags
 
     /**
      * Return the total price of all the items in the cart.
-     * {{ snipcart:total }}
+     * {{ snipcart:price }}
      *
      * @return string
      */
-    public function total(): string
+    public function price(): string
     {
         $class = $this->params->get('class');
 
