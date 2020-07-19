@@ -97,13 +97,13 @@ There are a couple of useful tags to render Snipcart specific HTML elements with
 This tag will output a Snipcart product button. The required `data-item-*` attributes are generated based on the fields in the product's `.md` file.
 
 ```template
-{{ snipcart:button }}
+{{ snipcart:product }}
 ```
 
 You may override any attribute directly on the tag.
 
 ```template
-{{ snipcart:button id="{{ increment }}" name="{{ some_variable }}" }}
+{{ snipcart:product id="{{ increment }}" name="{{ some_variable }}" }}
 ```
 
 >**Note:** If you use this tag outside of a collection loop, you'll have to manually define the attributes.
@@ -146,8 +146,8 @@ There's a couple of optional parameters you may use on the tags.
 
 | Parameter | Description | Supported by Tag |
 |-----------|-------------|--------------|
-`class` | Add additional classes to the HTML element | `button`, `cart`, `signin`, `items`, `price`
-`text`  | Override the default text of the HTML element | `button`, `cart`, `signin`
+`class` | Add additional classes to the HTML element | `product`, `cart`, `signin`, `items`, `price`
+`text`  | Override the default text of the HTML element | `product`, `cart`, `signin`
 
 ```template
 {{ snipcart:cart class="p-2 bg-gray-100" text="Checkout" }}

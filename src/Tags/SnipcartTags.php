@@ -123,11 +123,11 @@ class SnipcartTags extends Tags
 
     /**
      * Return a Snipcart product button.
-     * {{ snipcart:button }}
+     * {{ snipcart:product }}
      *
      * @return string
      */
-    public function button()
+    public function product()
     {
         if ($this->hasResults()) {
             $class = $this->params->get('class');
