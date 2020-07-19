@@ -34,7 +34,7 @@ return [
     |
     */
 
-    'behaviour' => env('SNIPCART_BEHAVIOUR', null),
+    'behaviour' => null,
 
     /*
     |--------------------------------------------------------------------------
