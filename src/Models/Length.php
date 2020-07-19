@@ -9,10 +9,29 @@ class Length extends Model
 {
     use Sushi;
 
-    protected $rows = [
-        ['abbr' => 'cm', 'singular' => 'Centimeter', 'plural' => 'Centimeters'],
-        ['abbr' => 'm', 'singular' => 'Meter', 'plural' => 'Meters'],
-        ['abbr' => 'in', 'singular' => 'Inch', 'plural' => 'Inches'],
-        ['abbr' => 'ft', 'singular' => 'Foot', 'plural' => 'Feet'],
-    ];
+    public function getRows()
+    {
+        return [
+            [
+                'abbr' => 'cm', 
+                'singular' => __('snipcart::units.centimeter'), 
+                'plural' => __('snipcart::units.centimeters')
+            ],
+            [
+                'abbr' => 'm', 
+                'singular' => __('snipcart::units.meter'), 
+                'plural' => __('snipcart::units.meters')
+            ],
+            [
+                'abbr' => 'in', 
+                'singular' => __('snipcart::units.inch'), 
+                'plural' => __('snipcart::units.inches')
+            ],
+            [
+                'abbr' => 'ft', 
+                'singular' => __('snipcart::units.foot'), 
+                'plural' => __('snipcart::units.feet')
+            ],
+        ];
+    }
 }
