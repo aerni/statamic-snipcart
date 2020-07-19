@@ -132,7 +132,7 @@ class SnipcartTags extends Tags
         if ($this->hasResults()) {
             $class = $this->params->get('class');
             $dataAttributes = $this->dataAttributes();
-            $text = $this->params->get('text') ?? __('snipcart::product.add_to_cart');
+            $text = $this->params->get('text') ?? __('snipcart::buttons.add_to_cart');
     
             return
                 "<button class='snipcart-add-item {$class}' {$dataAttributes}>
@@ -150,7 +150,7 @@ class SnipcartTags extends Tags
     public function cart(): string
     {
         $class = $this->params->get('class');
-        $text = $this->params->get('text') ?? __('snipcart::product.show_cart');
+        $text = $this->params->get('text') ?? __('snipcart::buttons.show_cart');
 
         return
             "<button class='snipcart-checkout {$class}'>
@@ -167,7 +167,7 @@ class SnipcartTags extends Tags
     public function signin(): string
     {
         $class = $this->params->get('class');
-        $text = $this->params->get('text') ?? __('snipcart::product.signin');
+        $text = $this->params->get('text') ?? __('snipcart::buttons.signin');
 
         return
             "<button class='snipcart-customer-signin {$class}'>
