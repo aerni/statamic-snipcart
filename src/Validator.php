@@ -48,7 +48,7 @@ class Validator
     public static function onlyValidAttributes(Collection $attributes): Collection
     {
         return $attributes->map(function ($item, $key) {
-            if (Self::isValidAttribute($key) && !empty($item)) {
+            if (Self::isValidAttribute($key) && ! empty($item)) {
                 return trim($item);
             }
         })->filter();
