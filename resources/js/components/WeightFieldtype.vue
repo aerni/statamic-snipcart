@@ -2,10 +2,9 @@
     <div>
         <text-input
             type="number"
-            :prepend="symbol"
+            :append="abbr"
             min="0"
-            step="0.01"
-            placeholder="0.00"
+            step="1"
             :value="value"
             @input="update" />
     </div>
@@ -13,11 +12,11 @@
 
 <script>
     export default {
-        name: 'money-fieldtype',
+        name: 'weight-fieldtype',
         mixins: [Fieldtype],
         data() {
             return {
-                symbol: this.meta.symbol,
+                abbr: this.meta.abbr
             }
         }
     };

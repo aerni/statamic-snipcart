@@ -12,7 +12,7 @@ use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Taxonomy;
 
-class InstallSnipcart extends Command
+class SetupSnipcart extends Command
 {
     use RunsInPlease;
 
@@ -21,14 +21,14 @@ class InstallSnipcart extends Command
      *
      * @var string
      */
-    protected $signature = 'snipcart:install';
+    protected $signature = 'snipcart:setup';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install Snipcart';
+    protected $description = 'Setup Snipcart';
 
     /**
      * The default product blueprint title.
@@ -80,7 +80,7 @@ class InstallSnipcart extends Command
         // Step 3
         $this->publishVendorFiles();
 
-        // Installation Complete
+        // Setup Complete
         $this->complete();
     }
 
@@ -128,16 +128,16 @@ class InstallSnipcart extends Command
     }
 
     /**
-     * The final information after a successful installation.
+     * The final information after a successful setup.
      *
      * @return void
      */
     protected function complete(): void
     {
-        $this->info('---  INSTALLATION COMPLETE  ----');
+        $this->info('---  SETUP COMPLETE  ----');
         $this->info('');
 
-        $this->info("The installation was successful!");
+        $this->info("The setup was successful!");
     }
 
     /**

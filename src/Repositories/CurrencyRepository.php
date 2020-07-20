@@ -4,10 +4,28 @@ namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
 use Aerni\Snipcart\Models\Currency;
+use Exception;
 use Illuminate\Support\Str;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
+    /**
+     * The currency from the config.
+     *
+     * @var string
+     */
+    protected $currency;
+
+    /**
+     * Create a new repository instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->currency = config('snipcart.currency');
+    }
+
     /**
      * Get an array of the default currency.
      *
@@ -15,8 +33,13 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function default(): array
     {
-        return Currency::firstWhere('code', config('snipcart.default_currency'))
-            ->only(['code', 'name', 'symbol']);
+        $currency = Currency::firstWhere('code', $this->currency);
+
+        if (! is_null($currency)) {
+            return $currency->only(['code', 'name', 'symbol']);
+        }
+
+        throw new Exception('This currency is not supported. Please make sure to set a supported currency in your config.');
     }
 
     /**
@@ -50,21 +73,21 @@ class CurrencyRepository implements CurrencyRepositoryContract
     }
 
     /**
-     * Parse the price to two decimal places.
+     * Parse the amount to two decimal places.
      *
-     * @param mixed $price
+     * @param mixed $amount
      * @return mixed
      */
-    public static function parse($price)
+    public function parse($amount)
     {
-        if (Str::startsWith($price, '-')) {
+        if (Str::startsWith($amount, '-')) {
             return '0.00';
         }
 
-        if (is_null($price)) {
+        if (is_null($amount)) {
             return null;
         }
 
-        return number_format(floatval($price), 2, '.', '');
+        return number_format(floatval($amount), 2, '.', '');
     }
 }
