@@ -53,6 +53,25 @@ class LengthRepository implements LengthRepositoryContract
     }
 
     /**
+     * Get the default length unit's name as singular or plural.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    public function name($value): string
+    {
+        if (is_null($value)) {
+            $this->singular();
+        }
+
+        if ($value <= 1) {
+            return $this->singular();
+        }
+        
+        return $this->plural();
+    }
+
+    /**
      * Get the default length unit's singular name.
      *
      * @return string

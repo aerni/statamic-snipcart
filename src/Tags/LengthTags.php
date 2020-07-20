@@ -44,6 +44,39 @@ class LengthTags extends Tags
     }
 
     /**
+     * Return the default length unit's name as singular or plural.
+     * {{ length:lengthName }}
+     *
+     * @return string
+     */
+    public function lengthName(): string
+    {
+        return Length::name($this->context->value('length'));
+    }
+
+    /**
+     * Return the default length unit's name as singular or plural.
+     * {{ length:widthName }}
+     *
+     * @return string
+     */
+    public function widthName(): string
+    {
+        return Length::name($this->context->value('width'));
+    }
+
+    /**
+     * Return the default length unit's name as singular or plural.
+     * {{ length:heightName }}
+     *
+     * @return string
+     */
+    public function heightName(): string
+    {
+        return Length::name($this->context->value('height'));
+    }
+
+    /**
      * Return the default length unit's singular name.
      * {{ length:singular }}
      *
