@@ -71,18 +71,4 @@ trait ProcessesData
 
         return false;
     }
-
-    /**
-     * Return true if results are found in the context.
-     *
-     * @return bool
-     */
-    protected function hasResults(): bool
-    {
-        if ($this->context->has('no_results')) {
-            return false;
-        }
-
-        return true;
-    }
 }
