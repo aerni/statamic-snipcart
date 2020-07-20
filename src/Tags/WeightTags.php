@@ -22,17 +22,6 @@ class WeightTags extends Tags
     protected static $aliases = ['wgt'];
 
     /**
-     * Return the default weight unit.
-     * {{ weight }}
-     *
-     * @return array
-     */
-    public function index(): array
-    {
-        return Weight::default();
-    }
-
-    /**
      * Return the default weight unit's abbreviation.
      * {{ weight:short }}
      *
@@ -41,17 +30,6 @@ class WeightTags extends Tags
     public function short(): string
     {
         return Weight::short();
-    }
-
-    /**
-     * Return the default weight unit's name as singular or plural.
-     * {{ weight:name }}
-     *
-     * @return string
-     */
-    public function name(): string
-    {
-        return Weight::name($this->context->value('weight'));
     }
 
     /**
@@ -74,5 +52,16 @@ class WeightTags extends Tags
     public function plural(): string
     {
         return Weight::plural();
+    }
+
+    /**
+     * Return the default weight unit's name as singular or plural.
+     * {{ weight:name }}
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return Weight::name($this->context->value('weight'));
     }
 }

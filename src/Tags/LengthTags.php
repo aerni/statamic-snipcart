@@ -22,17 +22,6 @@ class LengthTags extends Tags
     protected static $aliases = ['len'];
 
     /**
-     * Return the default length unit.
-     * {{ length }}
-     *
-     * @return array
-     */
-    public function index(): array
-    {
-        return length::default();
-    }
-
-    /**
      * Return the default length unit's abbreviation.
      * {{ length:short }}
      *
@@ -41,6 +30,28 @@ class LengthTags extends Tags
     public function short(): string
     {
         return Length::short();
+    }
+
+    /**
+     * Return the default length unit's singular name.
+     * {{ length:singular }}
+     *
+     * @return string
+     */
+    public function singular(): string
+    {
+        return Length::singular();
+    }
+
+    /**
+     * Return the default length unit's plural name.
+     * {{ length:plural }}
+     *
+     * @return string
+     */
+    public function plural(): string
+    {
+        return Length::plural();
     }
 
     /**
@@ -74,27 +85,5 @@ class LengthTags extends Tags
     public function heightName(): string
     {
         return Length::name($this->context->value('height'));
-    }
-
-    /**
-     * Return the default length unit's singular name.
-     * {{ length:singular }}
-     *
-     * @return string
-     */
-    public function singular(): string
-    {
-        return Length::singular();
-    }
-
-    /**
-     * Return the default length unit's plural name.
-     * {{ length:plural }}
-     *
-     * @return string
-     */
-    public function plural(): string
-    {
-        return Length::plural();
     }
 }

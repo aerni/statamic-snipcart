@@ -53,25 +53,6 @@ class WeightRepository implements WeightRepositoryContract
     }
 
     /**
-     * Get the default weight unit's name as singular or plural.
-     *
-     * @param mixed $value
-     * @return string
-     */
-    public function name($value): string
-    {
-        if (is_null($value)) {
-            $this->singular();
-        }
-
-        if ($value <= 1) {
-            return $this->singular();
-        }
-        
-        return $this->plural();
-    }
-
-    /**
      * Get the default weight unit's singular name.
      *
      * @return string
@@ -89,6 +70,25 @@ class WeightRepository implements WeightRepositoryContract
     public function plural(): string
     {
         return $this->default()['plural'];
+    }
+
+    /**
+     * Get the default weight unit's name as singular or plural.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    public function name($value): string
+    {
+        if (is_null($value)) {
+            $this->singular();
+        }
+
+        if ($value <= 1) {
+            return $this->singular();
+        }
+        
+        return $this->plural();
     }
 
     /**
