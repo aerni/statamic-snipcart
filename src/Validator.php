@@ -8,8 +8,22 @@ use Illuminate\Support\Str;
 
 class Validator
 {
-    use Attributes;
+    /**
+     * All the mandatory Snipcart product attributes.
+     *
+     * @var array
+     */
+    protected static $requiredAttributes = ['name', 'id', 'price', 'url'];
 
+    /**
+     * All the optional Snipcart product attributes.
+     *
+     * @var array
+     */
+    protected static $optionalAttributes = [
+        'description', 'image', 'categories', 'metadata', 'weight', 'length', 'height', 'width', 'quantity', 'max-quantity', 'min-quantity', 'stackable', 'quantity-step', 'shippable', 'taxable', 'taxes', 'has-taxes-included', 'file-guid',
+    ];
+    
     /**
      * Validate the attributes.
      *
@@ -34,7 +48,7 @@ class Validator
     public static function onlyValidAttributes(Collection $attributes): Collection
     {
         return $attributes->map(function ($item, $key) {
-            if (Self::isValidAttribute($key)) {
+            if (Self::isValidAttribute($key) && !empty($item)) {
                 return trim($item);
             }
         })->filter();
@@ -46,7 +60,7 @@ class Validator
      * @param string $key
      * @return bool
      */
-    public static function isValidAttribute(string $key): bool
+    protected static function isValidAttribute(string $key): bool
     {
         if (in_array($key, Self::$requiredAttributes)) {
             return true;
@@ -69,7 +83,7 @@ class Validator
      * @param Collection $attributes
      * @return bool
      */
-    public static function hasRequiredAttributes(Collection $attributes): bool
+    protected static function hasRequiredAttributes(Collection $attributes): bool
     {
         if ($attributes->has(Self::$requiredAttributes)) {
             return true;

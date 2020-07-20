@@ -6,7 +6,9 @@ interface WeightRepository
 {
     public function default(): array;
 
-    public function abbr(): string;
+    public function short(): string;
+
+    public function name($value): string;
 
     public function singular(): string;
 

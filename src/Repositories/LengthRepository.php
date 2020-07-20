@@ -33,10 +33,10 @@ class LengthRepository implements LengthRepositoryContract
      */
     public function default(): array
     {
-        $unit = Length::firstWhere('abbr', $this->unit);
+        $unit = Length::firstWhere('short', $this->unit);
         
         if (! is_null($unit)) {
-            return $unit->only(['abbr', 'singular', 'plural']);
+            return $unit->only(['short', 'singular', 'plural']);
         }
 
         throw new Exception('This length unit is not supported. Please make sure to set a supported unit in your config.');
@@ -47,9 +47,28 @@ class LengthRepository implements LengthRepositoryContract
      *
      * @return string
      */
-    public function abbr(): string
+    public function short(): string
     {
-        return $this->default()['abbr'];
+        return $this->default()['short'];
+    }
+
+    /**
+     * Get the default length unit's name as singular or plural.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    public function name($value): string
+    {
+        if (is_null($value)) {
+            $this->singular();
+        }
+
+        if ($value <= 1) {
+            return $this->singular();
+        }
+        
+        return $this->plural();
     }
 
     /**
