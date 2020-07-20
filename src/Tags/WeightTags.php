@@ -44,6 +44,17 @@ class WeightTags extends Tags
     }
 
     /**
+     * Return the default weight unit's name as singular or plural.
+     * {{ weight:name }}
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return Weight::name($this->context->value('weight'));
+    }
+
+    /**
      * Return the default weight unit's singular name.
      * {{ weight:singular }}
      *
