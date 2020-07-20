@@ -34,13 +34,13 @@ class LengthTags extends Tags
 
     /**
      * Return the default length unit's abbreviation.
-     * {{ length:abbr }}
+     * {{ length:short }}
      *
      * @return string
      */
-    public function abbr(): string
+    public function short(): string
     {
-        return Length::abbr();
+        return Length::short();
     }
 
     /**

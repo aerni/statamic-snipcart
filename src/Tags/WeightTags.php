@@ -34,13 +34,13 @@ class WeightTags extends Tags
 
     /**
      * Return the default weight unit's abbreviation.
-     * {{ weight:abbr }}
+     * {{ weight:short }}
      *
      * @return string
      */
-    public function abbr(): string
+    public function short(): string
     {
-        return Weight::abbr();
+        return Weight::short();
     }
 
     /**

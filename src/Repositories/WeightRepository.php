@@ -33,10 +33,10 @@ class WeightRepository implements WeightRepositoryContract
      */
     public function default(): array
     {
-        $unit = Weight::firstWhere('abbr', $this->unit);
+        $unit = Weight::firstWhere('short', $this->unit);
         
         if (! is_null($unit)) {
-            return $unit->only(['abbr', 'singular', 'plural']);
+            return $unit->only(['short', 'singular', 'plural']);
         }
 
         throw new Exception('This weight unit is not supported. Please make sure to set a supported unit in your config.');
@@ -47,9 +47,9 @@ class WeightRepository implements WeightRepositoryContract
      *
      * @return string
      */
-    public function abbr(): string
+    public function short(): string
     {
-        return $this->default()['abbr'];
+        return $this->default()['short'];
     }
 
     /**

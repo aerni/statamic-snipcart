@@ -13,22 +13,22 @@ class Length extends Model
     {
         return [
             [
-                'abbr' => 'cm',
+                'short' => 'cm',
                 'singular' => __('snipcart::units.centimeter'),
                 'plural' => __('snipcart::units.centimeters'),
             ],
             [
-                'abbr' => 'm',
+                'short' => 'm',
                 'singular' => __('snipcart::units.meter'),
                 'plural' => __('snipcart::units.meters'),
             ],
             [
-                'abbr' => 'in',
+                'short' => 'in',
                 'singular' => __('snipcart::units.inch'),
                 'plural' => __('snipcart::units.inches'),
             ],
             [
-                'abbr' => 'ft',
+                'short' => 'ft',
                 'singular' => __('snipcart::units.foot'),
                 'plural' => __('snipcart::units.feet'),
             ],
