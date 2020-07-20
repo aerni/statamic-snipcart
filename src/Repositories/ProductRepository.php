@@ -1,9 +1,11 @@
 <?php
 
-namespace Aerni\Snipcart;
+namespace Aerni\Snipcart\Repositories;
 
+use Aerni\Snipcart\Contracts\ProductRepository as ProductRepositoryContract;
 use Aerni\Snipcart\Facades\Length;
 use Aerni\Snipcart\Facades\Weight;
+use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
@@ -12,36 +14,35 @@ use Statamic\Entries\Entry;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
-use Statamic\Tags\Context;
 
-class Product
+class ProductRepository implements ProductRepositoryContract
 {
     /**
-     * The product instance.
+     * The product entry.
      *
      * @var Entry
      */
     protected $product;
 
     /**
-     * Construct the class.
+     * The product data.
      *
-     * @param Context $context
+     * @var Collection
      */
-    public function __construct(Context $context)
-    {
-        $this->product = $this->product($context);
-    }
+    protected $data;
 
     /**
-     * Get the product instance.
+     * Get the product entry and data by its id.
      *
-     * @param Context $context
-     * @return Entry
+     * @param string $id
+     * @return self
      */
-    protected function product(Context $context): Entry
+    public function find(string $id): self
     {
-        return EntryFacade::find($context->get('id'));
+        $this->product = EntryFacade::find($id);
+        $this->data = $this->product->data();
+        
+        return $this;
     }
 
     /**
@@ -51,8 +52,7 @@ class Product
      */
     public function attributes(): Collection
     {
-        $data = $this->product->data();
-        $attributes = $this->mapAttributes($data);
+        $attributes = $this->mapAttributes($this->data);
         $attributes->put('url', Request::url());
         
         return Validator::onlyValidAttributes($attributes);
@@ -255,8 +255,8 @@ class Product
      */
     protected function calcPriceDifference($price)
     {
-        if (array_key_exists('price', $this->product->data()->toArray())) {
-            $originalPrice = $this->product->data()['price'];
+        if (array_key_exists('price', $this->data->toArray())) {
+            $originalPrice = $this->data['price'];
             $priceDifference = $price - $originalPrice;
 
             if (is_null($price)) {

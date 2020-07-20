@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart\Tags\Concerns;
 
-use Aerni\Snipcart\Product;
+use Aerni\Snipcart\Facades\Product;
 use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
 
@@ -42,7 +42,7 @@ trait ProcessesData
     protected function productAttributes(): Collection
     {
         if ($this->isProduct()) {
-            return (new Product($this->context))->attributes();
+            return Product::find($this->context->get('id'))->attributes();
         }
 
         return collect();

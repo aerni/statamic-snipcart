@@ -8,6 +8,7 @@ use Aerni\Snipcart\Fieldtypes\LengthFieldtype;
 use Aerni\Snipcart\Fieldtypes\WeightFieldtype;
 use Aerni\Snipcart\Repositories\CurrencyRepository;
 use Aerni\Snipcart\Repositories\LengthRepository;
+use Aerni\Snipcart\Repositories\ProductRepository;
 use Aerni\Snipcart\Repositories\WeightRepository;
 use Aerni\Snipcart\Tags\CurrencyTags;
 use Aerni\Snipcart\Tags\LengthTags;
@@ -82,6 +83,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->app->bind('Currency', CurrencyRepository::class);
         $this->app->bind('Length', LengthRepository::class);
+        $this->app->bind('Product', ProductRepository::class);
         $this->app->bind('Weight', WeightRepository::class);
 
         return $this;
