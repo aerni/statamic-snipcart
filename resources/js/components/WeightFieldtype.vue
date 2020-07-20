@@ -2,7 +2,7 @@
     <div>
         <text-input
             type="number"
-            :prepend="abbr"
+            :append="abbr"
             min="0"
             step="1"
             :value="value"
