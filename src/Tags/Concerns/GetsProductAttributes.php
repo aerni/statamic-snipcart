@@ -6,7 +6,7 @@ use Aerni\Snipcart\Facades\Product;
 use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
 
-trait ProcessesData
+trait GetsProductAttributes
 {
     /**
      * Get all the Snipcart attributes as an HTML-ready string.

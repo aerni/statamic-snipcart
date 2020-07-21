@@ -2,12 +2,12 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Aerni\Snipcart\Tags\Concerns\ProcessesData;
+use Aerni\Snipcart\Tags\Concerns\GetsProductAttributes;
 use Statamic\Tags\Tags;
 
 class SnipcartTags extends Tags
 {
-    use ProcessesData;
+    use GetsProductAttributes;
 
     /**
      * The handle of the tag.
