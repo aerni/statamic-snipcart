@@ -4,14 +4,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Snipcart API Key
+    | Snipcart API Keys
     |--------------------------------------------------------------------------
     |
-    | Your Snipcart API Key.
+    | Your Snipcart API Keys for the Live and Test Environment.
     |
     */
 
-    'key' => env('SNIPCART_API_KEY'),
+    'live_key' => env('SNIPCART_LIVE_KEY'),
+    'test_key' => env('SNIPCART_TEST_KEY'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Test Mode
+    |--------------------------------------------------------------------------
+    |
+    | Set this to "false" to use the "live_key" and process real transactions.
+    |
+    */
+
+    'test_mode' => env('SNIPCART_TEST_MODE', true),
 
     /*
     |--------------------------------------------------------------------------

@@ -59,7 +59,12 @@ class ServiceProvider extends AddonServiceProvider
         parent::register();
 
         $this->app->bind(SnipcartTags::class, function () {
-            return new SnipcartTags(config('snipcart'));
+            return new SnipcartTags([
+                'key' => $this->apiKey(),
+                'currency' => config('snipcart.currency'),
+                'version' => config('snipcart.version'),
+                'behaviour' => config('snipcart.behaviour'),
+            ]);
         });
     }
 
@@ -87,5 +92,19 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind('Weight', WeightRepository::class);
 
         return $this;
+    }
+
+    /**
+     * Get the Snipcart API Key from the config.
+     *
+     * @return string
+     */
+    protected function apiKey(): string
+    {
+        if (config('snipcart.test_mode')) {
+            return config('snipcart.test_key');
+        }
+
+        return config('snipcart.live_key');
     }
 }

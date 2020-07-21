@@ -76,7 +76,7 @@ class SnipcartTags extends Tags
     {
         $key = $this->config['key'];
         $behaviour = $this->config['behaviour'];
-        $currency = $this->config['default_currency'];
+        $currency = $this->config['currency'];
 
         return
             "<div hidden id='snipcart' 
