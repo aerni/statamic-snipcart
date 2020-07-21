@@ -2,7 +2,7 @@
     <div>
         <text-input
             type="number"
-            :append="abbr"
+            :append="short"
             min="0"
             step="1"
             :value="value"
@@ -16,7 +16,7 @@
         mixins: [Fieldtype],
         data() {
             return {
-                abbr: this.meta.abbr
+                short: this.meta.short
             }
         }
     };
