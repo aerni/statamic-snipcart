@@ -1,7 +1,7 @@
 title: Product
 sections:
-  product:
-    display: Product
+  basic:
+    display: Basic
     fields:
       -
         handle: basic_information_section
@@ -17,10 +17,21 @@ sections:
           type: text
           localizable: false
           listable: hidden
-          display: Title
+          display: Name
           instructions: 'The name of the product.'
           validate: required|string
-          width: 50
+          width: 33
+      -
+        handle: sku
+        field:
+          input_type: text
+          type: text
+          localizable: false
+          listable: hidden
+          display: SKU
+          instructions: 'A unique product identifier.'
+          validate: required
+          width: 33
       -
         handle: price
         field:
@@ -28,16 +39,16 @@ sections:
           localizable: false
           listable: hidden
           display: Price
-          instructions: 'The price will be rounded to two decimal places.'
+          instructions: 'Rounded to two decimal places.'
           validate: required|numeric
-          width: 50
+          width: 33
       -
         handle: description
         field:
           type: textarea
           localizable: false
           listable: hidden
-          instructions: 'A short description of the product. This will show in the cart.'
+          instructions: 'A short product description that will show in the cart.'
           display: Description
       -
         handle: images
@@ -51,6 +62,9 @@ sections:
           listable: hidden
           display: Images
           instructions: 'One or more product images. The first image will show in the cart.'
+  advanced:
+    display: Advanced
+    fields:
       -
         handle: additional_information_section
         field:
@@ -69,7 +83,7 @@ sections:
           localizable: false
           listable: hidden
           display: Categories
-          instructions: 'Add some product categories.'
+          instructions: 'The categories of this product.'
       -
         handle: metadata
         field:
@@ -77,9 +91,183 @@ sections:
           localizable: false
           listable: hidden
           display: Metadata
-          instructions: 'Define additional metadata for this product.'
+          instructions: 'Additional metadata for this product.'
+      -
+        handle: shipping_section
+        field:
+          type: section
+          instructions: 'Customize the shipping behavior of the cart for this product. <a href="https://docs.snipcart.com/v3/setup/products#product-shipping">Learn more</a>'
+          localizable: false
+          listable: hidden
+          display: Shipping
+      -
+        handle: shippable
+        field:
+          type: toggle
+          instructions: 'Mark this product as `shippable`. Turn this off, if you do not ship this product.'
+          localizable: false
+          listable: hidden
+          display: Shippable
+          default: true
+      -
+        handle: weight_and_dimensions_section
+        field:
+          type: section
+          instructions: 'Use these attributes if you need to offer different shipping prices depending on product dimensions. <a href="https://docs.snipcart.com/v3/setup/products#product-dimensions">Learn more</a>'
+          localizable: false
+          listable: hidden
+          display: 'Weight & Dimensions'
+      -
+        handle: weight
+        field:
+          type: weight
+          localizable: false
+          listable: hidden
+          display: Weight
+          instructions: 'This is `mandatory` if you use any integrated shipping provider.'
+      -
+        handle: length
+        field:
+          type: length
+          localizable: false
+          listable: hidden
+          display: Length
+          instructions: 'This is `optional` if you enabled an integrated shipping provider.'
+          width: 33
+      -
+        handle: width
+        field:
+          type: length
+          localizable: false
+          listable: hidden
+          display: Width
+          instructions: 'This is `optional` if you enabled an integrated shipping provider.'
+          width: 33
+      -
+        handle: height
+        field:
+          type: length
+          localizable: false
+          listable: hidden
+          display: Height
+          instructions: 'This is `optional` if you enabled an integrated shipping provider.'
+          width: 33
+      -
+        handle: taxes_section
+        field:
+          type: section
+          localizable: false
+          listable: hidden
+          display: Taxes
+          instructions: 'Customize how taxes will be handled for this product. <a href="https://docs.snipcart.com/v3/setup/products#product-taxes">Learn more</a>'
+      -
+        handle: taxable
+        field:
+          type: toggle
+          instructions: 'Mark this product as `taxable`. Turn this off, if you want to exclude the product from the taxes calculation.'
+          localizable: false
+          listable: hidden
+          display: Taxable
+          default: true
+      -
+        handle: has_taxes_included
+        field:
+          type: toggle
+          instructions: 'Turn this on, if the taxes are included in the product''s price.'
+          localizable: false
+          listable: hidden
+          display: 'Taxes included'
+      -
+        handle: taxes
+        field:
+          type: tags
+          instructions: 'Specifically define the taxes to be applied on this product.'
+          localizable: false
+          listable: hidden
+          display: Taxes
+      -
+        handle: quantity_section
+        field:
+          type: section
+          instructions: 'Customize how the product quantity can be updated. <a href="https://docs.snipcart.com/v3/setup/products#product-quantity">Learn more</a>'
+          localizable: false
+          listable: hidden
+          display: Quantity
+      -
+        handle: quantity
+        field:
+          type: integer
+          instructions: 'The default product quantity.'
+          localizable: false
+          listable: hidden
+          display: 'Default Quantity'
+          width: 33
+          default: 1
+      -
+        handle: min_quantity
+        field:
+          type: integer
+          instructions: 'The minimum allowed product quantity.'
+          localizable: false
+          listable: hidden
+          display: 'Minimum Quantity'
+          width: 33
+      -
+        handle: max_quantity
+        field:
+          type: integer
+          instructions: 'The maximum allowed product quantity.'
+          localizable: false
+          listable: hidden
+          display: 'Maximum Quantity'
+          width: 33
+      -
+        handle: quantity_step
+        field:
+          type: integer
+          instructions: 'The quantity will change by this number when using the `+` and `-` buttons in the cart.'
+          localizable: false
+          listable: hidden
+          display: 'Quantity Step'
+          default: 1
+      -
+        handle: stackable
+        field:
+          options:
+            auto: Auto
+            never: Never
+            always: Always
+          default: auto
+          clearable: false
+          multiple: false
+          searchable: false
+          taggable: false
+          push_tags: false
+          cast_booleans: false
+          type: select
+          instructions: 'Customize the cart''s behaviour when adding multiple items of the same product.'
+          localizable: false
+          listable: hidden
+          display: Stackable
+      -
+        handle: digital_section
+        field:
+          type: section
+          localizable: false
+          listable: hidden
+          display: 'Digital Goods'
+          instructions: 'Sell a link to a digital good. Remember to upload the file in Snipcart''s dashboard. <a href="https://docs.snipcart.com/v3/setup/products#digital-goods">Learn more</a>'
+      -
+        handle: file_guid
+        field:
+          input_type: text
+          type: text
+          instructions: 'The file GUID of the digital good.'
+          localizable: false
+          listable: hidden
+          display: 'File GUID'
   custom_fields:
-    display: 'Custom Fields'
+    display: Custom
     fields:
       -
         handle: custom_fields
@@ -116,7 +304,7 @@ sections:
                         handle: price
                         field:
                           type: currency
-                          instructions: 'Define a different price for this product option.'
+                          instructions: 'You may define a different price for this product option.'
                           localizable: false
                           listable: hidden
                           display: Price
@@ -205,180 +393,7 @@ sections:
           localizable: false
           listable: hidden
           display: 'CUSTOM FIELDS'
-          instructions: 'Collect additional information or define product variations for things like shape, size and color. <a href="https://docs.snipcart.com/v3/setup/products#custom-fields">Learn more</a>'
-  settings:
-    display: Settings
-    fields:
-      -
-        handle: dimensions_section
-        field:
-          type: section
-          instructions: 'Use these attributes if you need to offer different shipping prices depending on product dimensions. <a href="https://docs.snipcart.com/v3/setup/products#product-dimensions">Learn more</a>'
-          localizable: false
-          listable: hidden
-          display: Dimensions
-      -
-        handle: weight
-        field:
-          type: weight
-          localizable: false
-          listable: hidden
-          display: Weight
-      -
-        handle: length
-        field:
-          type: length
-          localizable: false
-          listable: hidden
-          display: Length
-          width: 33
-      -
-        handle: height
-        field:
-          type: length
-          localizable: false
-          listable: hidden
-          display: Height
-          width: 33
-      -
-        handle: width
-        field:
-          type: length
-          localizable: false
-          listable: hidden
-          display: Width
-          width: 33
-      -
-        handle: quantity_section
-        field:
-          type: section
-          instructions: 'Customize how the product quantity can be updated. <a href="https://docs.snipcart.com/v3/setup/products#product-quantity">Learn more</a>'
-          localizable: false
-          listable: hidden
-          display: Quantity
-      -
-        handle: quantity
-        field:
-          type: integer
-          instructions: 'Set the default quantity.'
-          localizable: false
-          listable: hidden
-          display: 'Default Quantity'
-          width: 33
-          default: 1
-      -
-        handle: min_quantity
-        field:
-          type: integer
-          instructions: 'Set the minimum allowed quantity.'
-          localizable: false
-          listable: hidden
-          display: 'Minimum Quantity'
-          width: 33
-      -
-        handle: max_quantity
-        field:
-          type: integer
-          instructions: 'Set the maximum allowed quantity.'
-          localizable: false
-          listable: hidden
-          display: 'Maximum Quantity'
-          width: 33
-      -
-        handle: quantity_step
-        field:
-          type: integer
-          instructions: 'The quantity will change by this number when using the `+` and `-` buttons in the cart.'
-          localizable: false
-          listable: hidden
-          display: 'Quantity Step'
-          default: 1
-      -
-        handle: stackable
-        field:
-          options:
-            auto: Auto
-            never: Never
-            always: Always
-          default: auto
-          clearable: false
-          multiple: false
-          searchable: false
-          taggable: false
-          push_tags: false
-          cast_booleans: false
-          type: select
-          instructions: 'Customize the cart''s behaviour when adding multiple items of the same product.'
-          localizable: false
-          listable: hidden
-          display: Stackable
-      -
-        handle: shipping_section
-        field:
-          type: section
-          instructions: 'Customize the shipping behavior of the cart for this product. <a href="https://docs.snipcart.com/v3/setup/products#product-shipping">Learn more</a>'
-          localizable: false
-          listable: hidden
-          display: Shipping
-      -
-        handle: shippable
-        field:
-          type: toggle
-          instructions: 'Set this flag to false if this is a product that you do not ship.'
-          localizable: false
-          listable: hidden
-          display: Shippable
-          default: true
-      -
-        handle: taxes_section
-        field:
-          type: section
-          localizable: false
-          listable: hidden
-          display: Taxes
-          instructions: 'Customize how taxes will be handled for this product. <a href="https://docs.snipcart.com/v3/setup/products#product-taxes">Learn more</a>'
-      -
-        handle: taxable
-        field:
-          type: toggle
-          instructions: 'Set this flag to false if you want to exclude the product from the taxes calculation.'
-          localizable: false
-          listable: hidden
-          display: Taxable
-          default: true
-      -
-        handle: has_taxes_included
-        field:
-          type: toggle
-          instructions: 'Set this flag to true if the taxes are included in the product''s price.'
-          localizable: false
-          listable: hidden
-          display: 'Taxes included'
-      -
-        handle: taxes
-        field:
-          type: tags
-          instructions: 'Customize the taxes to be applied on this product.'
-          localizable: false
-          listable: hidden
-          display: Taxes
-      -
-        handle: digital_section
-        field:
-          type: section
-          localizable: false
-          listable: hidden
-          display: 'Digital Goods'
-          instructions: 'Sell a link to a digital good. Remember to first upload the file in Snipcart''s dashboard. <a href="https://docs.snipcart.com/v3/setup/products#digital-goods">Learn more</a>'
-      -
-        handle: file_guid
-        field:
-          input_type: text
-          type: text
-          instructions: 'The file GUID of the digital good.'
-          localizable: false
-          listable: hidden
-          display: 'File GUID'
+          instructions: 'Define product variations for things like `color` and `size` or collect additional information like a `gift note`. <a href="https://docs.snipcart.com/v3/setup/products#custom-fields">Learn more</a>'
   sidebar:
     display: Sidebar
     fields:
@@ -392,20 +407,6 @@ sections:
           listable: hidden
           display: Slug
       -
-        handle: sku
-        field:
-          input_type: text
-          type: text
-          localizable: false
-          listable: hidden
-          display: 'SKU / Product ID'
-          instructions: 'The unique product SKU / ID'
-          validate: required
-      -
         handle: is_snipcart_product
         field:
           type: hidden
-          localizable: false
-          listable: hidden
-          display: 'Is Snipcart Product'
-          default: true
