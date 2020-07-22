@@ -116,6 +116,8 @@ class ServiceProvider extends AddonServiceProvider
             Taxonomy::make($categories)
                 ->title(Str::studlyToTitle($categories))
                 ->save();
+
+            $this->updateProductBlueprint($products, $categories, $taxes);
         }
 
         if (! StatamicBlueprint::find("taxonomies/{$categories}/category")) {
@@ -130,6 +132,8 @@ class ServiceProvider extends AddonServiceProvider
             Taxonomy::make($taxes)
                 ->title(Str::studlyToTitle($taxes))
                 ->save();
+
+            $this->updateProductBlueprint($products, $categories, $taxes);
         }
 
         if (! StatamicBlueprint::find("taxonomies/{$taxes}/tax")) {
@@ -138,10 +142,6 @@ class ServiceProvider extends AddonServiceProvider
                 ->make('tax')
                 ->namespace("taxonomies.{$taxes}")
                 ->save();
-        }
-
-        if (Cache::get('categories') !== $categories || Cache::get('taxes') !== $taxes) {
-            $this->updateProductBlueprint($products, $categories, $taxes);
         }
     }
 
@@ -165,9 +165,6 @@ class ServiceProvider extends AddonServiceProvider
         $content['sections']['advanced']['fields'][13]['field']['taxonomy'] = $taxes;
 
         $blueprint->setContents($content)->save();
-
-        Cache::put('categories', $categories);
-        Cache::put('taxes', $taxes);
     }
 
     protected function bindRepositories(): void
