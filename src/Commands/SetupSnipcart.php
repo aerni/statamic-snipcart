@@ -224,7 +224,6 @@ class SetupSnipcart extends Command
             ->revisionsEnabled(false)
             ->pastDateBehavior('public')
             ->futureDateBehavior('private')
-            ->entryBlueprints(Str::snake($this->productBlueprintTitle))
             ->save();
     }
 
@@ -237,7 +236,7 @@ class SetupSnipcart extends Command
     {
         (new ProductBlueprint())
             ->taxonomy(Str::snake($this->categoryTaxonomyTitle))
-            ->make($this->productBlueprintTitle);
+            ->make($this->productBlueprintTitle, Str::snake($this->productCollectionTitle));
     }
 
     /**
@@ -249,8 +248,6 @@ class SetupSnipcart extends Command
     {
         Taxonomy::make(Str::snake($this->categoryTaxonomyTitle))
             ->title($this->categoryTaxonomyTitle)
-            ->termBlueprints([Str::snake($this->categoryBlueprintTitle)])
-            ->collection(Str::snake($this->productCollectionTitle))
             ->save();
     }
 
@@ -262,7 +259,7 @@ class SetupSnipcart extends Command
     protected function makeCategoryBlueprint(): void
     {
         (new CategoryBlueprint())
-            ->make($this->categoryBlueprintTitle);
+            ->make($this->categoryBlueprintTitle, Str::snake($this->categoryTaxonomyTitle));
     }
 
     /**

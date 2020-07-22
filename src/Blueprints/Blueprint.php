@@ -29,12 +29,13 @@ abstract class Blueprint
      * Make a blueprint with the given $title.
      *
      * @param string $title
+     * @param string $namespace
      * @return void
      */
-    public function make(string $title): void
+    public function make(string $title, string $namespace): void
     {
         $this->title($title);
-        StatamicBlueprint::make(Str::snake($title))->setContents($this->blueprint)->save();
+        StatamicBlueprint::make(Str::snake($title))->setNamespace($namespace)->setContents($this->blueprint)->save();
     }
 
     /**
