@@ -8,11 +8,9 @@ use Statamic\Statamic;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Taxonomy;
 use Statamic\Support\Str;
-use Aerni\Snipcart\Blueprints\ProductBlueprint;
-use Aerni\Snipcart\Blueprints\CategoryBlueprint;
-use Aerni\Snipcart\Blueprints\TaxBlueprint;
+use Aerni\Snipcart\Blueprints\Blueprint;
 use Illuminate\Support\Facades\Cache;
-use Statamic\Facades\Blueprint;
+use Statamic\Facades\Blueprint as StatamicBlueprint;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -104,12 +102,14 @@ class ServiceProvider extends AddonServiceProvider
                 ->save();
         }
 
-        if (! Blueprint::find("collections/{$products}/category")) {
-            (new ProductBlueprint())
-                ->categories($categories)
-                ->taxes($taxes)
+        if (! StatamicBlueprint::find("collections/{$products}/product")) {
+            (new Blueprint())
+                ->parse("collections/products/product.yaml")
+                ->make('product')
                 ->namespace("collections.{$products}")
                 ->save();
+
+            $this->updateProductBlueprint($products, $categories, $taxes);
         }
 
         if (! Taxonomy::handleExists($categories)) {
@@ -118,8 +118,10 @@ class ServiceProvider extends AddonServiceProvider
                 ->save();
         }
 
-        if (! Blueprint::find("taxonomies/{$categories}/category")) {
-            (new CategoryBlueprint())
+        if (! StatamicBlueprint::find("taxonomies/{$categories}/category")) {
+            (new Blueprint())
+                ->parse("taxonomies/categories/category.yaml")
+                ->make('category')
                 ->namespace("taxonomies.{$categories}")
                 ->save();
         }
@@ -130,8 +132,10 @@ class ServiceProvider extends AddonServiceProvider
                 ->save();
         }
 
-        if (! Blueprint::find("taxonomies/{$taxes}/tax")) {
-            (new TaxBlueprint())
+        if (! StatamicBlueprint::find("taxonomies/{$taxes}/tax")) {
+            (new Blueprint())
+                ->parse("taxonomies/taxes/tax.yaml")
+                ->make('tax')
                 ->namespace("taxonomies.{$taxes}")
                 ->save();
         }
@@ -151,7 +155,7 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function updateProductBlueprint(string $products, string $categories, string $taxes): void
     {
-        $blueprint = Blueprint::find("collections/{$products}/product");
+        $blueprint = StatamicBlueprint::find("collections/{$products}/product");
 
         $content = $blueprint->contents();
 

@@ -5,7 +5,7 @@ namespace Aerni\Snipcart\Blueprints;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\YAML;
 
-abstract class Blueprint
+class Blueprint
 {
     /**
      * The parsed blueprint content.
@@ -22,27 +22,28 @@ abstract class Blueprint
     protected $blueprint;
 
     /**
-     * Construct the class.
-     *
-     * @param string $path
-     * @param string $handle
-     */
-    public function __construct(string $path, string $handle)
-    {
-        $this->content = $this->parse($path);
-        $this->blueprint = StatamicBlueprint::make($handle);
-    }
-
-    /**
      * Get the blueprint Yaml as an array.
      *
      * @param string $path
      * @return array
      */
-    public function parse(string $path): array
+    public function parse(string $path): self
     {
         $blueprint = file_get_contents(__DIR__ . "/../../resources/blueprints/{$path}");
-        return YAML::parse($blueprint);
+        $this->content = YAML::parse($blueprint);
+        return $this;
+    }
+
+    /**
+     * Make a blueprint.
+     *
+     * @param string $handle
+     * @return self
+     */
+    public function make(string $handle): self
+    {
+        $this->blueprint = StatamicBlueprint::make($handle);
+        return $this;
     }
 
     /**
