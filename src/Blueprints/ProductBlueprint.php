@@ -2,39 +2,36 @@
 
 namespace Aerni\Snipcart\Blueprints;
 
-use Illuminate\Support\Str;
-use Statamic\Facades\Blueprint as StatamicBlueprint;
-
 class ProductBlueprint extends Blueprint
 {
     public function __construct()
     {
-        parent::__construct('product');
+        parent::__construct('collections/products/product.yaml', 'product');
     }
 
     /**
-     * Make a blueprint with the given $title.
+     * Set the category taxonomy on the blueprint.
      *
-     * @param string $title
      * @param string $handle
-     * @return void
-     */
-    public function make(string $title, string $handle): void
-    {
-        $this->title($title);
-        StatamicBlueprint::make(Str::snake($title))->setNamespace("collections.{$handle}")->setContents($this->blueprint)->save();
-    }
-
-    /**
-     * Set the taxonomy on the blueprint.
-     *
-     * @param string $taxonomy
      * @return self
      */
-    public function taxonomy(string $taxonomy): self
+    public function categories(string $handle): self
     {
-        $this->blueprint['sections']['advanced']['fields'][1]['field']['taxonomies'][0] = $taxonomy;
+        $this->content['sections']['advanced']['fields'][1]['handle'] = $handle;
+        $this->content['sections']['advanced']['fields'][1]['field']['taxonomy'] = $handle;
+        return $this;
+    }
 
+    /**
+     * Set the tax taxonomy on the blueprint.
+     *
+     * @param string $handle
+     * @return self
+     */
+    public function taxes(string $handle): self
+    {
+        $this->content['sections']['advanced']['fields'][13]['handle'] = $handle;
+        $this->content['sections']['advanced']['fields'][13]['field']['taxonomy'] = $handle;
         return $this;
     }
 }

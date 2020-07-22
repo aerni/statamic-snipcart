@@ -2,65 +2,68 @@
 
 namespace Aerni\Snipcart\Blueprints;
 
-use Illuminate\Support\Str;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\YAML;
 
 abstract class Blueprint
 {
     /**
-     * The parsed blueprint.
+     * The parsed blueprint content.
      *
      * @var array
      */
-    protected $blueprint = [];
+    protected $content;
 
     /**
-     * Construct the class with the given $filename.
+     * The blueprint instance.
      *
-     * @param string $filename
+     * @var StatamicBlueprint
      */
-    public function __construct(string $filename)
+    protected $blueprint;
+
+    /**
+     * Construct the class.
+     *
+     * @param string $path
+     * @param string $handle
+     */
+    public function __construct(string $path, string $handle)
     {
-        $this->blueprint = $this->parseBlueprintYaml($filename);
+        $this->content = $this->parse($path);
+        $this->blueprint = StatamicBlueprint::make($handle);
     }
 
     /**
-     * Make a blueprint with the given $title.
+     * Get the blueprint Yaml as an array.
      *
-     * @param string $title
-     * @param string $namespace
-     * @return void
-     */
-    public function make(string $title, string $namespace): void
-    {
-        $this->title($title);
-        StatamicBlueprint::make(Str::snake($title))->setNamespace($namespace)->setContents($this->blueprint)->save();
-    }
-
-    /**
-     * Parse the blueprint Yaml.
-     *
-     * @param string $filename
+     * @param string $path
      * @return array
      */
-    protected function parseBlueprintYaml(string $filename): array
+    public function parse(string $path): array
     {
-        $blueprintYaml = file_get_contents(__DIR__ . "/../../resources/blueprints/{$filename}.yaml");
-
-        return YAML::parse($blueprintYaml);
+        $blueprint = file_get_contents(__DIR__ . "/../../resources/blueprints/{$path}");
+        return YAML::parse($blueprint);
     }
 
     /**
-     * Set the title of the blueprint.
+     * Set the namespace on the blueprint.
      *
-     * @param string $title
+     * @param string $namespace
      * @return self
      */
-    protected function title(string $title): self
+    public function namespace(string $namespace): self
     {
-        $this->blueprint['title'] = $title;
-
+        $this->blueprint->setNamespace($namespace);
         return $this;
+    }
+
+    /**
+     * Set the contents on the blueprint and save it.
+     *
+     * @return void
+     */
+    public function save(): void
+    {
+        $this->blueprint->setContents($this->content)->save();
     }
 }

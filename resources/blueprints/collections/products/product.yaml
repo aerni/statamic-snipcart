@@ -76,14 +76,11 @@ sections:
       -
         handle: categories
         field:
-          mode: select
-          taxonomies:
-            - categories
           type: taxonomy
-          localizable: false
-          listable: hidden
+          taxonomy: categories
           display: Categories
           instructions: 'The categories of this product.'
+          mode: select
       -
         handle: metadata
         field:
@@ -180,11 +177,11 @@ sections:
       -
         handle: taxes
         field:
-          type: tags
-          instructions: 'Specifically define the taxes to be applied on this product.'
-          localizable: false
-          listable: hidden
+          type: taxonomy
+          taxonomy: taxes
           display: Taxes
+          instructions: 'Specifically define the taxes to be applied on this product.'
+          mode: select
       -
         handle: quantity_section
         field:

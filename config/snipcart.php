@@ -4,6 +4,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Collections & Taxonomies
+    |--------------------------------------------------------------------------
+    |
+    | Define the handles of the products collection and taxonomies.
+    | Changing a value will automatically create the relevant collection/taxonomy.
+    |
+    */
+
+    'collections' => [
+        'products' => 'products',
+    ],
+    
+    'taxonomies' => [
+        'categories' => 'categories',
+        'taxes' => 'taxes',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Snipcart API Keys
     |--------------------------------------------------------------------------
     |

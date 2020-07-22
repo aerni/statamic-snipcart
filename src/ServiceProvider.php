@@ -2,31 +2,24 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Commands\SetupSnipcart;
-use Aerni\Snipcart\Fieldtypes\CurrencyFieldtype;
-use Aerni\Snipcart\Fieldtypes\LengthFieldtype;
-use Aerni\Snipcart\Fieldtypes\WeightFieldtype;
-use Aerni\Snipcart\Repositories\CurrencyRepository;
-use Aerni\Snipcart\Repositories\LengthRepository;
-use Aerni\Snipcart\Repositories\ProductRepository;
-use Aerni\Snipcart\Repositories\WeightRepository;
-use Aerni\Snipcart\Tags\CurrencyTags;
-use Aerni\Snipcart\Tags\LengthTags;
 use Aerni\Snipcart\Tags\SnipcartTags;
-use Aerni\Snipcart\Tags\WeightTags;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
+use Statamic\Facades\Collection;
+use Statamic\Facades\Taxonomy;
+use Statamic\Support\Str;
+use Aerni\Snipcart\Blueprints\ProductBlueprint;
+use Aerni\Snipcart\Blueprints\CategoryBlueprint;
+use Aerni\Snipcart\Blueprints\TaxBlueprint;
+use Illuminate\Support\Facades\Cache;
+use Statamic\Facades\Blueprint;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $commands = [
-        SetupSnipcart::class,
-    ];
-
     protected $fieldtypes = [
-        CurrencyFieldtype::class,
-        LengthFieldtype::class,
-        WeightFieldtype::class,
+        Fieldtypes\CurrencyFieldtype::class,
+        Fieldtypes\LengthFieldtype::class,
+        Fieldtypes\WeightFieldtype::class,
     ];
 
     protected $scripts = [
@@ -34,10 +27,10 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $tags = [
-        CurrencyTags::class,
-        LengthTags::class,
-        SnipcartTags::class,
-        WeightTags::class,
+        Tags\CurrencyTags::class,
+        Tags\LengthTags::class,
+        Tags\SnipcartTags::class,
+        Tags\WeightTags::class,
     ];
 
     public function boot(): void
@@ -50,6 +43,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
 
         Statamic::booted(function () {
+            $this->setupContent();
             $this->bindRepositories();
         });
     }
@@ -68,6 +62,11 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
+    /**
+     * Publish the vendor files.
+     *
+     * @return void
+     */
     protected function publishVendorFiles(): void
     {
         if ($this->app->runningInConsole()) {
@@ -75,23 +74,104 @@ class ServiceProvider extends AddonServiceProvider
             // Config
             $this->publishes([
                 __DIR__.'/../config/snipcart.php' => config_path('snipcart.php'),
-            ]);
+            ], 'config');
 
-            // Lang
+            // Languages
             $this->publishes([
                 __DIR__ . '/../resources/lang' => resource_path('lang/vendor/snipcart'),
-            ]);
+            ], 'lang');
         }
     }
 
-    protected function bindRepositories()
+    /**
+     * Setup the product collections and taxonomies.
+     *
+     * @return void
+     */
+    protected function setupContent(): void
     {
-        $this->app->bind('Currency', CurrencyRepository::class);
-        $this->app->bind('Length', LengthRepository::class);
-        $this->app->bind('Product', ProductRepository::class);
-        $this->app->bind('Weight', WeightRepository::class);
+        $products = config('snipcart.collections.products');
+        $categories = config('snipcart.taxonomies.categories');
+        $taxes = config('snipcart.taxonomies.taxes');
 
-        return $this;
+        if (! Collection::handleExists($products)) {
+            Collection::make($products)
+                ->title(Str::studlyToTitle($products))
+                ->pastDateBehavior('public')
+                ->futureDateBehavior('private')
+                ->routes('/' . Str::slug(Str::studlyToTitle($products)) . '/{slug}')
+                ->taxonomies([$categories])
+                ->save();
+        }
+
+        if (! Blueprint::find("collections/{$products}/category")) {
+            (new ProductBlueprint())
+                ->categories($categories)
+                ->taxes($taxes)
+                ->namespace("collections.{$products}")
+                ->save();
+        }
+
+        if (! Taxonomy::handleExists($categories)) {
+            Taxonomy::make($categories)
+                ->title(Str::studlyToTitle($categories))
+                ->save();
+        }
+
+        if (! Blueprint::find("taxonomies/{$categories}/category")) {
+            (new CategoryBlueprint())
+                ->namespace("taxonomies.{$categories}")
+                ->save();
+        }
+
+        if (! Taxonomy::handleExists($taxes)) {
+            Taxonomy::make($taxes)
+                ->title(Str::studlyToTitle($taxes))
+                ->save();
+        }
+
+        if (! Blueprint::find("taxonomies/{$taxes}/tax")) {
+            (new TaxBlueprint())
+                ->namespace("taxonomies.{$taxes}")
+                ->save();
+        }
+
+        if (Cache::get('categories') !== $categories || Cache::get('taxes') !== $taxes) {
+            $this->updateProductBlueprint($products, $categories, $taxes);
+        }
+    }
+
+    /**
+     * Update the product blueprint with the categories and taxes taxonomies.
+     *
+     * @param string $products
+     * @param string $categories
+     * @param string $taxes
+     * @return void
+     */
+    protected function updateProductBlueprint(string $products, string $categories, string $taxes): void
+    {
+        $blueprint = Blueprint::find("collections/{$products}/product");
+
+        $content = $blueprint->contents();
+
+        $content['sections']['advanced']['fields'][1]['handle'] = $categories;
+        $content['sections']['advanced']['fields'][1]['field']['taxonomy'] = $categories;
+        $content['sections']['advanced']['fields'][13]['handle'] = $taxes;
+        $content['sections']['advanced']['fields'][13]['field']['taxonomy'] = $taxes;
+
+        $blueprint->setContents($content)->save();
+
+        Cache::put('categories', $categories);
+        Cache::put('taxes', $taxes);
+    }
+
+    protected function bindRepositories(): void
+    {
+        $this->app->bind('Currency', Repositories\CurrencyRepository::class);
+        $this->app->bind('Length', Repositories\LengthRepository::class);
+        $this->app->bind('Product', Repositories\ProductRepository::class);
+        $this->app->bind('Weight', Repositories\WeightRepository::class);
     }
 
     /**
