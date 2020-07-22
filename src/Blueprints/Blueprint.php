@@ -31,6 +31,7 @@ class Blueprint
     {
         $blueprint = file_get_contents(__DIR__ . "/../../resources/blueprints/{$path}");
         $this->content = YAML::parse($blueprint);
+
         return $this;
     }
 
@@ -43,6 +44,7 @@ class Blueprint
     public function make(string $handle): self
     {
         $this->blueprint = StatamicBlueprint::make($handle);
+
         return $this;
     }
 
@@ -55,6 +57,7 @@ class Blueprint
     public function namespace(string $namespace): self
     {
         $this->blueprint->setNamespace($namespace);
+
         return $this;
     }
 

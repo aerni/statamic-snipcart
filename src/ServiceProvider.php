@@ -2,15 +2,15 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Tags\SnipcartTags;
-use Statamic\Providers\AddonServiceProvider;
-use Statamic\Statamic;
-use Statamic\Facades\Collection;
-use Statamic\Facades\Taxonomy;
-use Statamic\Support\Str;
 use Aerni\Snipcart\Blueprints\Blueprint;
+use Aerni\Snipcart\Tags\SnipcartTags;
 use Illuminate\Support\Facades\Cache;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
+use Statamic\Facades\Collection;
+use Statamic\Facades\Taxonomy;
+use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
+use Statamic\Support\Str;
 
 class ServiceProvider extends AddonServiceProvider
 {
