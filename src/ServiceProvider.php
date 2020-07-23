@@ -170,6 +170,11 @@ class ServiceProvider extends AddonServiceProvider
 
     }
 
+    /**
+     * Bind the repositories.
+     *
+     * @return void
+     */
     protected function bindRepositories(): void
     {
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
@@ -192,7 +197,15 @@ class ServiceProvider extends AddonServiceProvider
         return config('snipcart.live_key');
     }
 
-    protected function hasNewHandle($products, $categories, $taxes): bool
+    /**
+     * Check if the handle from the config is different to the handle in the cache.
+     *
+     * @param string $products
+     * @param string $categories
+     * @param string $taxes
+     * @return boolean
+     */
+    protected function hasNewHandle(string $products, string $categories, string $taxes): bool
     {
         if (Cache::get('products') !== $products) {
             return true;
