@@ -4,13 +4,13 @@ namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Blueprints\Blueprint;
 use Aerni\Snipcart\Tags\SnipcartTags;
+use Illuminate\Support\Facades\Cache;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Taxonomy;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use Statamic\Support\Str;
-use Illuminate\Support\Facades\Cache;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -167,7 +167,6 @@ class ServiceProvider extends AddonServiceProvider
         $content['sections']['advanced']['fields'][13]['field']['taxonomy'] = $taxes;
 
         $blueprint->setContents($content)->save();
-
     }
 
     /**

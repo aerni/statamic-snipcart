@@ -81,7 +81,7 @@ class Validator
      * Check if the item is a valid Snipcart attribute value.
      *
      * @param mixed $item
-     * @return boolean
+     * @return bool
      */
     protected static function isValidItem($item): bool
     {

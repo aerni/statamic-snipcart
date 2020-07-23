@@ -9,11 +9,11 @@ use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
-use Statamic\Support\Str;
 use Statamic\Entries\Entry;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
+use Statamic\Support\Str;
 
 class ProductRepository implements ProductRepositoryContract
 {
