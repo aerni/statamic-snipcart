@@ -202,7 +202,7 @@ class ServiceProvider extends AddonServiceProvider
      * @param string $products
      * @param string $categories
      * @param string $taxes
-     * @return boolean
+     * @return bool
      */
     protected function hasNewHandle(string $products, string $categories, string $taxes): bool
     {
