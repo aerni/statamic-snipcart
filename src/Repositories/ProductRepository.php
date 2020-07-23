@@ -9,7 +9,7 @@ use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Str;
+use Statamic\Support\Str;
 use Statamic\Entries\Entry;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Entry as EntryFacade;
@@ -79,12 +79,12 @@ class ProductRepository implements ProductRepositoryContract
                 return ['image' => $this->imagePath($item[0])];
             }
 
-            if ($key === 'categories' && ! empty($item)) {
-                return [$key => implode('|', $item)];
+            if ($key === config('snipcart.taxonomies.categories') && ! empty($item)) {
+                return ['categories' => implode('|', $item)];
             }
 
-            if ($key === 'taxes' && ! empty($item)) {
-                return [$key => implode('|', $item)];
+            if ($key === config('snipcart.taxonomies.taxes') && ! empty($item)) {
+                return ['taxes' => implode('|', $item)];
             }
             
             if ($key === 'custom_fields' && ! empty($item)) {
