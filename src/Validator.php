@@ -48,7 +48,7 @@ class Validator
     public static function onlyValidAttributes(Collection $attributes): Collection
     {
         return $attributes->map(function ($item, $key) {
-            if (Self::isValidAttribute($key) && ! empty($item)) {
+            if (Self::isValidAttribute($key) && Self::isValidItem($item)) {
                 return trim($item);
             }
         })->filter();
@@ -75,6 +75,25 @@ class Validator
         }
 
         return false;
+    }
+
+    /**
+     * Check if the item is a valid Snipcart attribute value.
+     *
+     * @param mixed $item
+     * @return boolean
+     */
+    protected static function isValidItem($item): bool
+    {
+        if (is_array($item)) {
+            return false;
+        }
+
+        if (empty($item)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
