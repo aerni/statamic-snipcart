@@ -10,6 +10,7 @@ use Statamic\Facades\Taxonomy;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use Statamic\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -107,16 +108,12 @@ class ServiceProvider extends AddonServiceProvider
                 ->make('product')
                 ->namespace("collections.{$products}")
                 ->save();
-
-            $this->updateProductBlueprint($products, $categories, $taxes);
         }
 
         if (! Taxonomy::handleExists($categories)) {
             Taxonomy::make($categories)
                 ->title(Str::studlyToTitle($categories))
                 ->save();
-
-            $this->updateProductBlueprint($products, $categories, $taxes);
         }
 
         if (! StatamicBlueprint::find("taxonomies/{$categories}/category")) {
@@ -131,8 +128,6 @@ class ServiceProvider extends AddonServiceProvider
             Taxonomy::make($taxes)
                 ->title(Str::studlyToTitle($taxes))
                 ->save();
-
-            $this->updateProductBlueprint($products, $categories, $taxes);
         }
 
         if (! StatamicBlueprint::find("taxonomies/{$taxes}/tax")) {
@@ -141,6 +136,14 @@ class ServiceProvider extends AddonServiceProvider
                 ->make('tax')
                 ->namespace("taxonomies.{$taxes}")
                 ->save();
+        }
+
+        if ($this->hasNewHandle($products, $categories, $taxes)) {
+            $this->updateProductBlueprint($products, $categories, $taxes);
+
+            Cache::put('products', $products);
+            Cache::put('categories', $categories);
+            Cache::put('taxes', $taxes);
         }
     }
 
@@ -164,6 +167,7 @@ class ServiceProvider extends AddonServiceProvider
         $content['sections']['advanced']['fields'][13]['field']['taxonomy'] = $taxes;
 
         $blueprint->setContents($content)->save();
+
     }
 
     protected function bindRepositories(): void
@@ -186,5 +190,22 @@ class ServiceProvider extends AddonServiceProvider
         }
 
         return config('snipcart.live_key');
+    }
+
+    protected function hasNewHandle($products, $categories, $taxes): bool
+    {
+        if (Cache::get('products') !== $products) {
+            return true;
+        }
+
+        if (Cache::get('categories') !== $categories) {
+            return true;
+        }
+
+        if (Cache::get('taxes') !== $taxes) {
+            return true;
+        }
+
+        return false;
     }
 }
