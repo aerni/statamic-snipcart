@@ -4,7 +4,6 @@ namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Blueprints\Blueprint;
 use Aerni\Snipcart\Tags\SnipcartTags;
-use Illuminate\Support\Facades\Cache;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Taxonomy;
