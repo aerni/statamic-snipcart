@@ -7,10 +7,8 @@ use Aerni\Snipcart\Facades\Length;
 use Aerni\Snipcart\Facades\Weight;
 use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Statamic\Entries\Entry;
-use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Support\Str;
@@ -76,7 +74,7 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === 'images' && ! empty($item)) {
-                return ['image' => $this->imagePath($item[0])];
+                return ['image' => $this->imageUrl()];
             }
 
             if ($key === config('snipcart.taxonomies.categories') && ! empty($item)) {
@@ -278,47 +276,16 @@ class ProductRepository implements ProductRepositoryContract
     /**
      * Get the URL of an image.
      *
-     * @param string $image
      * @return string
      */
-    protected function imagePath(string $image): string
+    protected function imageUrl(): string
     {
-        $imagePath = $this->assetContainerPath() . '/' . $image;
+        $imageUrl = $this->product->augmentedValue('images')->value()[0]->url();
 
         if (config('snipcart.image.manipulation')) {
-            return Image::manipulate($imagePath, config('snipcart.image.preset'));
+            return Image::manipulate($imageUrl, config('snipcart.image.preset'));
         }
 
-        return $imagePath;
-    }
-
-    /**
-     * Get the path of the asset container.
-     *
-     * @return string
-     */
-    protected function assetContainerPath(): string
-    {
-        return Cache::remember('asset_container_path', 3600, function () {
-            return AssetContainer::find($this->assetContainer())->url();
-        });
-    }
-
-    /**
-     * Get the asset container from the blueprint.
-     *
-     * @return string
-     */
-    protected function assetContainer(): string
-    {
-        $blueprintFields = $this->product->blueprint()->contents()['sections'];
-
-        $imageField = collect($blueprintFields)->flatMap(function ($item) {
-            return collect($item['fields'])->first(function ($item) {
-                return $item['handle'] === 'images';
-            });
-        });
-
-        return $imageField['field']['container'];
+        return $imageUrl;
     }
 }
