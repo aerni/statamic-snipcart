@@ -20,6 +20,12 @@ class ServiceProvider extends AddonServiceProvider
         Fieldtypes\WeightFieldtype::class,
     ];
 
+    protected $listen = [
+        'Statamic\Events\EntryBlueprintFound' => [
+            'Aerni\Snipcart\Listeners\EditingProduct',
+        ],
+    ];
+
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',
     ];
@@ -38,17 +44,20 @@ class ServiceProvider extends AddonServiceProvider
         $this->publishVendorFiles();
 
         $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');        
 
         Statamic::booted(function () {
             $this->setupContent();
-            $this->bindRepositories();
         });
     }
 
     public function register(): void
     {
         parent::register();
+
+        Statamic::booted(function () {
+            $this->bindRepositories();
+         });
 
         $this->app->bind(SnipcartTags::class, function () {
             return new SnipcartTags([
@@ -176,6 +185,7 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function bindRepositories(): void
     {
+        $this->app->bind(\Statamic\Contracts\Entries\EntryRepository::class, Repositories\EntryRepository::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
         $this->app->bind('Length', Repositories\LengthRepository::class);
         $this->app->bind('Product', Repositories\ProductRepository::class);

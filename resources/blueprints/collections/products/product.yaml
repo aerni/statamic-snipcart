@@ -26,13 +26,13 @@ sections:
       -
         handle: sku
         field:
-          input_type: text
-          type: text
+          type: slug
+          required: true
           localizable: false
           listable: true
-          display: SKU
+          generate: true
           instructions: 'A unique product identifier.'
-          validate: required
+          display: SKU
           width: 33
       -
         handle: price
