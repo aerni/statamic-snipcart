@@ -31,7 +31,7 @@ sections:
           localizable: false
           generate: true
           instructions: 'A unique product identifier.'
-          listable: hidden
+          listable: true
           display: SKU
           width: 50
       -
