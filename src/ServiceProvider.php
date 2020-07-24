@@ -44,7 +44,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->publishVendorFiles();
 
         $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');        
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
 
         Statamic::booted(function () {
             $this->setupContent();
@@ -57,7 +57,7 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::booted(function () {
             $this->bindRepositories();
-         });
+        });
 
         $this->app->bind(SnipcartTags::class, function () {
             return new SnipcartTags([
