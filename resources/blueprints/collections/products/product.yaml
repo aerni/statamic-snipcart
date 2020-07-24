@@ -21,7 +21,7 @@ sections:
           display: Name
           instructions: 'The name of the product.'
           validate: required|string
-          width: 33
+          width: 50
           input_type: text
       -
         handle: sku
@@ -29,11 +29,11 @@ sections:
           type: slug
           required: true
           localizable: false
-          listable: true
           generate: true
           instructions: 'A unique product identifier.'
+          listable: hidden
           display: SKU
-          width: 33
+          width: 50
       -
         handle: price
         field:
@@ -43,7 +43,17 @@ sections:
           display: Price
           instructions: 'Rounded to two decimal places.'
           validate: required|numeric
-          width: 33
+          width: 50
+      -
+        handle: available
+        field:
+          type: toggle
+          instructions: 'Mark this product as available for sale.'
+          localizable: false
+          width: 50
+          listable: hidden
+          display: Available
+          default: true
       -
         handle: description
         field:
@@ -104,7 +114,7 @@ sections:
         handle: shippable
         field:
           type: toggle
-          instructions: 'Mark this product as `shippable`. Turn this off, if you do not ship this product.'
+          instructions: 'Mark this product as shippable. Turn this off, if you do not ship this product.'
           localizable: false
           listable: hidden
           display: Shippable
@@ -164,7 +174,7 @@ sections:
         handle: taxable
         field:
           type: toggle
-          instructions: 'Mark this product as `taxable`. Turn this off, if you want to exclude the product from the taxes calculation.'
+          instructions: 'Mark this product as taxable. Turn this off, if you want to exclude the product from the taxes calculation.'
           localizable: false
           listable: hidden
           display: Taxable
@@ -316,7 +326,7 @@ sections:
                     localizable: false
                     listable: hidden
                     display: Options
-                    instructions: 'The first option will be the default.'
+                    instructions: 'The `first` option will be the `default`.'
                     add_row: 'Add Option'
                     replicator_preview: false
                     validate: required
@@ -347,7 +357,7 @@ sections:
                     localizable: false
                     listable: hidden
                     display: Type
-                    instructions: 'Choose the type of the text field. A `textarea` is great for longer messages.'
+                    instructions: 'Choose the type of the text field. A textarea is great for longer messages.'
                     validate: required
                     replicator_preview: false
                     default: text
@@ -366,7 +376,7 @@ sections:
                   field:
                     input_type: text
                     type: text
-                    instructions: 'Define an optional placeholder.'
+                    instructions: 'Define an `optional` placeholder.'
                     localizable: false
                     listable: hidden
                     display: Placeholder
@@ -376,7 +386,7 @@ sections:
                   field:
                     input_type: text
                     type: text
-                    instructions: 'Define an optional default value.'
+                    instructions: 'Define an `optional` default value.'
                     localizable: false
                     listable: hidden
                     display: Default
@@ -385,7 +395,7 @@ sections:
                   handle: required
                   field:
                     type: toggle
-                    instructions: 'Make this field required.'
+                    instructions: 'Turn this on to `require` this field.'
                     localizable: false
                     listable: hidden
                     display: Required
@@ -399,6 +409,11 @@ sections:
     display: Sidebar
     fields:
       -
+        handle: is_snipcart_product
+        field:
+          type: hidden
+          listable: false
+      -
         handle: slug
         field:
           type: slug
@@ -408,8 +423,3 @@ sections:
           instructions: 'The slug of the product.'
           listable: hidden
           display: Slug
-      -
-        handle: is_snipcart_product
-        field:
-          type: hidden
-          listable: false
