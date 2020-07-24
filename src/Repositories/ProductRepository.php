@@ -101,11 +101,11 @@ class ProductRepository implements ProductRepositoryContract
                 return [$key => Length::toCentimeters($item)];
             }
 
-            if ($key === 'height' && ! empty($item)) {
+            if ($key === 'width' && ! empty($item)) {
                 return [$key => Length::toCentimeters($item)];
             }
 
-            if ($key === 'width' && ! empty($item)) {
+            if ($key === 'height' && ! empty($item)) {
                 return [$key => Length::toCentimeters($item)];
             }
 
