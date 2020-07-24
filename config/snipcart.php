@@ -8,7 +8,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define the handles of the products collection and taxonomies.
-    | Changing a value will automatically create the relevant collection/taxonomy.
+    | Changing a value will automatically create the relevant collection/taxonomy
+    | and update the taxonomies in the product blueprint.
     |
     */
 
@@ -38,7 +39,8 @@ return [
     | Test Mode
     |--------------------------------------------------------------------------
     |
-    | Set this to "false" to use the "live_key" and process real transactions.
+    | Set this to "false" to start processing real transactions.
+    | You probably want to do this in production only.
     |
     */
 
@@ -53,37 +55,26 @@ return [
     |
     */
 
-    'version' => env('SNIPCART_VERSION', '3.0.17'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cart Summary Behaviour
-    |--------------------------------------------------------------------------
-    |
-    | Setting this to "none" prevents the cart from opening every time
-    | a product is added.
-    |
-    */
-
-    'behaviour' => null,
+    'version' => '3.0.17',
 
     /*
     |--------------------------------------------------------------------------
     | Currency
     |--------------------------------------------------------------------------
     |
-    | The currency you want to use.
+    | Define the currency you want to use.
     |
     */
 
-    'currency' => 'CHF',
+    'currency' => 'USD',
 
     /*
     |--------------------------------------------------------------------------
     | Length Unit
     |--------------------------------------------------------------------------
     |
-    | Choose between the following length units: cm, m, in, ft.
+    | Define the lenght unit you want to use. 
+    | You can choose between the following options: 'cm', 'm', 'in', 'ft'.
     |
     */
     
@@ -94,15 +85,28 @@ return [
     | Weight Unit
     |--------------------------------------------------------------------------
     |
-    | Choose between the following weight units: g, kg, oz, lb.
+    | Define the weight unit you want to use. 
+    | You can choose between the following options: 'g', 'kg', 'oz', 'lb'.
     |
     */
     
-    'weight' => 'kg',
+    'weight' => 'g',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cart Summary Behaviour
+    |--------------------------------------------------------------------------
+    |
+    | Setting this to "none" prevents the cart from opening every time
+    | a product is added. Default is "null".
+    |
+    */
+
+    'behaviour' => null,
     
     /*
     |--------------------------------------------------------------------------
-    | Image Manipulation Settings
+    | Cart Image Manipulation Settings
     |--------------------------------------------------------------------------
     |
     | Define a Glide preset to be applied on the product image that shows 
