@@ -14,6 +14,8 @@ use Statamic\Support\Str;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $publishAfterInstall = false;
+    
     protected $fieldtypes = [
         Fieldtypes\CurrencyFieldtype::class,
         Fieldtypes\LengthFieldtype::class,
@@ -49,6 +51,13 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::booted(function () {
             $this->setupContent();
         });
+
+        Statamic::afterInstalled(function ($command) {
+            $command->call('vendor:publish', [ 
+                '--provider' => 'Aerni\Snipcart\ServiceProvider',
+                '--force' => true,
+            ]);
+        });
     }
 
     public function register(): void
@@ -78,15 +87,14 @@ class ServiceProvider extends AddonServiceProvider
     {
         if ($this->app->runningInConsole()) {
 
-            // Config
             $this->publishes([
                 __DIR__.'/../config/snipcart.php' => config_path('snipcart.php'),
             ], 'config');
 
-            // Languages
             $this->publishes([
                 __DIR__ . '/../resources/lang' => resource_path('lang/vendor/snipcart'),
             ], 'lang');
+
         }
     }
 
