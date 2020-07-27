@@ -8,8 +8,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define the handles of the products collection and taxonomies.
-    | Changing a value will automatically create the relevant collection/taxonomy
-    | and update the taxonomies in the product blueprint.
+    | If you change a value, you need to run 'php please snipcart:setup' 
+    | to re-generate the collection/taxonomies and product blueprint.
     |
     */
 
