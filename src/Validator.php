@@ -49,7 +49,7 @@ class Validator
     {
         return $attributes->map(function ($item, $key) {
             if (Self::isValidAttribute($key) && Self::isValidItem($item)) {
-                return trim($item);
+                return htmlentities(trim($item), ENT_QUOTES);
             }
         })->filter();
     }
