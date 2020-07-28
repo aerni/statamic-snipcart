@@ -129,7 +129,6 @@ class Content
 
             array_push($this->messages, "Created Blueprint <comment>[taxonomies/{$this->taxes}/tax]</comment>");
         }
-
     }
 
     /**

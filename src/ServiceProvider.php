@@ -7,7 +7,7 @@ use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
-{   
+{
     protected $commands = [
         Commands\SetupSnipcart::class,
     ];
@@ -45,7 +45,7 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::afterInstalled(function ($command) {
             $command->call('snipcart:setup');
-            $command->call('vendor:publish', [ 
+            $command->call('vendor:publish', [
                 '--provider' => 'Aerni\Snipcart\ServiceProvider',
             ]);
         });
