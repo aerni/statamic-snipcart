@@ -31,6 +31,12 @@ class SetupSnipcart extends Command
      */
     public function handle(): void
     {
-        (new Content())->setup();
+        $content = new Content();
+
+        $content->setup();
+
+        foreach ($content->messages() as $message) {
+            $this->info($message);
+        }
     }
 }
