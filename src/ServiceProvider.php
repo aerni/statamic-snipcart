@@ -70,11 +70,11 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/snipcart.php' => config_path('snipcart.php'),
-        ], 'statamic-snipcart-config');
+        ], 'snipcart-config');
 
         $this->publishes([
             __DIR__ . '/../resources/lang' => resource_path('lang/vendor/snipcart'),
-        ], 'statamic-snipcart-translations');
+        ], 'snipcart-translations');
 
         $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
