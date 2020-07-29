@@ -55,7 +55,7 @@ class Content
     /**
      * Setup the content.
      *
-     * @param boolean $force
+     * @param bool $force
      * @return void
      */
     public function setup(bool $force = false): void
