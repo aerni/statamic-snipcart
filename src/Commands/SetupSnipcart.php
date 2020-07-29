@@ -15,7 +15,7 @@ class SetupSnipcart extends Command
      *
      * @var string
      */
-    protected $signature = 'snipcart:setup';
+    protected $signature = 'snipcart:setup {--force}';
 
     /**
      * The console command description.
@@ -33,7 +33,7 @@ class SetupSnipcart extends Command
     {
         $content = new Content();
 
-        $content->setup();
+        $content->setup($this->option('force'));
 
         foreach ($content->messages() as $message) {
             $this->info($message);

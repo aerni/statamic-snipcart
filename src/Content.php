@@ -11,6 +11,13 @@ use Statamic\Support\Str;
 class Content
 {
     /**
+     * If this is true, existing content will be overridden.
+     *
+     * @var bool
+     */
+    protected $force = false;
+
+    /**
      * The products collection handle
      *
      * @var string
@@ -48,10 +55,13 @@ class Content
     /**
      * Setup the content.
      *
+     * @param boolean $force
      * @return void
      */
-    public function setup(): void
+    public function setup(bool $force = false): void
     {
+        $this->force = $force;
+
         $this->setupCollection();
         $this->setupTaxonomies();
         $this->updateProductBlueprint();
@@ -64,7 +74,7 @@ class Content
      */
     protected function setupCollection(): void
     {
-        if (! Collection::handleExists($this->products)) {
+        if (! Collection::handleExists($this->products) || $this->force) {
             Collection::make($this->products)
                 ->title(Str::studlyToTitle($this->products))
                 ->pastDateBehavior('public')
@@ -73,17 +83,17 @@ class Content
                 ->taxonomies([$this->categories])
                 ->save();
             
-            array_push($this->messages, "Created Collection <comment>[{$this->products}]</comment>");
+            array_push($this->messages, "Created Collection: <comment>{$this->products}</comment>");
         }
 
-        if (! StatamicBlueprint::find("collections/{$this->products}/product")) {
+        if (! StatamicBlueprint::find("collections/{$this->products}/product") || $this->force) {
             (new Blueprint())
                 ->parse("collections/products/product.yaml")
                 ->make('product')
                 ->namespace("collections.{$this->products}")
                 ->save();
 
-            array_push($this->messages, "Created Blueprint <comment>[collections/{$this->products}/product]</comment>");
+            array_push($this->messages, "Created Blueprint: <comment>collections/{$this->products}/product</comment>");
         }
     }
 
@@ -94,40 +104,40 @@ class Content
      */
     protected function setupTaxonomies(): void
     {
-        if (! Taxonomy::handleExists($this->categories)) {
+        if (! Taxonomy::handleExists($this->categories) || $this->force) {
             Taxonomy::make($this->categories)
                 ->title(Str::studlyToTitle($this->categories))
                 ->save();
 
-            array_push($this->messages, "Created Taxonomy <comment>[{$this->categories}]</comment>");
+            array_push($this->messages, "Created Taxonomy: <comment>{$this->categories}</comment>");
         }
 
-        if (! StatamicBlueprint::find("taxonomies/{$this->categories}/category")) {
+        if (! StatamicBlueprint::find("taxonomies/{$this->categories}/category") || $this->force) {
             (new Blueprint())
                 ->parse("taxonomies/categories/category.yaml")
                 ->make('category')
                 ->namespace("taxonomies.{$this->categories}")
                 ->save();
 
-            array_push($this->messages, "Created Blueprint <comment>[taxonomies/{$this->categories}/category]</comment>");
+            array_push($this->messages, "Created Blueprint: <comment>taxonomies/{$this->categories}/category</comment>");
         }
 
-        if (! Taxonomy::handleExists($this->taxes)) {
+        if (! Taxonomy::handleExists($this->taxes) || $this->force) {
             Taxonomy::make($this->taxes)
                 ->title(Str::studlyToTitle($this->taxes))
                 ->save();
 
-            array_push($this->messages, "Created Taxnomoy <comment>[{$this->taxes}]</comment>");
+            array_push($this->messages, "Created Taxnomoy: <comment>{$this->taxes}</comment>");
         }
 
-        if (! StatamicBlueprint::find("taxonomies/{$this->taxes}/tax")) {
+        if (! StatamicBlueprint::find("taxonomies/{$this->taxes}/tax") || $this->force) {
             (new Blueprint())
                 ->parse("taxonomies/taxes/tax.yaml")
                 ->make('tax')
                 ->namespace("taxonomies.{$this->taxes}")
                 ->save();
 
-            array_push($this->messages, "Created Blueprint <comment>[taxonomies/{$this->taxes}/tax]</comment>");
+            array_push($this->messages, "Created Blueprint: <comment>taxonomies/{$this->taxes}/tax</comment>");
         }
     }
 
@@ -149,7 +159,7 @@ class Content
 
         $blueprint->setContents($content)->save();
 
-        array_push($this->messages, "Updated Blueprint <comment>[collections/{$this->products}/product]</comment>");
+        array_push($this->messages, "Updated Blueprint: <comment>collections/{$this->products}/product</comment>");
     }
 
     /**
