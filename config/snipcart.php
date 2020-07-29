@@ -73,7 +73,7 @@ return [
     | Length Unit
     |--------------------------------------------------------------------------
     |
-    | Define the lenght unit you want to use. 
+    | Define the length unit you want to use. 
     | You can choose between the following options: 'cm', 'm', 'in', 'ft'.
     |
     */
@@ -94,10 +94,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cart Summary Behaviour
+    | Cart Behaviour
     |--------------------------------------------------------------------------
     |
-    | Setting this to "none" prevents the cart from opening every time
+    | Set this to "none" to prevent the cart from opening every time
     | a product is added. Default is "null".
     |
     */
@@ -106,10 +106,10 @@ return [
     
     /*
     |--------------------------------------------------------------------------
-    | Cart Image Manipulation Settings
+    | Cart Image
     |--------------------------------------------------------------------------
     |
-    | Define a Glide preset to be applied on the product image that shows 
+    | Define a Glide preset to be applied to the product image that shows 
     | in the cart. You may also turn the manipulation off (not recommended).
     |
     */
