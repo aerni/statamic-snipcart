@@ -22,17 +22,6 @@ class CurrencyTags extends Tags
     protected static $aliases = ['cy'];
 
     /**
-     * Return the default currency.
-     * {{ currency }}
-     *
-     * @return array
-     */
-    public function index(): array
-    {
-        return Currency::default();
-    }
-
-    /**
      * Return the currency code.
      * {{ currency:code }}
      *
