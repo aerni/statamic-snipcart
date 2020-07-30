@@ -38,16 +38,13 @@ class ServiceProvider extends AddonServiceProvider
     public function boot(): void
     {
         parent::boot();
-
+        
         Statamic::booted(function () {
             $this->bootVendorAssets();
         });
 
         Statamic::afterInstalled(function ($command) {
             $command->call('snipcart:setup');
-            $command->call('vendor:publish', [
-                '--provider' => 'Aerni\Snipcart\ServiceProvider',
-            ]);
         });
     }
 
