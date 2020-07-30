@@ -9,7 +9,7 @@ return [
     |
     | Define the handles of the products collection and taxonomies.
     | If you change a value, you need to run 'php please snipcart:setup' 
-    | to re-generate the collection/taxonomies and product blueprint.
+    | to re-generate the collection, taxonomies, and blueprints.
     |
     */
 
