@@ -77,6 +77,9 @@ class Content
         if (! Collection::handleExists($this->products) || $this->force) {
             Collection::make($this->products)
                 ->title(Str::studlyToTitle($this->products))
+                ->template('product')
+                ->layout('layout')
+                ->sortDirection('asc')
                 ->pastDateBehavior('public')
                 ->futureDateBehavior('private')
                 ->routes('/' . Str::slug(Str::studlyToTitle($this->products)) . '/{slug}')
