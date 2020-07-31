@@ -2,4 +2,25 @@ title: 'Category'
 sections:
   main:
     display: Main
-    fields: {  }
+    fields:
+      -
+        handle: title
+        field:
+          type: text
+          required: true
+      -
+        handle: hide_from_snipcart
+        field:
+          type: toggle
+          instructions: 'Hide this category from Snipcart buy buttons.'
+          localizable: false
+          listable: hidden
+          display: 'Hide from Snipcart'
+  sidebar:
+    display: Sidebar
+    fields:
+      -
+        handle: slug
+        field:
+          type: slug
+          required: true

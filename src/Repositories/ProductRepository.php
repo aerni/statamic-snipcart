@@ -78,7 +78,7 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === config('snipcart.taxonomies.categories') && ! empty($item)) {
-                return ['categories' => implode('|', $item)];
+                return ['categories' => $this->mapCategories()];
             }
 
             if ($key === config('snipcart.taxonomies.taxes') && ! empty($item)) {
@@ -113,6 +113,21 @@ class ProductRepository implements ProductRepositoryContract
         });
 
         return $mappedAttributes;
+    }
+
+    /**
+     * Get the Snipcart categories.
+     *
+     * @return string
+     */
+    protected function mapCategories(): string
+    {
+        return $this->product->augmentedValue('categories')->value()
+            ->filter(function ($item) {
+                return ! $item->data()->get('hide_from_snipcart');
+            })->map(function ($item) {
+                return $item->slug();
+            })->implode('|');
     }
 
     /**
