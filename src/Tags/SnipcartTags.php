@@ -122,21 +122,32 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return a Snipcart product button.
+     * Return a simple Snipcart product button.
      * {{ snipcart:product }}
      *
      * @return string
      */
-    public function product()
+    public function product(): string
     {
+        $attributes = $this->dataAttributes();
         $class = $this->params->get('class');
-        $dataAttributes = $this->dataAttributes();
         $text = $this->params->get('text') ?? __('snipcart::buttons.add_to_cart');
 
         return
-            "<button class='snipcart-add-item {$class}' {$dataAttributes}>
+            "<button class='snipcart-add-item {$class}' {$attributes}>
                 {$text}
             </button>";
+    }
+
+    /**
+     * Return the product attributes.
+     * {{ snipcart:attributes }}
+     *
+     * @return string
+     */
+    public function attributes(): string
+    {
+        return $this->dataAttributes();
     }
 
     /**

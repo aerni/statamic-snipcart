@@ -15,17 +15,17 @@ trait GetsProductAttributes
      */
     protected function dataAttributes(): string
     {
-        return $this->attributes()->map(function ($value, $key) {
+        return $this->mergedAttributes()->map(function ($value, $key) {
             return "data-item-{$key}='{$value}'";
         })->implode(' ');
     }
 
     /**
-     * Get valid Snipcart attributes.
+     * Get the merged and valid Snipcart attributes.
      *
      * @return Collection
      */
-    protected function attributes(): Collection
+    protected function mergedAttributes(): Collection
     {
         $productAttributes = $this->productAttributes();
         $tagAttributes = $this->tagAttributes();
