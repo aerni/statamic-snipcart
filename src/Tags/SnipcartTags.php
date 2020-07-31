@@ -122,12 +122,12 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return a simple Snipcart product button.
-     * {{ snipcart:product }}
+     * Return a simple Snipcart product buy button.
+     * {{ snipcart:buy }}
      *
      * @return string
      */
-    public function product(): string
+    public function buy(): string
     {
         $attributes = $this->dataAttributes();
         $class = $this->params->get('class');
