@@ -77,7 +77,7 @@ class Content
         if (! Collection::handleExists($this->products) || $this->force) {
             Collection::make($this->products)
                 ->title(Str::studlyToTitle($this->products))
-                ->template('product')
+                ->template($this->products . '/show')
                 ->layout('layout')
                 ->sortDirection('asc')
                 ->pastDateBehavior('public')
