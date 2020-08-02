@@ -126,7 +126,7 @@ class ProductRepository implements ProductRepositoryContract
             ->filter(function ($item) {
                 return ! $item->data()->get('hide_from_snipcart');
             })->map(function ($item) {
-                return $item->slug();
+                return $item->title();
             })->implode('|');
     }
 
