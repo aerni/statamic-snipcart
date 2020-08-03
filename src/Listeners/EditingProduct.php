@@ -14,7 +14,22 @@ class EditingProduct
      */
     public function handle(EntryBlueprintFound $event)
     {
-        $isProduct = $event->blueprint->handle() === 'product';
+        $this->makeSkuReadOnly($event);
+    }
+
+    /**
+     * Make the SKU field read only when editing a product.
+     *
+     * @param EntryBlueprintFound $event
+     * @return void
+     */
+    protected function makeSkuReadOnly(EntryBlueprintFound $event): void
+    {
+        $collection = config('snipcart.collections.products');
+        $isRightNamespace = $event->blueprint->namespace() === "collections.{$collection}";
+        $isRightHandle = $event->blueprint->handle() === 'product';
+
+        $isProduct = $isRightNamespace && $isRightHandle;
         $isEditing = $event->entry;
 
         if ($isEditing && $isProduct) {
