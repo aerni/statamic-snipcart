@@ -64,7 +64,10 @@ class Content
 
         $this->setupCollection();
         $this->setupTaxonomies();
-        $this->updateProductBlueprint();
+
+        $this->update();
+
+        array_push($this->messages, "Snipcart is configured and ready to go!");
     }
 
     /**
@@ -145,24 +148,59 @@ class Content
     }
 
     /**
-     * Update the product blueprint with the categories and taxes taxonomies.
+     * Update the products collection and its blueprint.
+     *
+     * @return void
+     */
+    protected function update(): void
+    {
+        $this->updateProductsTaxonomies();
+        $this->updateProductBlueprint();
+    }
+
+    /**
+     * Update the products collection taxonomies.
+     *
+     * @return void
+     */
+    protected function updateProductsTaxonomies(): void
+    {
+        $productsCollection = Collection::find($this->products);
+
+        $taxonomies = $productsCollection->taxonomies()
+            ->transform(function ($item) {
+                return $item->handle();
+            })
+            ->merge([$this->categories])
+            ->unique()
+            ->toArray();
+            
+        $productsCollection->taxonomies($taxonomies)
+            ->save();
+
+        array_push($this->messages, "Updated taxonomies in <comment>{$this->products}</comment> collection");
+    }
+
+    /**
+     * Update the product blueprint with the new categories and taxes taxonomies.
      *
      * @return void
      */
     protected function updateProductBlueprint(): void
     {
-        $blueprint = StatamicBlueprint::find("collections/{$this->products}/product");
+        $productBlueprint = StatamicBlueprint::find("collections/{$this->products}/product");
 
-        $content = $blueprint->contents();
-
+        $content = $productBlueprint->contents();
+    
         $content['sections']['advanced']['fields'][1]['handle'] = $this->categories;
         $content['sections']['advanced']['fields'][1]['field']['taxonomy'] = $this->categories;
+        
         $content['sections']['advanced']['fields'][13]['handle'] = $this->taxes;
         $content['sections']['advanced']['fields'][13]['field']['taxonomy'] = $this->taxes;
 
-        $blueprint->setContents($content)->save();
+        $productBlueprint->setContents($content)->save();
 
-        array_push($this->messages, "Updated Blueprint: <comment>collections/{$this->products}/product</comment>");
+        array_push($this->messages, "Updated taxonomies in <comment>collections/{$this->products}/product</comment> blueprint");
     }
 
     /**
