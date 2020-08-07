@@ -21,7 +21,8 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         'Statamic\Events\EntryBlueprintFound' => [
-            'Aerni\Snipcart\Listeners\EditingProduct',
+            'Aerni\Snipcart\Listeners\ConvertUnits',
+            'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
         ],
     ];
 
