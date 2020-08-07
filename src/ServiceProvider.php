@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
 use Aerni\Snipcart\Tags\SnipcartTags;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
@@ -100,11 +101,31 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->app->bind(SnipcartTags::class, function () {
             return new SnipcartTags([
-                'key' => config('snipcart.test_mode') ? config('snipcart.test_key') : config('snipcart.live_key'),
+                'key' => $this->apiKey(),
                 'currency' => config('snipcart.currency'),
                 'version' => config('snipcart.version'),
                 'behaviour' => config('snipcart.behaviour'),
             ]);
         });
+    }
+
+    /**
+     * Returns the Snipcart API Key.
+     *
+     * @return mixed
+     */
+    protected function apiKey()
+    {
+        $mode = config('snipcart.test_mode');
+        
+        $apiKey = $mode
+            ? config('snipcart.test_key')
+            : config('snipcart.live_key');
+
+        if (! $apiKey) {
+            throw new ApiKeyNotFoundException($mode);
+        }
+
+        return $apiKey;
     }
 }
