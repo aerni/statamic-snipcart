@@ -104,11 +104,11 @@ class WeightRepository implements WeightRepositoryContract
         }
 
         if ($this->unit === 'oz') {
-            return round($value / 0.03527396195, 2);
+            return $value / 0.03527396195;
         }
 
         if ($this->unit === 'lb') {
-            return round($value / 0.00220462262185, 2);
+            return $value / 0.00220462262185;
         }
         
         return $value;

@@ -104,11 +104,11 @@ class LengthRepository implements LengthRepositoryContract
         }
 
         if ($this->unit === 'in') {
-            return round($value / 0.3937007874, 2);
+            return $value / 0.3937007874;
         }
 
         if ($this->unit === 'ft') {
-            return round($value / 0.032808399, 2);
+            return $value / 0.032808399;
         }
         
         return $value;
