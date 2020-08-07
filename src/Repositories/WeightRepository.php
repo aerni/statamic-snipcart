@@ -6,6 +6,7 @@ use Aerni\Snipcart\Contracts\WeightRepository as WeightRepositoryContract;
 use Aerni\Snipcart\Models\Weight;
 use Exception;
 use Illuminate\Support\Str;
+use UnitConverter\UnitConverter;
 
 class WeightRepository implements WeightRepositoryContract
 {
@@ -99,19 +100,10 @@ class WeightRepository implements WeightRepositoryContract
      */
     public function toGrams(string $value): string
     {
-        if ($this->unit === 'kg') {
-            return $value * 1000;
-        }
-
-        if ($this->unit === 'oz') {
-            return $value / 0.03527396195;
-        }
-
-        if ($this->unit === 'lb') {
-            return $value / 0.00220462262185;
-        }
-        
-        return $value;
+        return UnitConverter::default()
+            ->convert($value)
+            ->from(config('snipcart.weight'))
+            ->to('g');
     }
 
     /**

@@ -18,6 +18,7 @@
     "require": {
         "php": "^7.2.5",
         "calebporzio/sushi": "^2.0",
+        "jordanbrauer/unit-converter": "^0.8.4",
         "statamic/cms": "^3.0@beta"
     },
     "require-dev": {

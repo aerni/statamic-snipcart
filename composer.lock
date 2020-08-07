@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e98ec377c60a84d000bc8cbf11224a47",
+    "content-hash": "d088ac036c0b3b0a9b7b7539e20e3130",
     "packages": [
         {
             "name": "brick/math",
@@ -1270,6 +1270,51 @@
                 "watermark"
             ],
             "time": "2019-11-02T09:15:47+00:00"
+        },
+        {
+            "name": "jordanbrauer/unit-converter",
+            "version": "v0.8.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jordanbrauer/unit-converter.git",
+                "reference": "be778e107bdd19494be2f1b246612ddf51a5a30d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jordanbrauer/unit-converter/zipball/be778e107bdd19494be2f1b246612ddf51a5a30d",
+                "reference": "be778e107bdd19494be2f1b246612ddf51a5a30d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "codedungeon/phpunit-result-printer": "^0.19.12",
+                "consolidation/robo": "^1.2",
+                "phpmetrics/phpmetrics": "^2.4",
+                "phpunit/phpunit": "^6.3",
+                "symfony/var-dumper": "^3.3",
+                "vlucas/phpdotenv": "^2.4"
+            },
+            "type": "component",
+            "autoload": {
+                "psr-4": {
+                    "UnitConverter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jordanbrauer",
+                    "email": "18744334+jordanbrauer@users.noreply.github.com"
+                }
+            ],
+            "description": "Convert standard units from one to another with this easy to use, lightweight package",
+            "time": "2020-04-28T00:05:02+00:00"
         },
         {
             "name": "justinrainbow/json-schema",

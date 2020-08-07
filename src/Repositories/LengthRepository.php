@@ -6,6 +6,7 @@ use Aerni\Snipcart\Contracts\LengthRepository as LengthRepositoryContract;
 use Aerni\Snipcart\Models\Length;
 use Exception;
 use Illuminate\Support\Str;
+use UnitConverter\UnitConverter;
 
 class LengthRepository implements LengthRepositoryContract
 {
@@ -23,6 +24,7 @@ class LengthRepository implements LengthRepositoryContract
      */
     public function __construct()
     {
+        
         $this->unit = config('snipcart.length');
     }
 
@@ -99,19 +101,10 @@ class LengthRepository implements LengthRepositoryContract
      */
     public function toCentimeters(string $value): string
     {
-        if ($this->unit === 'm') {
-            return $value * 100;
-        }
-
-        if ($this->unit === 'in') {
-            return $value / 0.3937007874;
-        }
-
-        if ($this->unit === 'ft') {
-            return $value / 0.032808399;
-        }
-        
-        return $value;
+        return UnitConverter::default()
+            ->convert($value)
+            ->from(config('snipcart.length'))
+            ->to('cm');
     }
 
     /**
