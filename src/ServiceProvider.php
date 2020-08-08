@@ -10,6 +10,7 @@ use Statamic\Statamic;
 class ServiceProvider extends AddonServiceProvider
 {
     protected $commands = [
+        Commands\MigrateSnipcart::class,
         Commands\SetupSnipcart::class,
     ];
 

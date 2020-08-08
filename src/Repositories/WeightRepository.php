@@ -108,6 +108,34 @@ class WeightRepository implements WeightRepositoryContract
     }
 
     /**
+     * Convert a value of a unit to the unit set in the config.
+     *
+     * @param string $value
+     * @param string $unit
+     * @return mixed
+     */
+    public function convert(string $value = null, string $unit = null)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        if (empty($unit)) {
+            return $value;
+        }
+
+        if ($unit === $this->unit)
+        {
+            return $value;
+        }
+
+        return (string) UnitConverter::default()
+            ->convert($value)
+            ->from($unit)
+            ->to($this->unit);
+    }
+
+    /**
      * Parse the weight.
      *
      * @param mixed $weight
