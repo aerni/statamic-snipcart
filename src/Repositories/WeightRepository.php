@@ -101,7 +101,7 @@ class WeightRepository implements WeightRepositoryContract
      */
     public function toGrams(string $value, string $unit): string
     {
-        return UnitConverter::default()
+        return UnitConverter::binary()
             ->convert($value)
             ->from($unit)
             ->to('g');
@@ -129,7 +129,7 @@ class WeightRepository implements WeightRepositoryContract
             return $value;
         }
 
-        return (string) UnitConverter::default()
+        return (string) UnitConverter::binary()
             ->convert($value)
             ->from($unit)
             ->to($this->unit);

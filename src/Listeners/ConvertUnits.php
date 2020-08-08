@@ -47,7 +47,7 @@ class ConvertUnits
     {
         if ($this->hasValue($key) && $this->canConvertDimension($dimension)) {
 
-            $convertedValue = (string) UnitConverter::default()
+            $convertedValue = (string) UnitConverter::binary()
                 ->convert($this->entry->get($key))
                 ->from($this->entry->get("{$dimension}_unit"))
                 ->to(config("snipcart.{$dimension}"));

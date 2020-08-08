@@ -102,7 +102,7 @@ class LengthRepository implements LengthRepositoryContract
      */
     public function toCentimeters(string $value, string $unit): string
     {
-        return UnitConverter::default()
+        return UnitConverter::binary()
             ->convert($value)
             ->from($unit)
             ->to('cm');
@@ -130,7 +130,7 @@ class LengthRepository implements LengthRepositoryContract
             return $value;
         }
 
-        return (string) UnitConverter::default()
+        return (string) UnitConverter::binary()
             ->convert($value)
             ->from($unit)
             ->to($this->unit);
