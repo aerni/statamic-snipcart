@@ -94,16 +94,17 @@ class LengthRepository implements LengthRepositoryContract
     }
 
     /**
-     * Convert the given value to Centimeters.
+     * Convert a value of a unit to Centimeters.
      *
      * @param string $value
+     * @param string $unit
      * @return string
      */
-    public function toCentimeters(string $value): string
+    public function toCentimeters(string $value, string $unit): string
     {
         return UnitConverter::default()
             ->convert($value)
-            ->from(config('snipcart.length'))
+            ->from($unit)
             ->to('cm');
     }
 

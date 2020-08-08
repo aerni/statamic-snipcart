@@ -14,7 +14,7 @@ interface LengthRepository
 
     public function plural(): string;
 
-    public function toCentimeters(string $value): string;
+    public function toCentimeters(string $value, string $unit): string;
 
     public function parse($length);
 }

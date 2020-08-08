@@ -93,16 +93,17 @@ class WeightRepository implements WeightRepositoryContract
     }
 
     /**
-     * Convert the given value to Grams.
+     * Convert a value of a unit to Grams.
      *
      * @param string $value
+     * @param string $unit
      * @return string
      */
-    public function toGrams(string $value): string
+    public function toGrams(string $value, string $unit): string
     {
         return UnitConverter::default()
             ->convert($value)
-            ->from(config('snipcart.weight'))
+            ->from($unit)
             ->to('g');
     }
 

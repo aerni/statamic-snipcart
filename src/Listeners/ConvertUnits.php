@@ -2,7 +2,6 @@
 
 namespace Aerni\Snipcart\Listeners;
 
-use Aerni\Snipcart\Events\UnitHasChanged;
 use Aerni\Snipcart\Listeners\Concerns\ListenerGuards;
 use Statamic\Events\EntryBlueprintFound;
 use UnitConverter\UnitConverter;

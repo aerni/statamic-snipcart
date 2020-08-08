@@ -94,19 +94,19 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === 'weight' && ! empty($item)) {
-                return [$key => Weight::toGrams($item)];
+                return [$key => Weight::toGrams($item, $this->weightUnit())];
             }
 
             if ($key === 'length' && ! empty($item)) {
-                return [$key => Length::toCentimeters($item)];
+                return [$key => Length::toCentimeters($item, $this->lengthUnit())];
             }
 
             if ($key === 'width' && ! empty($item)) {
-                return [$key => Length::toCentimeters($item)];
+                return [$key => Length::toCentimeters($item, $this->lengthUnit())];
             }
 
             if ($key === 'height' && ! empty($item)) {
-                return [$key => Length::toCentimeters($item)];
+                return [$key => Length::toCentimeters($item, $this->lengthUnit())];
             }
 
             return [$key => $item];
@@ -302,5 +302,25 @@ class ProductRepository implements ProductRepositoryContract
         }
 
         return $imageUrl;
+    }
+
+    /**
+     * Returns the length unit.
+     *
+     * @return string
+     */
+    protected function lengthUnit(): string
+    {
+        return $this->data['length_unit'] ?? config('snipcart.length');
+    }
+
+    /**
+     * Returns the weight unit.
+     *
+     * @return string
+     */
+    protected function weightUnit(): string
+    {
+        return $this->data['weight_unit'] ?? config('snipcart.weight');
     }
 }

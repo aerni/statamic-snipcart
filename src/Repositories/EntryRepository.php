@@ -8,8 +8,7 @@ class EntryRepository extends StatamicEntryRepository
 {
     public function save($entry)
     {
-        $entry->set('length_unit', config('snipcart.length'));
-        $entry->set('weight_unit', config('snipcart.weight'));
+        $this->setUnitsFromConfig($entry);
 
         parent::save($entry);
     }
@@ -34,5 +33,11 @@ class EntryRepository extends StatamicEntryRepository
         }
 
         return $rules;
+    }
+
+    protected function setUnitsFromConfig($entry): void
+    {
+        $entry->set('length_unit', config('snipcart.length'));
+        $entry->set('weight_unit', config('snipcart.weight'));
     }
 }
