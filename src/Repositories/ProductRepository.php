@@ -3,8 +3,7 @@
 namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\ProductRepository as ProductRepositoryContract;
-use Aerni\Snipcart\Facades\Length;
-use Aerni\Snipcart\Facades\Weight;
+use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
@@ -94,19 +93,19 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === 'weight' && ! empty($item)) {
-                return [$key => Weight::toGrams($item, $this->weightUnit())];
+                return [$key => Converter::toGrams($item, $this->weightUnit())];
             }
 
             if ($key === 'length' && ! empty($item)) {
-                return [$key => Length::toCentimeters($item, $this->lengthUnit())];
+                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
             }
 
             if ($key === 'width' && ! empty($item)) {
-                return [$key => Length::toCentimeters($item, $this->lengthUnit())];
+                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
             }
 
             if ($key === 'height' && ! empty($item)) {
-                return [$key => Length::toCentimeters($item, $this->lengthUnit())];
+                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
             }
 
             return [$key => $item];

@@ -22,7 +22,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         'Statamic\Events\EntryBlueprintFound' => [
-            'Aerni\Snipcart\Listeners\ConvertUnits',
+            'Aerni\Snipcart\Listeners\ConvertDimensions',
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
         ],
     ];
@@ -88,6 +88,7 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerRepositories(): void
     {
         $this->app->bind(\Statamic\Contracts\Entries\EntryRepository::class, Repositories\EntryRepository::class);
+        $this->app->bind('Converter', Support\Converter::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
         $this->app->bind('Length', Repositories\LengthRepository::class);
         $this->app->bind('Product', Repositories\ProductRepository::class);

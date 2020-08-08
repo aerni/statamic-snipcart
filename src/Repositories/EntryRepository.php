@@ -6,13 +6,6 @@ use Statamic\Stache\Repositories\EntryRepository as StatamicEntryRepository;
 
 class EntryRepository extends StatamicEntryRepository
 {
-    public function save($entry)
-    {
-        $this->setUnitsFromConfig($entry);
-
-        parent::save($entry);
-    }
-
     public function createRules($collection, $site)
     {
         $rules = parent::createRules($collection, $site);
@@ -33,11 +26,5 @@ class EntryRepository extends StatamicEntryRepository
         }
 
         return $rules;
-    }
-
-    protected function setUnitsFromConfig($entry): void
-    {
-        $entry->set('length_unit', config('snipcart.length'));
-        $entry->set('weight_unit', config('snipcart.weight'));
     }
 }

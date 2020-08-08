@@ -6,7 +6,6 @@ use Aerni\Snipcart\Contracts\WeightRepository as WeightRepositoryContract;
 use Aerni\Snipcart\Models\Weight;
 use Exception;
 use Illuminate\Support\Str;
-use UnitConverter\UnitConverter;
 
 class WeightRepository implements WeightRepositoryContract
 {
@@ -90,49 +89,6 @@ class WeightRepository implements WeightRepositoryContract
         }
         
         return $this->plural();
-    }
-
-    /**
-     * Convert a value of a unit to Grams.
-     *
-     * @param string $value
-     * @param string $unit
-     * @return string
-     */
-    public function toGrams(string $value, string $unit): string
-    {
-        return UnitConverter::binary()
-            ->convert($value)
-            ->from($unit)
-            ->to('g');
-    }
-
-    /**
-     * Convert a value of a unit to the unit set in the config.
-     *
-     * @param string $value
-     * @param string $unit
-     * @return mixed
-     */
-    public function convert(string $value = null, string $unit = null)
-    {
-        if (empty($value)) {
-            return null;
-        }
-
-        if (empty($unit)) {
-            return $value;
-        }
-
-        if ($unit === $this->unit)
-        {
-            return $value;
-        }
-
-        return (string) UnitConverter::binary()
-            ->convert($value)
-            ->from($unit)
-            ->to($this->unit);
     }
 
     /**

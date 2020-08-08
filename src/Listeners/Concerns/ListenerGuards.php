@@ -3,23 +3,25 @@
 namespace Aerni\Snipcart\Listeners\Concerns;
 
 use Statamic\Events\EntryBlueprintFound;
+use Statamic\Events\EntrySaving;
 
 trait ListenerGuards
 {
     /**
-     * Check if the entry is a Snipcart product.
+     * Check if you're editing an existing Snipcart product.
      *
      * @param EntryBlueprintFound $event
      * @return bool
      */
-    protected function isProduct(EntryBlueprintFound $event): bool
+    protected function isEditingExistingProduct(EntryBlueprintFound $event): bool
     {
         $collection = config('snipcart.collections.products');
         
         $isRightNamespace = $event->blueprint->namespace() === "collections.{$collection}";
         $isRightHandle = $event->blueprint->handle() === 'product';
+        $isEditing = $event->entry;
 
-        $isProduct = $isRightNamespace && $isRightHandle;
+        $isProduct = $isRightNamespace && $isRightHandle && $isEditing;
 
         if (! $isProduct) {
             return false;
@@ -29,17 +31,19 @@ trait ListenerGuards
     }
     
     /**
-     * Check if you're editing an existing Snipcart product.
+     * Check if you're saving a product.
      *
-     * @param EntryBlueprintFound $event
+     * @param EntrySaving $event
      * @return bool
      */
-    protected function isEditingExistingProduct(EntryBlueprintFound $event): bool
+    protected function isSavingProduct(EntrySaving $event): bool
     {
-        if (! $event->entry) {
+        $collection = config('snipcart.collections.products');
+
+        if ($event->entry->collection()->handle() !== $collection) {
             return false;
         }
-
+        
         return true;
     }
 }

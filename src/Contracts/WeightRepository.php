@@ -14,7 +14,5 @@ interface WeightRepository
 
     public function plural(): string;
 
-    public function toGrams(string $value, string $unit): string;
-
     public function parse($weight);
 }

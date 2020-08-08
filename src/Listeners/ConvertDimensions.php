@@ -2,10 +2,11 @@
 
 namespace Aerni\Snipcart\Listeners;
 
+use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Listeners\Concerns\ListenerGuards;
 use Statamic\Events\EntryBlueprintFound;
 
-class MakeSkuReadOnly
+class ConvertDimensions
 {
     use ListenerGuards;
 
@@ -18,11 +19,7 @@ class MakeSkuReadOnly
     public function handle(EntryBlueprintFound $event): void
     {
         if ($this->isEditingExistingProduct($event)) {
-
-            $content = $event->blueprint->contents();
-            $content['sections']['basic']['fields'][2]['field']['read_only'] = true;
-            $event->blueprint->setContents($content);
-
+            Converter::convertEntryDimensions($event->entry);
         }
     }
 }
