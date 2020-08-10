@@ -4,7 +4,7 @@ namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\ProductRepository as ProductRepositoryContract;
 use Aerni\Snipcart\Facades\Converter;
-use Aerni\Snipcart\Validator;
+use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Statamic\Entries\Entry;

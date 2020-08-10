@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\Snipcart;
+namespace Aerni\Snipcart\Support;
 
 use Exception;
 use Illuminate\Support\Collection;

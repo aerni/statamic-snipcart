@@ -3,7 +3,7 @@
 namespace Aerni\Snipcart\Tags\Concerns;
 
 use Aerni\Snipcart\Facades\Product;
-use Aerni\Snipcart\Validator;
+use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
 
 trait GetsProductAttributes
