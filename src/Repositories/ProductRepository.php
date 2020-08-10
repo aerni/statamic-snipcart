@@ -112,11 +112,12 @@ class ProductRepository implements ProductRepositoryContract
         })->mapWithKeys(function ($item, $key) {
             if (is_bool($item)) {
                 return [
-                    $this->underscoreToDash($key) => $this->boolToString($item)
+                    $this->underscoreToDash($key) => $this->boolToString($item),
                 ];
             }
+
             return [
-                $this->underscoreToDash($key) => $item
+                $this->underscoreToDash($key) => $item,
             ];
         });
 
@@ -359,7 +360,7 @@ class ProductRepository implements ProductRepositoryContract
     /**
      * Convert a boolean to a string.
      *
-     * @param boolean $item
+     * @param bool $item
      * @return string
      */
     protected function boolToString(bool $item): string
