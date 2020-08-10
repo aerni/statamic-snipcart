@@ -16,7 +16,7 @@ class CurrencyFieldtype extends Fieldtype
      */
     public function preload(): array
     {
-        return Currency::default();
+        return Currency::all();
     }
 
     /**

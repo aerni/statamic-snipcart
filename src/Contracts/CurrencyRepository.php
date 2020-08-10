@@ -4,7 +4,7 @@ namespace Aerni\Snipcart\Contracts;
 
 interface CurrencyRepository
 {
-    public function default(): array;
+    public function all(): array;
 
     public function code(): string;
 

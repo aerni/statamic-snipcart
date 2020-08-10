@@ -27,11 +27,11 @@ class CurrencyRepository implements CurrencyRepositoryContract
     }
 
     /**
-     * Get an array of the default currency.
+     * Get an array of the currency's information.
      *
      * @return object
      */
-    public function default(): array
+    public function all(): array
     {
         $currency = Currency::firstWhere('code', $this->currency);
 
@@ -43,51 +43,51 @@ class CurrencyRepository implements CurrencyRepositoryContract
     }
 
     /**
-     * Get the default currency's code.
+     * Get the currency's code.
      *
      * @return string
      */
     public function code(): string
     {
-        return $this->default()['code'];
+        return $this->all()['code'];
     }
 
     /**
-     * Get the default currency's name.
+     * Get the currency's name.
      *
      * @return string
      */
     public function name(): string
     {
-        return $this->default()['name'];
+        return $this->all()['name'];
     }
 
     /**
-     * Get the default currency's symbol.
+     * Get the currency's symbol.
      *
      * @return string
      */
     public function symbol(): string
     {
-        return $this->default()['symbol'];
+        return $this->all()['symbol'];
     }
 
     /**
-     * Parse the amount to two decimal places.
+     * Parse the value to two decimal places.
      *
-     * @param mixed $amount
+     * @param mixed $value
      * @return mixed
      */
-    public function parse($amount)
+    public function parse($value)
     {
-        if (Str::startsWith($amount, '-')) {
+        if (Str::startsWith($value, '-')) {
             return '0.00';
         }
 
-        if (is_null($amount)) {
+        if (is_null($value)) {
             return null;
         }
 
-        return number_format(floatval($amount), 2, '.', '');
+        return number_format(floatval($value), 2, '.', '');
     }
 }
