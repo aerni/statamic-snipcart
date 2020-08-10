@@ -109,6 +109,8 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             return [$key => $item];
+        })->mapWithKeys(function ($item, $key) {
+            return [$this->underscoreToDash($key) => $item];
         });
 
         return $mappedAttributes;
@@ -334,5 +336,16 @@ class ProductRepository implements ProductRepositoryContract
     protected function weightUnit(): string
     {
         return $this->data['weight_unit'] ?? config('snipcart.weight');
+    }
+
+    /**
+     * Replaces underscores with dashes.
+     *
+     * @param string $item
+     * @return string
+     */
+    protected function underscoreToDash(string $item): string
+    {
+        return str_replace('_', '-', $item);
     }
 }
