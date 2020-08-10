@@ -5,7 +5,7 @@
             :prepend="symbol"
             :placeholder="originalPrice"
             min="0"
-            step="0.01"
+            step="1"
             :value="value"
             @input="update" />
     </div>
