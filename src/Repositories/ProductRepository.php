@@ -110,7 +110,14 @@ class ProductRepository implements ProductRepositoryContract
 
             return [$key => $item];
         })->mapWithKeys(function ($item, $key) {
-            return [$this->underscoreToDash($key) => $item];
+            if (is_bool($item)) {
+                return [
+                    $this->underscoreToDash($key) => $this->boolToString($item)
+                ];
+            }
+            return [
+                $this->underscoreToDash($key) => $item
+            ];
         });
 
         return $mappedAttributes;
@@ -347,5 +354,16 @@ class ProductRepository implements ProductRepositoryContract
     protected function underscoreToDash(string $item): string
     {
         return str_replace('_', '-', $item);
+    }
+
+    /**
+     * Convert a boolean to a string.
+     *
+     * @param boolean $item
+     * @return string
+     */
+    protected function boolToString(bool $item): string
+    {
+        return $item ? 'true' : 'false';
     }
 }
