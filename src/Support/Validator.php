@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart\Support;
 
-use Exception;
+use Aerni\Snipcart\Exceptions\UnsupportedAttributeException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -36,7 +36,7 @@ class Validator
             return $attributes;
         }
 
-        throw new Exception("Please make sure that your products include the required attributes: [name], [id], [price], [url]");
+        throw new UnsupportedAttributeException();
     }
 
     /**

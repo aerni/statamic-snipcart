@@ -3,8 +3,8 @@
 namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
+use Aerni\Snipcart\Exceptions\UnsupportedCurrencyException;
 use Aerni\Snipcart\Models\Currency;
-use Exception;
 use Illuminate\Support\Str;
 
 class CurrencyRepository implements CurrencyRepositoryContract
@@ -35,11 +35,11 @@ class CurrencyRepository implements CurrencyRepositoryContract
     {
         $currency = Currency::firstWhere('code', $this->currency);
 
-        if (! is_null($currency)) {
-            return $currency->only(['code', 'name', 'symbol']);
+        if (is_null($currency)) {
+            throw new UnsupportedCurrencyException($this->currency);
         }
-
-        throw new Exception('This currency is not supported. Please make sure to set a supported currency in your config.');
+        
+        return $currency->only(['code', 'name', 'symbol']);
     }
 
     /**

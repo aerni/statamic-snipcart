@@ -13,7 +13,7 @@ class ApiKeyNotFoundException extends Exception implements ProvidesSolution
 
     public function __construct($mode)
     {
-        parent::__construct("Snipcart API Key not found");
+        parent::__construct("Could not find a Snipcart API Key.");
 
         $this->mode = $mode;
     }
