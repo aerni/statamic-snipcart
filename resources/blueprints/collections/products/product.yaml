@@ -35,6 +35,15 @@ sections:
           display: SKU
           width: 50
       -
+        handle: price_label
+        field:
+          type: text
+          localizable: false
+          listable: hidden
+          display: 'Price Label'
+          instructions: 'A price label, e.g. `Starting at`.'
+          width: 50
+      -
         handle: price
         field:
           type: currency
@@ -45,22 +54,21 @@ sections:
           validate: required|numeric
           width: 50
       -
-        handle: available
+        handle: categories
         field:
-          type: toggle
-          instructions: 'Mark this product as available for sale.'
-          localizable: false
-          width: 50
+          type: taxonomy
+          taxonomy: categories
+          display: Categories
+          mode: select
+          instructions: 'The categories of this product.'
           listable: hidden
-          display: Available
-          default: true
       -
         handle: description
         field:
           type: textarea
           localizable: false
           listable: hidden
-          instructions: 'A short product description that will show in the cart.'
+          instructions: 'A short product description. This will show in the cart.'
           display: Description
       -
         handle: images
@@ -78,31 +86,6 @@ sections:
     display: Advanced
     fields:
       -
-        handle: additional_information_section
-        field:
-          type: section
-          localizable: false
-          listable: false
-          display: 'Additional Information'
-          instructions: 'Add additional product information. <a href="https://docs.snipcart.com/v3/setup/products#advanced-product-attributes">Learn more</a>'
-      -
-        handle: categories
-        field:
-          type: taxonomy
-          taxonomy: categories
-          display: Categories
-          mode: select
-          instructions: 'The categories of this product.'
-          listable: hidden
-      -
-        handle: metadata
-        field:
-          type: yaml
-          localizable: false
-          listable: false
-          display: Metadata
-          instructions: 'Additional metadata for this product.'
-      -
         handle: shipping_section
         field:
           type: section
@@ -114,19 +97,19 @@ sections:
         handle: shippable
         field:
           type: toggle
-          instructions: 'Mark this product as shippable. Turn this off, if you do not ship this product.'
+          instructions: 'Mark this product as shippable. Deactivate, if you do not ship this product.'
           localizable: false
           listable: hidden
           display: Shippable
           default: true
       -
-        handle: weight_and_dimensions_section
+        handle: dimensions_section
         field:
           type: section
           instructions: 'Use these attributes if you need to offer different shipping prices depending on product dimensions. <a href="https://docs.snipcart.com/v3/setup/products#product-dimensions">Learn more</a>'
           localizable: false
           listable: false
-          display: 'Weight & Dimensions'
+          display: Dimensions
       -
         handle: weight
         field:
@@ -174,7 +157,7 @@ sections:
         handle: taxable
         field:
           type: toggle
-          instructions: 'Mark this product as taxable. Turn this off, if you want to exclude the product from the taxes calculation.'
+          instructions: 'Mark this product as taxable. Deactivate, if you want to exclude the product from the taxes calculation.'
           localizable: false
           listable: hidden
           display: Taxable
@@ -183,17 +166,17 @@ sections:
         handle: has_taxes_included
         field:
           type: toggle
-          instructions: 'Turn this on, if the taxes are included in the product''s price.'
+          instructions: 'Activate, if the taxes are included in the product''s price.'
           localizable: false
           listable: hidden
-          display: 'Taxes included'
+          display: 'Taxes Included'
       -
         handle: taxes
         field:
           type: taxonomy
           taxonomy: taxes
           display: Taxes
-          instructions: 'Specifically define the taxes to be applied on this product.'
+          instructions: 'Apply specific taxes to this product.'
           mode: select
           listable: hidden
       -
@@ -277,8 +260,24 @@ sections:
           localizable: false
           listable: hidden
           display: 'File GUID'
+      -
+        handle: additional_information_section
+        field:
+          type: section
+          localizable: false
+          listable: false
+          display: 'Additional Information'
+          instructions: 'Add additional product information. <a href="https://docs.snipcart.com/v3/setup/products#advanced-product-attributes">Learn more</a>'
+      -
+        handle: metadata
+        field:
+          type: yaml
+          localizable: false
+          listable: false
+          display: Metadata
+          instructions: 'Additional metadata for this product.'
   custom_fields:
-    display: Custom
+    display: 'Custom Fields'
     fields:
       -
         handle: custom_fields
@@ -395,7 +394,7 @@ sections:
                   handle: required
                   field:
                     type: toggle
-                    instructions: 'Turn this on to `require` this field.'
+                    instructions: 'Activate to `require` this field.'
                     localizable: false
                     listable: hidden
                     display: Required
@@ -404,7 +403,7 @@ sections:
           localizable: false
           listable: false
           display: 'CUSTOM FIELDS'
-          instructions: 'Define product variations for things like `color` and `size` or collect additional information like a `gift note`. <a href="https://docs.snipcart.com/v3/setup/products#custom-fields">Learn more</a>'
+          instructions: 'Create product variations for attributes like `Color` and `Size` or collect additional information like a `Gift Note`. <a href="https://docs.snipcart.com/v3/setup/products#custom-fields">Learn more</a>'
   sidebar:
     display: Sidebar
     fields:
