@@ -81,7 +81,7 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === config('snipcart.taxonomies.taxes') && ! empty($item)) {
-                return ['taxes' => implode('|', $item)];
+                return ['taxes' => $this->mapTaxes()];
             }
             
             if ($key === 'custom_fields' && ! empty($item)) {
@@ -125,6 +125,19 @@ class ProductRepository implements ProductRepositoryContract
             ->filter(function ($item) {
                 return ! $item->data()->get('hide_from_snipcart');
             })->map(function ($item) {
+                return $item->title();
+            })->implode('|');
+    }
+
+    /**
+     * Get the Snipcart taxes.
+     *
+     * @return string
+     */
+    protected function mapTaxes(): string
+    {
+        return $this->product->augmentedValue('taxes')->value()
+            ->map(function ($item) {
                 return $item->title();
             })->implode('|');
     }
