@@ -8,6 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define the handles of the products collection and taxonomies.
+    |
     | If you change a value, you need to run 'php please snipcart:setup' 
     | to re-generate the collection, taxonomies, and blueprints.
     |
@@ -76,6 +77,9 @@ return [
     | Define the length unit you want to use. 
     | You can choose between the following options: 'cm', 'm', 'in', 'ft'.
     |
+    | If you change a value, you may run 'php please snipcart:migrate'
+    | to convert your products' lengths to the new unit.
+    |
     */
     
     'length' => 'cm',
@@ -87,6 +91,9 @@ return [
     |
     | Define the weight unit you want to use. 
     | You can choose between the following options: 'g', 'kg', 'oz', 'lb'.
+    |
+    | If you change a value, you may run 'php please snipcart:migrate'
+    | to convert your products' lengths to the new unit.
     |
     */
     
