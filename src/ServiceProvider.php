@@ -16,8 +16,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $fieldtypes = [
         Fieldtypes\CurrencyFieldtype::class,
-        Fieldtypes\LengthFieldtype::class,
-        Fieldtypes\WeightFieldtype::class,
+        Fieldtypes\DimensionFieldtype::class,
     ];
 
     protected $listen = [
@@ -90,9 +89,8 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind(\Statamic\Contracts\Entries\EntryRepository::class, Repositories\EntryRepository::class);
         $this->app->bind('Converter', Support\Converter::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
-        $this->app->bind('Length', Repositories\LengthRepository::class);
+        $this->app->bind('Dimension', Repositories\DimensionRepository::class);
         $this->app->bind('Product', Repositories\ProductRepository::class);
-        $this->app->bind('Weight', Repositories\WeightRepository::class);
     }
 
     /**

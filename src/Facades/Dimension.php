@@ -4,10 +4,10 @@ namespace Aerni\Snipcart\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Length extends Facade
+class Dimension extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'Length';
+        return 'Dimension';
     }
 }

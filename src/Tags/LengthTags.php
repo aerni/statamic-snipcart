@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Aerni\Snipcart\Facades\Length;
+use Aerni\Snipcart\Facades\Dimension;
 use Statamic\Tags\Tags;
 
 class LengthTags extends Tags
@@ -22,68 +22,68 @@ class LengthTags extends Tags
     protected static $aliases = ['len'];
 
     /**
-     * Return the default length unit's abbreviation.
+     * Return the length unit's abbreviation.
      * {{ length:short }}
      *
      * @return string
      */
     public function short(): string
     {
-        return Length::short();
+        return Dimension::type('length')->short();
     }
 
     /**
-     * Return the default length unit's singular name.
+     * Return the length unit's singular name.
      * {{ length:singular }}
      *
      * @return string
      */
     public function singular(): string
     {
-        return Length::singular();
+        return Dimension::type('length')->singular();
     }
 
     /**
-     * Return the default length unit's plural name.
+     * Return the length unit's plural name.
      * {{ length:plural }}
      *
      * @return string
      */
     public function plural(): string
     {
-        return Length::plural();
+        return Dimension::type('length')->plural();
     }
 
     /**
-     * Return the default length unit's name as singular or plural.
+     * Return the length unit's length name as singular or plural.
      * {{ length:lengthName }}
      *
      * @return string
      */
     public function lengthName(): string
     {
-        return Length::name($this->context->value('length'));
+        return Dimension::type('length')->name($this->context->value('length'));
     }
 
     /**
-     * Return the default length unit's name as singular or plural.
+     * Return the length unit's width name as singular or plural.
      * {{ length:widthName }}
      *
      * @return string
      */
     public function widthName(): string
     {
-        return Length::name($this->context->value('width'));
+        return Dimension::type('length')->name($this->context->value('width'));
     }
 
     /**
-     * Return the default length unit's name as singular or plural.
+     * Return the length unit's height name as singular or plural.
      * {{ length:heightName }}
      *
      * @return string
      */
     public function heightName(): string
     {
-        return Length::name($this->context->value('height'));
+        return Dimension::type('length')->name($this->context->value('height'));
     }
 }

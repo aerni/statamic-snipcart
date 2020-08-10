@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Aerni\Snipcart\Facades\Weight;
+use Aerni\Snipcart\Facades\Dimension;
 use Statamic\Tags\Tags;
 
 class WeightTags extends Tags
@@ -22,46 +22,46 @@ class WeightTags extends Tags
     protected static $aliases = ['wgt'];
 
     /**
-     * Return the default weight unit's abbreviation.
+     * Return the weight unit's abbreviation.
      * {{ weight:short }}
      *
      * @return string
      */
     public function short(): string
     {
-        return Weight::short();
+        return Dimension::type('weight')->short();
     }
 
     /**
-     * Return the default weight unit's singular name.
+     * Return the weight unit's singular name.
      * {{ weight:singular }}
      *
      * @return string
      */
     public function singular(): string
     {
-        return Weight::singular();
+        return Dimension::type('weight')->singular();
     }
 
     /**
-     * Return the default weight unit's plural name.
+     * Return the weight unit's plural name.
      * {{ weight:plural }}
      *
      * @return string
      */
     public function plural(): string
     {
-        return Weight::plural();
+        return Dimension::type('weight')->plural();
     }
 
     /**
-     * Return the default weight unit's name as singular or plural.
+     * Return the weight unit's name as singular or plural.
      * {{ weight:name }}
      *
      * @return string
      */
     public function name(): string
     {
-        return Weight::name($this->context->value('weight'));
+        return Dimension::type('weight')->name($this->context->value('weight'));
     }
 }

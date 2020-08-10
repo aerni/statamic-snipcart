@@ -12,7 +12,7 @@
 
 <script>
     export default {
-        name: 'length-fieldtype',
+        name: 'dimension-fieldtype',
         mixins: [Fieldtype],
         data() {
             return {

@@ -113,7 +113,8 @@ sections:
       -
         handle: weight
         field:
-          type: weight
+          type: dimension
+          options: weight
           localizable: false
           listable: hidden
           display: Weight
@@ -121,7 +122,8 @@ sections:
       -
         handle: length
         field:
-          type: length
+          type: dimension
+          options: length
           localizable: false
           listable: hidden
           display: Length
@@ -130,7 +132,8 @@ sections:
       -
         handle: width
         field:
-          type: length
+          type: dimension
+          options: length
           localizable: false
           listable: hidden
           display: Width
@@ -139,7 +142,8 @@ sections:
       -
         handle: height
         field:
-          type: length
+          type: dimension
+          options: length
           localizable: false
           listable: hidden
           display: Height
