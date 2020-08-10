@@ -22,7 +22,7 @@ class UnsupportedCurrencyException extends Exception implements ProvidesSolution
     {
         return BaseSolution::create("Please set a valid currency code in the config.")
             ->setSolutionDescription("Change the value of the `currency` key to a supported currency.")
-            ->setDocumentationLinks([   
+            ->setDocumentationLinks([
                 'Read the config guide' => 'https://snipcart.docs.michaelaerni.ch/setup/configuration',
             ]);
     }

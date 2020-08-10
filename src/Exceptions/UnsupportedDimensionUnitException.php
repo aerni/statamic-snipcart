@@ -32,7 +32,7 @@ class UnsupportedDimensionUnitException extends Exception implements ProvidesSol
 
         return BaseSolution::create("Please set a valid {$this->type} unit in the config.")
             ->setSolutionDescription($description)
-            ->setDocumentationLinks([   
+            ->setDocumentationLinks([
                 'Read the config guide' => 'https://snipcart.docs.michaelaerni.ch/setup/configuration',
             ]);
     }

@@ -18,12 +18,10 @@ class Converter
     public function convert(string $value = null, string $from = null, string $to = null)
     {
         if ($this->hasValue($value) && $this->canConvert($from, $to)) {
-
             return UnitConverter::binary()
                 ->convert($value)
                 ->from($from)
                 ->to($to);
-
         }
 
         if ($this->hasValue($value)) {
@@ -119,7 +117,7 @@ class Converter
      * Check if there is a value.
      *
      * @param mixed $key
-     * @return boolean
+     * @return bool
      */
     protected function hasValue($value): bool
     {

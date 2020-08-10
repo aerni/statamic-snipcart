@@ -36,11 +36,13 @@ class DimensionRepository implements DimensionRepositoryContract
 
         if ($type === 'length') {
             $this->unit = config('snipcart.length');
+
             return $this;
         }
         
         if ($type === 'weight') {
             $this->unit = config('snipcart.weight');
+
             return $this;
         }
 

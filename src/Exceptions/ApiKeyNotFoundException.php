@@ -26,7 +26,7 @@ class ApiKeyNotFoundException extends Exception implements ProvidesSolution
 
         return BaseSolution::create("You didn't set a Snipcart API Key.")
             ->setSolutionDescription($description)
-            ->setDocumentationLinks([   
+            ->setDocumentationLinks([
                 'Read the API Key guide' => 'https://snipcart.docs.michaelaerni.ch/setup/installation#add-snipcart-api-keys',
             ]);
     }
