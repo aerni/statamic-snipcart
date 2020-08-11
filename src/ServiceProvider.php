@@ -7,6 +7,7 @@ use Aerni\Snipcart\Tags\SnipcartTags;
 use Illuminate\Support\Facades\Config;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
+use Statamic\Facades\CP\Nav;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -27,6 +28,11 @@ class ServiceProvider extends AddonServiceProvider
         ],
     ];
 
+    protected $routes = [
+        'cp'  => __DIR__ . '/../routes/cp.php',
+    ];
+
+
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',
     ];
@@ -44,6 +50,7 @@ class ServiceProvider extends AddonServiceProvider
         
         Statamic::booted(function () {
             $this->bootVendorAssets();
+            $this->createNavigation();
         });
 
         Statamic::afterInstalled(function ($command) {
@@ -79,6 +86,7 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'snipcart');
     }
 
     /**
@@ -148,4 +156,20 @@ class ServiceProvider extends AddonServiceProvider
 
         return $apiKey;
     }
+
+    /**
+     * Create the Snipcart CP navigation
+     *
+     * @return void
+     */
+    protected function createNavigation(): void
+    {
+        Nav::extend(function ($nav) {
+            $nav->create('Orders')
+                ->section('Snipcart')
+                ->route('orders.index')
+                ->icon('drawer-file');
+        });
+    }
+
 }
