@@ -4,9 +4,9 @@ namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
 use Aerni\Snipcart\Tags\SnipcartTags;
+use Illuminate\Support\Facades\Config;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
-use Illuminate\Support\Facades\Config;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -87,7 +87,7 @@ class ServiceProvider extends AddonServiceProvider
      * @return void
      */
     protected function setSnipcartApiConfig(): void
-    {   
+    {
         $snipcartApiConfig = Config::get('snipcart-api');
         $snipcartConfig = Config::get('snipcart');
 
