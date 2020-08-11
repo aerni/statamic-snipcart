@@ -82,15 +82,20 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
-     * Set the config for the Snipcart API package.
+     * Set the config of the Snipcart API package.
      *
      * @return void
      */
     protected function setSnipcartApiConfig(): void
-    {
-        Config::set('snipcart-api.live_secret', config('snipcart.live_secret'));
-        Config::set('snipcart-api.test_secret', config('snipcart.test_secret'));
-        Config::set('snipcart-api.test_mode', config('snipcart.test_mode'));
+    {   
+        $snipcartApiConfig = Config::get('snipcart-api');
+        $snipcartConfig = Config::get('snipcart');
+
+        $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
+
+        foreach ($mergedConfigs as $key => $value) {
+            Config::set("snipcart-api.{$key}", $value);
+        }
     }
 
     /**
