@@ -6,6 +6,7 @@ use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
 use Aerni\Snipcart\Tags\SnipcartTags;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
+use Illuminate\Support\Facades\Config;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -55,6 +56,7 @@ class ServiceProvider extends AddonServiceProvider
         parent::register();
 
         Statamic::booted(function () {
+            $this->setSnipcartApiConfig();
             $this->registerRepositories();
             $this->registerTags();
         });
@@ -77,6 +79,18 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
+    }
+
+    /**
+     * Set the config for the Snipcart API package.
+     *
+     * @return void
+     */
+    protected function setSnipcartApiConfig(): void
+    {
+        Config::set('snipcart-api.live_secret', config('snipcart.live_secret'));
+        Config::set('snipcart-api.test_secret', config('snipcart.test_secret'));
+        Config::set('snipcart-api.test_mode', config('snipcart.test_mode'));
     }
 
     /**
