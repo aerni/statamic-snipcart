@@ -117,6 +117,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind('Converter', Support\Converter::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
         $this->app->bind('Dimension', Repositories\DimensionRepository::class);
+        $this->app->bind('Orders', Repositories\OrdersRepository::class);
         $this->app->bind('Product', Repositories\ProductRepository::class);
     }
 
@@ -165,6 +166,10 @@ class ServiceProvider extends AddonServiceProvider
     protected function createNavigation(): void
     {
         Nav::extend(function ($nav) {
+            $nav->create('Overview')
+                ->section('Snipcart')
+                ->route('overview.index')
+                ->icon('drawer-file');
             $nav->create('Orders')
                 ->section('Snipcart')
                 ->route('orders.index')
