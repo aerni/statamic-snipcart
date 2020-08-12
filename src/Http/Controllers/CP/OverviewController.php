@@ -11,7 +11,7 @@ class OverviewController extends CpController
     {
         return view('snipcart::cp.overview.index', [
             'number' => Orders::number(),
-            'sales' => Orders::sales()
+            'sales' => Orders::sales(),
         ]);
     }
 }

@@ -10,7 +10,7 @@ class OrdersController extends CpController
     public function index()
     {
         return view('snipcart::cp.orders.index', [
-            'orders' => Orders::overview()
+            'orders' => Orders::overview(),
         ]);
     }
 }

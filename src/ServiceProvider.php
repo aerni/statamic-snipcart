@@ -5,9 +5,9 @@ namespace Aerni\Snipcart;
 use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
 use Aerni\Snipcart\Tags\SnipcartTags;
 use Illuminate\Support\Facades\Config;
+use Statamic\Facades\CP\Nav;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
-use Statamic\Facades\CP\Nav;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -29,7 +29,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $routes = [
-        'cp'  => __DIR__ . '/../routes/cp.php',
+        'cp' => __DIR__ . '/../routes/cp.php',
     ];
 
 
@@ -176,5 +176,4 @@ class ServiceProvider extends AddonServiceProvider
                 ->icon('drawer-file');
         });
     }
-
 }
