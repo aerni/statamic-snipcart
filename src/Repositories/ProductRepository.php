@@ -11,6 +11,8 @@ use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Support\Str;
+use Aerni\Snipcart\Facades\Currency;
+use Cknow\Money\Money;
 
 class ProductRepository implements ProductRepositoryContract
 {
@@ -38,7 +40,7 @@ class ProductRepository implements ProductRepositoryContract
     {
         $this->product = EntryFacade::find($id);
         $this->data = $this->product->data();
-        
+
         return $this;
     }
 
@@ -51,7 +53,7 @@ class ProductRepository implements ProductRepositoryContract
     {
         $attributes = $this->mapAttributes($this->data);
         $attributes->put('url', Request::url());
-        
+
         return Validator::onlyValidAttributes($attributes);
     }
 
@@ -83,7 +85,7 @@ class ProductRepository implements ProductRepositoryContract
             if ($key === config('snipcart.taxonomies.taxes') && ! empty($item)) {
                 return ['taxes' => $this->mapTaxes()];
             }
-            
+
             if ($key === 'custom_fields' && ! empty($item)) {
                 return $this->mapCustomFields($item);
             }
@@ -106,6 +108,10 @@ class ProductRepository implements ProductRepositoryContract
 
             if ($key === 'height' && ! empty($item)) {
                 return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            }
+
+            if ($key === 'price' && ! empty($item)) {
+                return [$key => Currency::formatByDecimal($item)];
             }
 
             return [$key => $item];
@@ -222,7 +228,7 @@ class ProductRepository implements ProductRepositoryContract
             if (empty($price)) {
                 return $name;
             }
-            
+
             return "{$name}[{$price}]";
         })->implode('|');
 
@@ -291,22 +297,26 @@ class ProductRepository implements ProductRepositoryContract
     protected function calcPriceDifference($price)
     {
         if (array_key_exists('price', $this->data->toArray())) {
-            $originalPrice = $this->data['price'];
-            $priceDifference = $price - $originalPrice;
 
             if (is_null($price)) {
                 return null;
             }
 
-            if ($originalPrice === $price) {
+            $currency = config('snipcart.currency');
+            $originalPrice = Money::$currency($this->data['price']);
+            $price = Money::$currency($price);
+
+            if ($originalPrice->getAmount() === $price->getAmount()) {
                 return null;
             }
-    
-            if (! Str::startsWith($priceDifference, '-')) {
-                return "+{$priceDifference}";
+
+            $priceDifference = $price->subtract($originalPrice)->formatByDecimal();
+
+            if (Str::startsWith($priceDifference, '-')) {
+                return $priceDifference;
             }
-            
-            return $priceDifference;
+
+            return "+{$priceDifference}";
         }
     }
 
