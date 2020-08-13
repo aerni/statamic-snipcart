@@ -84,7 +84,8 @@ class CurrencyRepository implements CurrencyRepositoryContract
             return null;
         }
 
-        return (string) Money::USD($value)->absolute()->formatByDecimal();
+        $currency = $this->currency;
+        return (string) Money::$currency($value)->absolute()->formatByDecimal();
     }
 
     /**
