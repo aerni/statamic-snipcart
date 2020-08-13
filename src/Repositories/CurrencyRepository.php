@@ -76,7 +76,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Parse integer to decimal string.
      *
      * @param integer|null $value
-     * @return string
+     * @return string|null
      */
     public function formatByDecimal(int $value = null)
     {
@@ -91,7 +91,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Parse decimal string to integer.
      *
      * @param string|null $value
-     * @return integer
+     * @return integer|null
      */
     public function parseByDecimal(string $value = null)
     {

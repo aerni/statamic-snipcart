@@ -8,7 +8,7 @@ use UnitConverter\UnitConverter;
 class Converter
 {
     /**
-     * Convert a value from on unit to another.
+     * Convert a value from a unit to another.
      *
      * @param string $value
      * @param string $from
@@ -96,7 +96,7 @@ class Converter
         $width = $data->get('width');
         $height = $data->get('height');
         $weight = $data->get('weight');
-        
+
         $convertedLength = $this->convertLength($length, $entryLengthUnit);
         $convertedWidth = $this->convertLength($width, $entryLengthUnit);
         $convertedHeight = $this->convertLength($height, $entryLengthUnit);
