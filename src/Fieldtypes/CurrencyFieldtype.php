@@ -27,7 +27,7 @@ class CurrencyFieldtype extends Fieldtype
      */
     public function preProcess($data)
     {
-        return Currency::parse($data);
+        return Currency::formatByDecimal($data);
     }
 
     /**
@@ -38,6 +38,6 @@ class CurrencyFieldtype extends Fieldtype
      */
     public function process($data)
     {
-        return Currency::parse($data);
+        return Currency::parseByDecimal($data);
     }
 }
