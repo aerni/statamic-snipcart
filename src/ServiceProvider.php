@@ -5,6 +5,7 @@ namespace Aerni\Snipcart;
 use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
 use Aerni\Snipcart\Tags\SnipcartTags;
 use Illuminate\Support\Facades\Config;
+use Statamic\Facades\Site;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -41,7 +42,7 @@ class ServiceProvider extends AddonServiceProvider
     public function boot(): void
     {
         parent::boot();
-        
+
         Statamic::booted(function () {
             $this->bootVendorAssets();
         });
@@ -57,6 +58,7 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::booted(function () {
             $this->setSnipcartApiConfig();
+            $this->setMoneyConfig();
             $this->registerRepositories();
             $this->registerTags();
         });
@@ -99,6 +101,17 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
+     * Set the config for the "cknow/laravel-money" package.
+     *
+     * @return void
+     */
+    protected function setMoneyConfig(): void
+    {
+        Config::set('money.locale', Site::default()->locale());
+        Config::set('money.defaultCurrency', Config::get('snipcart.currency'));
+    }
+
+    /**
      * Bind the repositories.
      *
      * @return void
@@ -137,7 +150,7 @@ class ServiceProvider extends AddonServiceProvider
     protected function apiKey()
     {
         $mode = config('snipcart.test_mode');
-        
+
         $apiKey = $mode
             ? config('snipcart.test_key')
             : config('snipcart.live_key');

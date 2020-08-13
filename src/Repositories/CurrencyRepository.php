@@ -5,7 +5,7 @@ namespace Aerni\Snipcart\Repositories;
 use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
 use Aerni\Snipcart\Exceptions\UnsupportedCurrencyException;
 use Aerni\Snipcart\Models\Currency;
-use Illuminate\Support\Str;
+use Cknow\Money\Money;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
@@ -38,7 +38,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
         if (is_null($currency)) {
             throw new UnsupportedCurrencyException($this->currency);
         }
-        
+
         return $currency->only(['code', 'name', 'symbol']);
     }
 
@@ -73,21 +73,32 @@ class CurrencyRepository implements CurrencyRepositoryContract
     }
 
     /**
-     * Parse the value to two decimal places.
+     * Parse integer to decimal string.
      *
-     * @param mixed $value
-     * @return mixed
+     * @param integer|null $value
+     * @return string
      */
-    public function parse($value)
+    public function formatByDecimal(int $value = null)
     {
-        if (Str::startsWith($value, '-')) {
-            return '0.00';
-        }
-
         if (is_null($value)) {
             return null;
         }
 
-        return number_format(floatval($value), 2, '.', '');
+        return (string) Money::USD($value)->absolute()->formatByDecimal();
+    }
+
+    /**
+     * Parse decimal string to integer.
+     *
+     * @param string|null $value
+     * @return integer
+     */
+    public function parseByDecimal(string $value = null)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return (int) Money::parseByDecimal($value, $this->currency)->absolute()->getAmount();
     }
 }

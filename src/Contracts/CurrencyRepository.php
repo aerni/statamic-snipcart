@@ -12,5 +12,7 @@ interface CurrencyRepository
 
     public function symbol(): string;
 
-    public function parse($amount);
+    public function formatBydecimal(int $value = null);
+
+    public function parseBydecimal(string $value = null);
 }
