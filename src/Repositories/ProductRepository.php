@@ -4,15 +4,15 @@ namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\ProductRepository as ProductRepositoryContract;
 use Aerni\Snipcart\Facades\Converter;
+use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Support\Validator;
+use Cknow\Money\Money;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Support\Str;
-use Aerni\Snipcart\Facades\Currency;
-use Cknow\Money\Money;
 
 class ProductRepository implements ProductRepositoryContract
 {
@@ -297,7 +297,6 @@ class ProductRepository implements ProductRepositoryContract
     protected function calcPriceDifference($price)
     {
         if (array_key_exists('price', $this->data->toArray())) {
-
             if (is_null($price)) {
                 return null;
             }
