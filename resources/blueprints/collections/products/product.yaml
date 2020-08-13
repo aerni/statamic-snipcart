@@ -314,16 +314,37 @@ sections:
                           listable: hidden
                           display: Name
                           validate: required
+                          width: 50
                       -
                         handle: price
                         field:
                           type: currency
-                          instructions: 'You may define a different price for this product option.'
+                          instructions: 'Leave empty to use the default price.'
                           localizable: false
                           listable: hidden
                           display: Price
                           validate: numeric
-                    mode: table
+                          width: 50
+                      -
+                        handle: stock
+                        field:
+                          type: stock
+                          instructions: 'Leave empty to use the default stock.'
+                          localizable: false
+                          listable: hidden
+                          display: Stock
+                          width: 50
+                      -
+                        handle: unlimited_stock
+                        field:
+                          type: toggle
+                          instructions: 'Activate to set the stock to unlimited.'
+                          localizable: false
+                          listable: hidden
+                          display: 'Unlimited Stock'
+                          width: 50
+                          validate: required
+                    mode: stacked
                     reorderable: true
                     type: grid
                     localizable: false
@@ -426,3 +447,21 @@ sections:
           instructions: 'The slug of the product.'
           listable: hidden
           display: Slug
+      -
+        handle: stock
+        field:
+          type: stock
+          instructions: 'Set the stock of this product.'
+          localizable: false
+          listable: hidden
+          display: Stock
+          validate: '|required_if:unlimited_stock,false'
+      -
+        handle: unlimited_stock
+        field:
+          type: toggle
+          instructions: 'Activate to set the stock to unlimited.'
+          localizable: false
+          listable: hidden
+          display: 'Unlimited Stock'
+          validate: required
