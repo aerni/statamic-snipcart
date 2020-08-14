@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Request;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
-use Statamic\Support\Str;
 use Statamic\Facades\Site;
+use Statamic\Support\Str;
 
 class ProductRepository implements ProductRepositoryContract
 {

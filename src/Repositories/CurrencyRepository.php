@@ -73,7 +73,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     /**
      * Format an integer to a currency string.
      *
-     * @param integer|null $value
+     * @param int|null $value
      * @param Site $site
      * @return string|null
      */
@@ -93,7 +93,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     /**
      * Format an integer to a decimal string.
      *
-     * @param integer|null $value
+     * @param int|null $value
      * @param Site $site
      * @return string|null
      */
@@ -112,7 +112,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     /**
      * Format an integer to a decimal string.
      *
-     * @param integer|null $value
+     * @param int|null $value
      * @param Site $site
      * @return string|null
      */
@@ -134,7 +134,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      *
      * @param string|null $value
      * @param Site $site
-     * @return integer|null
+     * @return int|null
      */
     public function parseDecimal(?string $value, Site $site)
     {

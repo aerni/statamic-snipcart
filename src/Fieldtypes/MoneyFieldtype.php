@@ -3,8 +3,8 @@
 namespace Aerni\Snipcart\Fieldtypes;
 
 use Aerni\Snipcart\Facades\Currency;
-use Statamic\Fields\Fieldtype;
 use Statamic\Facades\Site;
+use Statamic\Fields\Fieldtype;
 
 class MoneyFieldtype extends Fieldtype
 {
