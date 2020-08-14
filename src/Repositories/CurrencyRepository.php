@@ -75,7 +75,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     /**
      * Parse integer to decimal string.
      *
-     * @param integer|null $value
+     * @param int|null $value
      * @return string
      */
     public function formatByDecimal(int $value = null)
@@ -85,6 +85,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
         }
 
         $currency = $this->currency;
+
         return (string) Money::$currency($value)->absolute()->formatByDecimal();
     }
 
@@ -92,7 +93,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Parse decimal string to integer.
      *
      * @param string|null $value
-     * @return integer
+     * @return int
      */
     public function parseByDecimal(string $value = null)
     {
