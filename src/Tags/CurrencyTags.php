@@ -16,13 +16,6 @@ class CurrencyTags extends Tags
     protected static $handle = 'currency';
 
     /**
-     * An alias of the tag handle.
-     *
-     * @var array
-     */
-    protected static $aliases = ['cy'];
-
-    /**
      * Return the currency code.
      * {{ currency:code }}
      *

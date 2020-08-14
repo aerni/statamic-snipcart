@@ -17,13 +17,6 @@ class SnipcartTags extends Tags
     protected static $handle = 'snipcart';
 
     /**
-     * An alias of the tag handle.
-     *
-     * @var array
-     */
-    protected static $aliases = ['sc'];
-
-    /**
      * The config of this addon.
      *
      * @var array

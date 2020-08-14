@@ -15,13 +15,6 @@ class LengthTags extends Tags
     protected static $handle = 'length';
 
     /**
-     * An alias of the tag handle.
-     *
-     * @var array
-     */
-    protected static $aliases = ['len'];
-
-    /**
      * Return the length unit's abbreviation.
      * {{ length:short }}
      *

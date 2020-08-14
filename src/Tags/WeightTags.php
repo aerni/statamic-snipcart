@@ -15,13 +15,6 @@ class WeightTags extends Tags
     protected static $handle = 'weight';
 
     /**
-     * An alias of the tag handle.
-     *
-     * @var array
-     */
-    protected static $aliases = ['wgt'];
-
-    /**
      * Return the weight unit's abbreviation.
      * {{ weight:short }}
      *
