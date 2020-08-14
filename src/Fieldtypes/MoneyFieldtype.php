@@ -5,7 +5,7 @@ namespace Aerni\Snipcart\Fieldtypes;
 use Aerni\Snipcart\Facades\Currency;
 use Statamic\Fields\Fieldtype;
 
-class CurrencyFieldtype extends Fieldtype
+class MoneyFieldtype extends Fieldtype
 {
     protected $icon = 'tags';
 

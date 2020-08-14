@@ -17,8 +17,8 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $fieldtypes = [
-        Fieldtypes\CurrencyFieldtype::class,
         Fieldtypes\DimensionFieldtype::class,
+        Fieldtypes\MoneyFieldtype::class,
     ];
 
     protected $listen = [

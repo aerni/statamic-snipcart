@@ -46,7 +46,7 @@ sections:
       -
         handle: price
         field:
-          type: currency
+          type: money
           localizable: false
           listable: true
           display: Price
@@ -317,7 +317,7 @@ sections:
                       -
                         handle: price
                         field:
-                          type: currency
+                          type: money
                           instructions: 'You may define a different price for this product option.'
                           localizable: false
                           listable: hidden
