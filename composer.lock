@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd8f0861dd75ebc2eecd7175dee6adc7",
+    "content-hash": "5c66dcdb7e4467168aebbbb27b5adf2d",
     "packages": [
         {
             "name": "aerni/snipcart-api",
@@ -164,69 +164,6 @@
                 }
             ],
             "time": "2020-03-04T02:49:53+00:00"
-        },
-        {
-            "name": "cknow/laravel-money",
-            "version": "v5.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cknow/laravel-money.git",
-                "reference": "f5891333d0f567ec4c2d525e0d3a8dc515cb19a8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cknow/laravel-money/zipball/f5891333d0f567ec4c2d525e0d3a8dc515cb19a8",
-                "reference": "f5891333d0f567ec4c2d525e0d3a8dc515cb19a8",
-                "shasum": ""
-            },
-            "require": {
-                "ext-intl": "*",
-                "ext-json": "*",
-                "illuminate/support": "^7.0",
-                "illuminate/view": "^7.0",
-                "moneyphp/money": "^3.3",
-                "php": "^7.2.5"
-            },
-            "require-dev": {
-                "graham-campbell/testbench": "^5.4",
-                "illuminate/filesystem": "^7.0",
-                "mockery/mockery": "^1.3",
-                "phpunit/phpunit": "^8.5|^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Cknow\\Money\\MoneyServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "Cknow\\Money\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ricardo Gobbo de Souza",
-                    "email": "ricardogobbosouza@yahoo.com.br"
-                }
-            ],
-            "description": "Laravel Money",
-            "homepage": "https://github.com/cknow/laravel-money",
-            "keywords": [
-                "currency",
-                "laravel",
-                "money"
-            ],
-            "time": "2020-07-01T18:22:09+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -1887,16 +1824,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "481c0174b9c99b189959e2bb9d6f52188ed1f692"
+                "reference": "6e96f54d82e71f71c4108da33ee96a7f57083710"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/481c0174b9c99b189959e2bb9d6f52188ed1f692",
-                "reference": "481c0174b9c99b189959e2bb9d6f52188ed1f692",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/6e96f54d82e71f71c4108da33ee96a7f57083710",
+                "reference": "6e96f54d82e71f71c4108da33ee96a7f57083710",
                 "shasum": ""
             },
             "require": {
@@ -1974,7 +1911,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2020-08-09T15:57:10+00:00"
+            "time": "2020-08-12T14:23:41+00:00"
         },
         {
             "name": "league/glide",

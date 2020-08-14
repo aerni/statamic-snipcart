@@ -4,12 +4,30 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Sites
+    |--------------------------------------------------------------------------
+    |
+    | The site handles need to be in sync with your Statamic config.
+    | Make sure to add a new key for each site found in `config/statamic/site.php`.
+    |
+    */
+
+    'sites' => [
+
+        'default' => [
+            'currency' => 'USD',
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Collections & Taxonomies
     |--------------------------------------------------------------------------
     |
     | Define the handles of the products collection and taxonomies.
     |
-    | If you change a value, you need to run 'php please snipcart:setup' 
+    | If you change a value, you need to run 'php please snipcart:setup'
     | to re-generate the collection, taxonomies, and blueprints.
     |
     */
@@ -17,7 +35,7 @@ return [
     'collections' => [
         'products' => 'products',
     ],
-    
+
     'taxonomies' => [
         'categories' => 'categories',
         'taxes' => 'taxes',
@@ -34,7 +52,7 @@ return [
 
     'live_key' => env('SNIPCART_LIVE_KEY'),
     'live_secret' => env('SNIPCART_LIVE_SECRET'),
-    
+
     'test_key' => env('SNIPCART_TEST_KEY'),
     'test_secret' => env('SNIPCART_TEST_SECRET'),
 
@@ -63,28 +81,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Currency
-    |--------------------------------------------------------------------------
-    |
-    | Define the currency you want to use.
-    |
-    */
-
-    'currency' => 'USD',
-
-    /*
-    |--------------------------------------------------------------------------
     | Length Unit
     |--------------------------------------------------------------------------
     |
-    | Define the length unit you want to use. 
+    | Define the length unit you want to use.
     | You can choose between the following options: 'cm', 'm', 'in', 'ft'.
     |
     | If you change a value, you may run 'php please snipcart:migrate'
     | to convert your products' lengths to the new unit.
     |
     */
-    
+
     'length' => 'cm',
 
     /*
@@ -92,14 +99,14 @@ return [
     | Weight Unit
     |--------------------------------------------------------------------------
     |
-    | Define the weight unit you want to use. 
+    | Define the weight unit you want to use.
     | You can choose between the following options: 'g', 'kg', 'oz', 'lb'.
     |
     | If you change a value, you may run 'php please snipcart:migrate'
     | to convert your products' lengths to the new unit.
     |
     */
-    
+
     'weight' => 'g',
 
     /*
@@ -113,13 +120,13 @@ return [
     */
 
     'behaviour' => null,
-    
+
     /*
     |--------------------------------------------------------------------------
     | Cart Image
     |--------------------------------------------------------------------------
     |
-    | Define a Glide preset to be applied to the product image that shows 
+    | Define a Glide preset to be applied to the product image that shows
     | in the cart. You may also turn the manipulation off (not recommended).
     |
     */

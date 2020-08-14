@@ -2,17 +2,23 @@
 
 namespace Aerni\Snipcart\Contracts;
 
+use Statamic\Sites\Site;
+
 interface CurrencyRepository
 {
-    public function all(): array;
+    public function get(Site $site): array;
 
-    public function code(): string;
+    public function code(Site $site): string;
 
-    public function name(): string;
+    public function symbol(Site $site): string;
 
-    public function symbol(): string;
+    public function name(Site $site): string;
 
-    public function formatBydecimal(int $value = null);
+    public function formatCurrency(?int $value, Site $site);
 
-    public function parseBydecimal(string $value = null);
+    public function formatDecimal(?int $value, Site $site);
+
+    public function formatDecimalIntl(?int $value, Site $site);
+
+    public function parseDecimal(?string $value, Site $site);
 }

@@ -6,13 +6,13 @@ use Aerni\Snipcart\Contracts\ProductRepository as ProductRepositoryContract;
 use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Support\Validator;
-use Cknow\Money\Money;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Support\Str;
+use Statamic\Facades\Site;
 
 class ProductRepository implements ProductRepositoryContract
 {
@@ -111,7 +111,7 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === 'price' && ! empty($item)) {
-                return [$key => Currency::formatByDecimal($item)];
+                return [$key => Currency::formatDecimal($item, Site::current())];
             }
 
             return [$key => $item];
@@ -301,15 +301,13 @@ class ProductRepository implements ProductRepositoryContract
                 return null;
             }
 
-            $currency = config('snipcart.currency');
-            $originalPrice = Money::$currency($this->data['price']);
-            $price = Money::$currency($price);
+            $originalPrice = $this->data['price'];
 
-            if ($originalPrice->getAmount() === $price->getAmount()) {
+            if ($originalPrice === $price) {
                 return null;
             }
 
-            $priceDifference = $price->subtract($originalPrice)->formatByDecimal();
+            $priceDifference = Currency::formatDecimal($price - $originalPrice, Site::current());
 
             if (Str::startsWith($priceDifference, '-')) {
                 return $priceDifference;
