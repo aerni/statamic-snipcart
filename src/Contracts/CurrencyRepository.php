@@ -6,19 +6,23 @@ use Statamic\Sites\Site;
 
 interface CurrencyRepository
 {
-    public function get(Site $site): array;
+    public function from(Site $site): self;
 
-    public function code(Site $site): string;
+    public function all(): array;
 
-    public function symbol(Site $site): string;
+    public function get(string $key): string;
 
-    public function name(Site $site): string;
+    public function code(): string;
 
-    public function formatCurrency(?int $value, Site $site);
+    public function symbol(): string;
 
-    public function formatDecimal(?int $value, Site $site);
+    public function name(): string;
 
-    public function formatDecimalIntl(?int $value, Site $site);
+    public function formatCurrency(?int $value);
 
-    public function parseDecimal(?string $value, Site $site);
+    public function formatDecimal(?int $value);
+
+    public function formatDecimalIntl(?int $value);
+
+    public function parseDecimal(?string $value);
 }

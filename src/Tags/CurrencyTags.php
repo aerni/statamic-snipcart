@@ -30,7 +30,7 @@ class CurrencyTags extends Tags
      */
     public function code(): string
     {
-        return Currency::code(Site::current());
+        return Currency::from(Site::current())->code();
     }
 
     /**
@@ -41,7 +41,7 @@ class CurrencyTags extends Tags
      */
     public function name(): string
     {
-        return Currency::name(Site::current());
+        return Currency::from(Site::current())->name();
     }
 
     /**
@@ -52,6 +52,6 @@ class CurrencyTags extends Tags
      */
     public function symbol(): string
     {
-        return Currency::symbol(Site::current());
+        return Currency::from(Site::current())->symbol();
     }
 }

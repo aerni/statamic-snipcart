@@ -111,7 +111,7 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === 'price' && ! empty($item)) {
-                return [$key => Currency::formatDecimal($item, Site::current())];
+                return [$key => Currency::from(Site::current())->formatDecimal($item)];
             }
 
             return [$key => $item];
@@ -307,7 +307,7 @@ class ProductRepository implements ProductRepositoryContract
                 return null;
             }
 
-            $priceDifference = Currency::formatDecimal($price - $originalPrice, Site::current());
+            $priceDifference = Currency::from(Site::current())->formatDecimal($price - $originalPrice);
 
             if (Str::startsWith($priceDifference, '-')) {
                 return $priceDifference;

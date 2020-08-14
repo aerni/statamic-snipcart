@@ -17,7 +17,7 @@ class MoneyFieldtype extends Fieldtype
      */
     public function preload(): array
     {
-        return Currency::get(Site::current());
+        return Currency::from(Site::current())->all();
     }
 
     /**
@@ -28,7 +28,7 @@ class MoneyFieldtype extends Fieldtype
      */
     public function preProcess($data)
     {
-        return Currency::formatDecimalIntl($data, Site::current());
+        return Currency::from(Site::current())->formatDecimalIntl($data);
     }
 
     /**
@@ -39,7 +39,7 @@ class MoneyFieldtype extends Fieldtype
      */
     public function process($data)
     {
-        return Currency::parseDecimal($data, Site::current());
+        return Currency::from(Site::current())->parseDecimal($data);
     }
 
     /**
@@ -50,6 +50,6 @@ class MoneyFieldtype extends Fieldtype
      */
     public function augment($data)
     {
-        return Currency::formatDecimalIntl($data, Site::current());
+        return Currency::from(Site::current())->formatDecimalIntl($data);
     }
 }

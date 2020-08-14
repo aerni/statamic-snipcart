@@ -18,73 +18,97 @@ use Statamic\Sites\Site;
 class CurrencyRepository implements CurrencyRepositoryContract
 {
     /**
-     * Get the currency's code, symbol and name.
+     * The site to get the currency from.
+     *
+     * @var Site
+     */
+    protected $site;
+
+    /**
+     * Set the site property.
      *
      * @param Site $site
+     */
+    public function from(Site $site): self
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get an array of the currency's data.
+     *
      * @return array
      */
-    public function get(Site $site): array
+    public function all(): array
     {
-        $siteSettings = collect(Config::get('snipcart.sites'))
-            ->get($site->handle());
+        $currencySetting = collect(Config::get('snipcart.sites'))
+            ->get($this->site->handle())['currency'];
 
-        $currency = CurrencyModel::firstWhere('code', $siteSettings['currency']);
+        $currency = CurrencyModel::firstWhere('code', $currencySetting);
 
         if (is_null($currency)) {
-            throw new UnsupportedCurrencyException($site->handle(), $siteSettings['currency']);
+            throw new UnsupportedCurrencyException($this->site->handle(), $currencySetting);
         }
 
-        return $currency->only(['code', 'symbol', 'name']);
+        return $currency->toArray();
+    }
+
+    /**
+     * Get a currency value by key.
+     *
+     * @return string
+     */
+    public function get(string $key): string
+    {
+        return $this->all()[$key];
     }
 
     /**
      * Get the currency's code.
      *
-     * @param Site $site
      * @return string
      */
-    public function code(Site $site): string
+    public function code(): string
     {
-        return $this->get($site)['code'];
+        return $this->get('code');
     }
 
     /**
      * Get the currency's symbol.
      *
-     * @param Site $site
      * @return string
      */
-    public function symbol(Site $site): string
+    public function symbol(): string
     {
-        return $this->get($site)['symbol'];
+        return $this->get('symbol');
     }
 
     /**
      * Get the currency's name.
      *
-     * @param Site $site
      * @return string
      */
-    public function name(Site $site): string
+    public function name(): string
     {
-        return $this->get($site)['name'];
+        return $this->get('symbol');
     }
 
     /**
      * Format an integer to a currency string.
      *
      * @param int|null $value
-     * @param Site $site
      * @return string|null
      */
-    public function formatCurrency(?int $value, Site $site)
+    public function formatCurrency(?int $value)
     {
         if (is_null($value)) {
             return null;
         }
 
-        $money = new Money($value, new Currency($this->code($site)));
-        $numberFormatter = new NumberFormatter($site->locale(), NumberFormatter::CURRENCY);
+        $money = new Money($value, new Currency($this->code()));
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::CURRENCY);
         $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
 
         return (string) $moneyFormatter->format($money);
@@ -94,16 +118,15 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Format an integer to a decimal string.
      *
      * @param int|null $value
-     * @param Site $site
      * @return string|null
      */
-    public function formatDecimal(?int $value, Site $site)
+    public function formatDecimal(?int $value)
     {
         if (is_null($value)) {
             return null;
         }
 
-        $money = new Money($value, new Currency($this->code($site)));
+        $money = new Money($value, new Currency($this->code()));
         $moneyFormatter = new DecimalMoneyFormatter(new ISOCurrencies());
 
         return (string) $moneyFormatter->format($money);
@@ -113,17 +136,16 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Format an integer to a decimal string.
      *
      * @param int|null $value
-     * @param Site $site
      * @return string|null
      */
-    public function formatDecimalIntl(?int $value, Site $site)
+    public function formatDecimalIntl(?int $value)
     {
         if (is_null($value)) {
             return null;
         }
 
-        $money = new Money($value, new Currency($this->code($site)));
-        $numberFormatter = new NumberFormatter($site->locale(), NumberFormatter::DECIMAL);
+        $money = new Money($value, new Currency($this->code()));
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
         $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
 
         return (string) $moneyFormatter->format($money);
@@ -133,18 +155,17 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Parse a decimal string to an integer.
      *
      * @param string|null $value
-     * @param Site $site
      * @return int|null
      */
-    public function parseDecimal(?string $value, Site $site)
+    public function parseDecimal(?string $value)
     {
         if (is_null($value)) {
             return null;
         }
 
-        $numberFormatter = new NumberFormatter($site->locale(), NumberFormatter::DECIMAL);
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
         $moneyParser = new IntlLocalizedDecimalParser($numberFormatter, new ISOCurrencies());
 
-        return (int) $moneyParser->parse($value, new Currency($this->code($site)))->getAmount();
+        return (int) $moneyParser->parse($value, new Currency($this->code()))->getAmount();
     }
 }
