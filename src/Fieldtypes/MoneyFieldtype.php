@@ -40,4 +40,15 @@ class MoneyFieldtype extends Fieldtype
     {
         return Currency::parseByDecimal($data);
     }
+
+    /**
+     * Process the data before it gets loaded into the view.
+     *
+     * @param mixed $data
+     * @return array|mixed
+     */
+    public function augment($data)
+    {
+        return Currency::formatByDecimal($data);
+    }
 }
