@@ -489,7 +489,7 @@ class Currency extends Model
             ],
             [
                 'code' => 'USD',
-                'name' => __('snipcart::currencies.UDF'),
+                'name' => __('snipcart::currencies.USD'),
                 'symbol' => '$',
             ],
             [
