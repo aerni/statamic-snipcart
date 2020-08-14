@@ -19,8 +19,8 @@
         "php": "^7.2.5",
         "aerni/snipcart-api": "dev-master",
         "calebporzio/sushi": "^2.0",
-        "cknow/laravel-money": "^5.0",
         "jordanbrauer/unit-converter": "^0.8.4",
+        "moneyphp/money": "^3.3",
         "statamic/cms": "^3.0@beta"
     },
     "require-dev": {

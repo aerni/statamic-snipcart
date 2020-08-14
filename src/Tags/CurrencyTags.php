@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart\Tags;
 
 use Aerni\Snipcart\Facades\Currency;
+use Statamic\Facades\Site;
 use Statamic\Tags\Tags;
 
 class CurrencyTags extends Tags
@@ -29,7 +30,7 @@ class CurrencyTags extends Tags
      */
     public function code(): string
     {
-        return Currency::code();
+        return Currency::code(Site::current());
     }
 
     /**
@@ -40,7 +41,7 @@ class CurrencyTags extends Tags
      */
     public function name(): string
     {
-        return Currency::name();
+        return Currency::name(Site::current());
     }
 
     /**
@@ -51,6 +52,6 @@ class CurrencyTags extends Tags
      */
     public function symbol(): string
     {
-        return Currency::symbol();
+        return Currency::symbol(Site::current());
     }
 }

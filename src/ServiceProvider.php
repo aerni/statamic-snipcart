@@ -17,8 +17,8 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $fieldtypes = [
-        Fieldtypes\CurrencyFieldtype::class,
         Fieldtypes\DimensionFieldtype::class,
+        Fieldtypes\MoneyFieldtype::class,
     ];
 
     protected $listen = [
@@ -45,6 +45,8 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::booted(function () {
             $this->bootVendorAssets();
+            $this->setMoneyConfig();
+            $this->setSnipcartApiConfig();
         });
 
         Statamic::afterInstalled(function ($command) {
@@ -57,8 +59,6 @@ class ServiceProvider extends AddonServiceProvider
         parent::register();
 
         Statamic::booted(function () {
-            $this->setSnipcartApiConfig();
-            $this->setMoneyConfig();
             $this->registerRepositories();
             $this->registerTags();
         });
@@ -107,8 +107,11 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function setMoneyConfig(): void
     {
-        Config::set('money.locale', Site::default()->locale());
-        Config::set('money.defaultCurrency', Config::get('snipcart.currency'));
+        $locale = Site::default()->locale();
+        $currency = Config::get('snipcart.currency');
+
+        Config::set('money.locale', $locale);
+        Config::set('money.defaultCurrency', $currency);
     }
 
     /**

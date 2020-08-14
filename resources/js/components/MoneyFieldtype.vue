@@ -13,7 +13,7 @@
 
 <script>
     export default {
-        name: 'currency-fieldtype',
+        name: 'money-fieldtype',
         mixins: [Fieldtype],
         data() {
             return {
