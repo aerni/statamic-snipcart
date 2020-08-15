@@ -40,9 +40,24 @@ class ProductRepository implements ProductRepositoryContract
     public function find(string $id): self
     {
         $this->product = EntryFacade::find($id);
-        $this->data = $this->product->data();
+        $this->data = $this->data();
 
         return $this;
+    }
+
+    /**
+     * Get the products data.
+     *
+     * @return Collection
+     */
+    protected function data(): Collection
+    {
+        if ($this->product->hasOrigin()) {
+            return $this->product->origin()->data()
+                ->merge($this->product->data()->filter());
+        }
+
+        return $this->product->data();
     }
 
     /**
