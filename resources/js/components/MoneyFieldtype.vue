@@ -4,6 +4,7 @@
             type="number"
             :prepend="symbol"
             :placeholder="originalPrice"
+            :isReadOnly="isReadOnly"
             min="0"
             step="1"
             :value="value"
