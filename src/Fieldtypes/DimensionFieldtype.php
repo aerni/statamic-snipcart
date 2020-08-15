@@ -4,6 +4,8 @@ namespace Aerni\Snipcart\Fieldtypes;
 
 use Aerni\Snipcart\Facades\Dimension;
 use Statamic\Fields\Fieldtype;
+use Statamic\Facades\Site;
+use Aerni\Snipcart\Facades\Converter;
 
 class DimensionFieldtype extends Fieldtype
 {
@@ -33,28 +35,63 @@ class DimensionFieldtype extends Fieldtype
      */
     public function preload(): array
     {
-        return Dimension::type($this->config('options'))->all();
+        return Dimension::from(Site::default())
+            ->type($this->config('options'))
+            ->all();
     }
 
     /**
      * Pre-process the data before it gets sent to the publish page.
      *
-     * @param mixed $data
-     * @return array|mixed
+     * @param string|null $data
+     * @return string|null
      */
     public function preProcess($data)
     {
-        return Dimension::type($this->config('options'))->parse($data);
+        return Dimension::from(Site::default())
+            ->type($this->config('options'))
+            ->parse($data);
     }
 
     /**
      * Process the data before it gets saved.
      *
-     * @param mixed $data
-     * @return array|mixed
+     * @param string|null $data
+     * @return string|null
      */
     public function process($data)
     {
-        return Dimension::type($this->config('options'))->parse($data);
+        return Dimension::from(Site::default())
+            ->type($this->config('options'))
+            ->parse($data);
+    }
+
+    /**
+     * Process the data before it gets loaded into the view.
+     *
+     * @param int|null $data
+     * @return string|null
+     */
+    public function augment($data)
+    {
+        return $this->convertUnit($this->config('options'), $data);
+    }
+
+    /**
+     * Convert the entry unit to the site's unit.
+     *
+     * @param string $dimension
+     * @param int|null $data
+     * @return string
+     */
+    protected function convertUnit(string $dimension, $data): string
+    {
+        $entryUnit = $this->field()->parent()->get("{$dimension}_unit");
+
+        $siteUnit = Dimension::from(Site::current())
+            ->type($dimension)
+            ->short();
+
+        return Converter::convert($data, $entryUnit, $siteUnit);
     }
 }

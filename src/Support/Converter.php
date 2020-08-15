@@ -4,18 +4,45 @@ namespace Aerni\Snipcart\Support;
 
 use Statamic\Entries\Entry;
 use UnitConverter\UnitConverter;
+use Statamic\Facades\Site;
+use Aerni\Snipcart\Facades\Dimension;
 
 class Converter
 {
     /**
-     * Convert a value from a unit to another.
+     * The default site's length unit.
      *
-     * @param string $value
-     * @param string $from
-     * @param string $to
+     * @var string
+     */
+    protected $defaultLengthUnit;
+
+    /**
+     * The default site's weight unit.
+     *
+     * @var string
+     */
+    protected $defaultWeightUnit;
+
+    public function __construct()
+    {
+        $this->defaultLengthUnit = Dimension::from(Site::default())
+            ->type('length')
+            ->short();
+
+        $this->defaultWeightUnit = Dimension::from(Site::default())
+            ->type('weight')
+            ->short();
+    }
+
+    /**
+     * Convert a value from one unit to another.
+     *
+     * @param string|null $value
+     * @param string|null $from
+     * @param string|null $to
      * @return string|null
      */
-    public function convert(string $value = null, string $from = null, string $to = null)
+    public function convert(?string $value, ?string $from, ?string $to)
     {
         if ($this->hasValue($value) && $this->canConvert($from, $to)) {
             return UnitConverter::binary()
@@ -32,31 +59,31 @@ class Converter
     }
 
     /**
-     * Convert a length to the unit set in the config.
+     * Convert a length value to the default site's unit.
      *
      * @param mixed $value
      * @param mixed $from
      * @return string|null
      */
-    public function convertLength($value, $from)
+    public function convertToDefaultLength($value, $from)
     {
-        return $this->convert($value, $from, config('snipcart.length'));
+        return $this->convert($value, $from, $this->defaultLengthUnit);
     }
 
     /**
-     * Convert a weight to the unit set in the config.
+     * Convert a weight value to the default site's unit.
      *
      * @param mixed $value
      * @param mixed $from
      * @return string|null
      */
-    public function convertWeight($value, $from)
+    public function convertToDefaultWeight($value, $from)
     {
-        return $this->convert($value, $from, config('snipcart.weight'));
+        return $this->convert($value, $from, $this->defaultWeightUnit);
     }
 
     /**
-     * Convert a value to centimeters.
+     * Convert a length value to centimeters.
      *
      * @param mixed $value
      * @param mixed $from
@@ -68,7 +95,7 @@ class Converter
     }
 
     /**
-     * Convert a value to grams.
+     * Convert a weight value to grams.
      *
      * @param mixed $value
      * @param mixed $from
@@ -80,7 +107,7 @@ class Converter
     }
 
     /**
-     * Convert length and weight units of an entry.
+     * Convert the length/weight of an entry to the default site's unit.
      *
      * @param Entry $entry
      * @return void
@@ -97,18 +124,18 @@ class Converter
         $height = $data->get('height');
         $weight = $data->get('weight');
 
-        $convertedLength = $this->convertLength($length, $entryLengthUnit);
-        $convertedWidth = $this->convertLength($width, $entryLengthUnit);
-        $convertedHeight = $this->convertLength($height, $entryLengthUnit);
-        $convertedWeight = $this->convertWeight($weight, $entryWeightUnit);
+        $convertedLength = $this->convertToDefaultLength($length, $entryLengthUnit);
+        $convertedWidth = $this->convertToDefaultLength($width, $entryLengthUnit);
+        $convertedHeight = $this->convertToDefaultLength($height, $entryLengthUnit);
+        $convertedWeight = $this->convertToDefaultWeight($weight, $entryWeightUnit);
 
         $entry->set('length', $convertedLength);
         $entry->set('width', $convertedWidth);
         $entry->set('height', $convertedHeight);
         $entry->set('weight', $convertedWeight);
 
-        $entry->set('length_unit', config('snipcart.length'));
-        $entry->set('weight_unit', config('snipcart.weight'));
+        $entry->set('length_unit', $this->defaultLengthUnit);
+        $entry->set('weight_unit', $this->defaultWeightUnit);
 
         $entry->save();
     }

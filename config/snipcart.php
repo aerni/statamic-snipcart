@@ -4,24 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Sites
-    |--------------------------------------------------------------------------
-    |
-    | The site handles need to be in sync with your Statamic config.
-    | Make sure to add a new key for each site found in `config/statamic/site.php`.
-    |
-    */
-
-    'sites' => [
-
-        'default' => [
-            'currency' => 'USD',
-        ],
-
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Collections & Taxonomies
     |--------------------------------------------------------------------------
     |
@@ -39,6 +21,26 @@ return [
     'taxonomies' => [
         'categories' => 'categories',
         'taxes' => 'taxes',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sites
+    |--------------------------------------------------------------------------
+    |
+    | The site handles need to be in sync with your Statamic config.
+    | Make sure to add a new key for each site found in `config/statamic/site.php`.
+    |
+    */
+
+    'sites' => [
+
+        'default' => [
+            'currency' => 'USD',
+            'length' => 'in',
+            'weight' => 'oz',
+        ],
+
     ],
 
     /*
@@ -78,36 +80,6 @@ return [
     */
 
     'version' => '3.0.19',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Length Unit
-    |--------------------------------------------------------------------------
-    |
-    | Define the length unit you want to use.
-    | You can choose between the following options: 'cm', 'm', 'in', 'ft'.
-    |
-    | If you change a value, you may run 'php please snipcart:migrate'
-    | to convert your products' lengths to the new unit.
-    |
-    */
-
-    'length' => 'cm',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Weight Unit
-    |--------------------------------------------------------------------------
-    |
-    | Define the weight unit you want to use.
-    | You can choose between the following options: 'g', 'kg', 'oz', 'lb'.
-    |
-    | If you change a value, you may run 'php please snipcart:migrate'
-    | to convert your products' lengths to the new unit.
-    |
-    */
-
-    'weight' => 'g',
 
     /*
     |--------------------------------------------------------------------------

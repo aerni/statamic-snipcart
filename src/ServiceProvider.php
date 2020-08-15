@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
+use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Tags\SnipcartTags;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Site;
@@ -138,7 +139,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind(SnipcartTags::class, function () {
             return new SnipcartTags([
                 'key' => $this->apiKey(),
-                'currency' => config('snipcart.currency'),
+                'currency' => $this->currency(),
                 'version' => config('snipcart.version'),
                 'behaviour' => config('snipcart.behaviour'),
             ]);
@@ -163,5 +164,15 @@ class ServiceProvider extends AddonServiceProvider
         }
 
         return $apiKey;
+    }
+
+    /**
+     * Returns the currency of the current site.
+     *
+     * @return string
+     */
+    protected function currency(): string
+    {
+        return Currency::from(Site::current())->code();
     }
 }

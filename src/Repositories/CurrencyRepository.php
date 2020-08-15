@@ -104,7 +104,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     public function formatCurrency(?int $value)
     {
         if (is_null($value)) {
-            return null;
+            return $value;
         }
 
         $money = new Money($value, new Currency($this->code()));
@@ -123,7 +123,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     public function formatDecimal(?int $value)
     {
         if (is_null($value)) {
-            return null;
+            return $value;
         }
 
         $money = new Money($value, new Currency($this->code()));
@@ -141,7 +141,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     public function formatDecimalIntl(?int $value)
     {
         if (is_null($value)) {
-            return null;
+            return $value;
         }
 
         $money = new Money($value, new Currency($this->code()));
@@ -160,7 +160,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
     public function parseDecimal(?string $value)
     {
         if (is_null($value)) {
-            return null;
+            return $value;
         }
 
         $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);

@@ -5,6 +5,7 @@ namespace Aerni\Snipcart\Repositories;
 use Aerni\Snipcart\Contracts\ProductRepository as ProductRepositoryContract;
 use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Facades\Currency;
+use Aerni\Snipcart\Facades\Dimension;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
@@ -340,7 +341,13 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function lengthUnit(): string
     {
-        return $this->data['length_unit'] ?? config('snipcart.length');
+        if ($this->data->has('length_unit')) {
+            return $this->data->get('length_unit');
+        }
+
+        return Dimension::from(Site::default())
+            ->type('length')
+            ->short();
     }
 
     /**
@@ -350,7 +357,13 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function weightUnit(): string
     {
-        return $this->data['weight_unit'] ?? config('snipcart.weight');
+        if ($this->data->has('weight_unit')) {
+            return $this->data->get('weight_unit');
+        }
+
+        return Dimension::from(Site::default())
+            ->type('weight')
+            ->short();
     }
 
     /**

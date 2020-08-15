@@ -4,6 +4,7 @@ namespace Aerni\Snipcart\Tags;
 
 use Aerni\Snipcart\Facades\Dimension;
 use Statamic\Tags\Tags;
+use Statamic\Facades\Site;
 
 class WeightTags extends Tags
 {
@@ -15,46 +16,54 @@ class WeightTags extends Tags
     protected static $handle = 'weight';
 
     /**
-     * Return the weight unit's abbreviation.
+     * Return the unit's abbreviation.
      * {{ weight:short }}
      *
      * @return string
      */
     public function short(): string
     {
-        return Dimension::type('weight')->short();
+        return Dimension::from(Site::current())
+            ->type('weight')
+            ->short();
     }
 
     /**
-     * Return the weight unit's singular name.
+     * Return the unit's singular name.
      * {{ weight:singular }}
      *
      * @return string
      */
     public function singular(): string
     {
-        return Dimension::type('weight')->singular();
+        return Dimension::from(Site::current())
+            ->type('weight')
+            ->singular();
     }
 
     /**
-     * Return the weight unit's plural name.
+     * Return the unit's plural name.
      * {{ weight:plural }}
      *
      * @return string
      */
     public function plural(): string
     {
-        return Dimension::type('weight')->plural();
+        return Dimension::from(Site::current())
+            ->type('weight')
+            ->plural();
     }
 
     /**
-     * Return the weight unit's name as singular or plural.
+     * Return the unit's singular/plural name.
      * {{ weight:name }}
      *
      * @return string
      */
     public function name(): string
     {
-        return Dimension::type('weight')->name($this->context->value('weight'));
+        return Dimension::from(Site::current())
+            ->type('weight')
+            ->name($this->context->value('weight'));
     }
 }

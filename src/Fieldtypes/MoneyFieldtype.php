@@ -23,7 +23,7 @@ class MoneyFieldtype extends Fieldtype
     /**
      * Pre-process the data before it gets sent to the publish page.
      *
-     * @param mixed $data
+     * @param int|null $data
      * @return string|null
      */
     public function preProcess($data)
@@ -34,7 +34,7 @@ class MoneyFieldtype extends Fieldtype
     /**
      * Process the data before it gets saved.
      *
-     * @param mixed $data
+     * @param string|null $data
      * @return int|null
      */
     public function process($data)
@@ -45,7 +45,7 @@ class MoneyFieldtype extends Fieldtype
     /**
      * Process the data before it gets loaded into the view.
      *
-     * @param mixed $data
+     * @param int|null $data
      * @return string|null
      */
     public function augment($data)
