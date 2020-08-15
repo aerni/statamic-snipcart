@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Support;
 
-use Statamic\Entries\Entry;
-use UnitConverter\UnitConverter;
-use Statamic\Facades\Site;
 use Aerni\Snipcart\Facades\Dimension;
+use Statamic\Entries\Entry;
+use Statamic\Facades\Site;
+use UnitConverter\UnitConverter;
 
 class Converter
 {

@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Fieldtypes;
 
-use Aerni\Snipcart\Facades\Dimension;
-use Statamic\Fields\Fieldtype;
-use Statamic\Facades\Site;
 use Aerni\Snipcart\Facades\Converter;
+use Aerni\Snipcart\Facades\Dimension;
+use Statamic\Facades\Site;
+use Statamic\Fields\Fieldtype;
 
 class DimensionFieldtype extends Fieldtype
 {
