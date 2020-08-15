@@ -8,6 +8,8 @@ interface CurrencyRepository
 {
     public function from(Site $site): self;
 
+    public function data(): array;
+
     public function all(): array;
 
     public function get(string $key): string;

@@ -13,6 +13,7 @@ use Money\Formatter\IntlMoneyFormatter;
 use Money\Money;
 use Money\Parser\IntlLocalizedDecimalParser;
 use NumberFormatter;
+use Statamic\Facades\Site as SiteFacade;
 use Statamic\Sites\Site;
 
 class CurrencyRepository implements CurrencyRepositoryContract
@@ -41,7 +42,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      *
      * @return array
      */
-    public function all(): array
+    public function data(): array
     {
         $currencySetting = collect(Config::get('snipcart.sites'))
             ->get($this->site->handle())['currency'];
@@ -56,13 +57,31 @@ class CurrencyRepository implements CurrencyRepositoryContract
     }
 
     /**
+     * Get an array of the currency's data from all the sites.
+     *
+     * @return array
+     */
+    public function all(): array
+    {
+        $currencySettings = SiteFacade::all()->map(function ($item, $key) {
+            return collect(Config::get('snipcart.sites'))->get($key)['currency'];
+        });
+
+        $currencies = $currencySettings->map(function ($item) {
+            return CurrencyModel::firstWhere('code', $item)->toArray();
+        })->toArray();
+
+        return $currencies;
+    }
+
+    /**
      * Get a currency value by key.
      *
      * @return string
      */
     public function get(string $key): string
     {
-        return $this->all()[$key];
+        return $this->data()[$key];
     }
 
     /**

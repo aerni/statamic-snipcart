@@ -17,7 +17,7 @@ class MoneyFieldtype extends Fieldtype
      */
     public function preload(): array
     {
-        return Currency::from(Site::current())->all();
+        return Currency::all();
     }
 
     /**

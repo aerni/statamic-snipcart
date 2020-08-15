@@ -16,15 +16,13 @@
     export default {
         name: 'money-fieldtype',
         mixins: [Fieldtype],
-        data() {
-            return {
-                symbol: this.meta.symbol
-            }
-        },
         computed: {
             originalPrice() {
                 return this.$store.state.publish.base.values.price;
             },
+            symbol() {
+                return this.meta[this.$store.state.publish.base.site]['symbol'];
+            }
         }
     };
 </script>
