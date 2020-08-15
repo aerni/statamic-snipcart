@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Support;
 
-use Statamic\Entries\Entry;
-use UnitConverter\UnitConverter;
-use Statamic\Facades\Site;
 use Aerni\Snipcart\Facades\Dimension;
+use Statamic\Entries\Entry;
+use Statamic\Facades\Site;
+use UnitConverter\UnitConverter;
 
 class Converter
 {
@@ -115,7 +115,6 @@ class Converter
     public function convertEntryDimensions(Entry $entry): void
     {
         if (! $entry->hasOrigin()) {
-
             $data = $entry->data();
 
             $entryLengthUnit = $data->get('length_unit');
@@ -140,9 +139,7 @@ class Converter
             $entry->set('weight_unit', $this->defaultWeightUnit);
 
             $entry->save();
-
         }
-
     }
 
     /**

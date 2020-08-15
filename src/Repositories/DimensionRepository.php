@@ -6,8 +6,8 @@ use Aerni\Snipcart\Contracts\DimensionRepository as DimensionRepositoryContract;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionTypeException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionUnitException;
 use Aerni\Snipcart\Models\Dimension;
-use Statamic\Sites\Site;
 use Illuminate\Support\Facades\Config;
+use Statamic\Sites\Site;
 
 class DimensionRepository implements DimensionRepositoryContract
 {

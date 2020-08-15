@@ -3,8 +3,8 @@
 namespace Aerni\Snipcart\Tags;
 
 use Aerni\Snipcart\Facades\Dimension;
-use Statamic\Tags\Tags;
 use Statamic\Facades\Site;
+use Statamic\Tags\Tags;
 
 class LengthTags extends Tags
 {
