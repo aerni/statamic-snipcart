@@ -92,7 +92,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function name(): string
     {
-        return $this->get('symbol');
+        return $this->get('name');
     }
 
     /**

@@ -86,7 +86,7 @@ class DimensionFieldtype extends Fieldtype
      */
     protected function convertUnit(string $dimension, $data): string
     {
-        $entryUnit = $this->field()->parent()->get("{$dimension}_unit");
+        $entryUnit = $this->field()->parent()->get("{$dimension}_unit") ?? $this->field()->parent()->origin()->get("{$dimension}_unit");
 
         $siteUnit = Dimension::from(Site::current())
             ->type($dimension)

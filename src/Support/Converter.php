@@ -114,30 +114,35 @@ class Converter
      */
     public function convertEntryDimensions(Entry $entry): void
     {
-        $data = $entry->data();
+        if (! $entry->hasOrigin()) {
 
-        $entryLengthUnit = $data->get('length_unit');
-        $entryWeightUnit = $data->get('weight_unit');
+            $data = $entry->data();
 
-        $length = $data->get('length');
-        $width = $data->get('width');
-        $height = $data->get('height');
-        $weight = $data->get('weight');
+            $entryLengthUnit = $data->get('length_unit');
+            $entryWeightUnit = $data->get('weight_unit');
 
-        $convertedLength = $this->convertToDefaultLength($length, $entryLengthUnit);
-        $convertedWidth = $this->convertToDefaultLength($width, $entryLengthUnit);
-        $convertedHeight = $this->convertToDefaultLength($height, $entryLengthUnit);
-        $convertedWeight = $this->convertToDefaultWeight($weight, $entryWeightUnit);
+            $length = $data->get('length');
+            $width = $data->get('width');
+            $height = $data->get('height');
+            $weight = $data->get('weight');
 
-        $entry->set('length', $convertedLength);
-        $entry->set('width', $convertedWidth);
-        $entry->set('height', $convertedHeight);
-        $entry->set('weight', $convertedWeight);
+            $convertedLength = $this->convertToDefaultLength($length, $entryLengthUnit);
+            $convertedWidth = $this->convertToDefaultLength($width, $entryLengthUnit);
+            $convertedHeight = $this->convertToDefaultLength($height, $entryLengthUnit);
+            $convertedWeight = $this->convertToDefaultWeight($weight, $entryWeightUnit);
 
-        $entry->set('length_unit', $this->defaultLengthUnit);
-        $entry->set('weight_unit', $this->defaultWeightUnit);
+            $entry->set('length', $convertedLength);
+            $entry->set('width', $convertedWidth);
+            $entry->set('height', $convertedHeight);
+            $entry->set('weight', $convertedWeight);
 
-        $entry->save();
+            $entry->set('length_unit', $this->defaultLengthUnit);
+            $entry->set('weight_unit', $this->defaultWeightUnit);
+
+            $entry->save();
+
+        }
+
     }
 
     /**
