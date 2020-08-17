@@ -15,6 +15,7 @@ use Money\Parser\IntlLocalizedDecimalParser;
 use NumberFormatter;
 use Statamic\Facades\Site as SiteFacade;
 use Statamic\Sites\Site;
+use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
@@ -44,8 +45,13 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function data(): array
     {
-        $currencySetting = collect(Config::get('snipcart.sites'))
-            ->get($this->site->handle())['currency'];
+        $sites = collect(Config::get('snipcart.sites'));
+
+        if (! $sites->has($this->site->handle())) {
+            throw new SitesNotInSyncException($this->site->handle());
+        }
+
+        $currencySetting = $sites->get($this->site->handle())['currency'];
 
         $currency = CurrencyModel::firstWhere('code', $currencySetting);
 
@@ -64,7 +70,13 @@ class CurrencyRepository implements CurrencyRepositoryContract
     public function all(): array
     {
         $currencySettings = SiteFacade::all()->map(function ($item, $key) {
-            return collect(Config::get('snipcart.sites'))->get($key)['currency'];
+            $sites = collect(Config::get('snipcart.sites'));
+
+            if (! $sites->has($key)) {
+                throw new SitesNotInSyncException($key);
+            }
+
+            return $sites->get($key)['currency'];
         });
 
         $currencies = $currencySettings->map(function ($item) {

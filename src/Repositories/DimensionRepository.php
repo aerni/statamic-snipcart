@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\DimensionRepository as DimensionRepositoryContract;
+use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionTypeException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionUnitException;
 use Aerni\Snipcart\Models\Dimension;
@@ -61,8 +62,13 @@ class DimensionRepository implements DimensionRepositoryContract
      */
     public function all(): array
     {
-        $unitSetting = collect(Config::get('snipcart.sites'))
-            ->get($this->site->handle())[$this->dimension];
+        $sites = collect(Config::get('snipcart.sites'));
+
+        if (! $sites->has($this->site->handle())) {
+            throw new SitesNotInSyncException($this->site->handle());
+        }
+
+        $unitSetting = $sites->get($this->site->handle())[$this->dimension];
 
         $unit = Dimension::where('dimension', $this->dimension)->where('short', $unitSetting)->first();
 
