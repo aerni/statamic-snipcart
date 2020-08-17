@@ -50,6 +50,6 @@ class MoneyFieldtype extends Fieldtype
      */
     public function augment($data)
     {
-        return Currency::from(Site::current())->formatDecimalIntl($data);
+        return Currency::from(Site::current())->formatCurrency($data);
     }
 }
