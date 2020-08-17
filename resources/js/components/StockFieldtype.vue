@@ -3,6 +3,7 @@
         <text-input
             type="number"
             :placeholder="originalStock"
+            :isReadOnly="isReadOnly"
             min="0"
             step="1"
             :value="value"
