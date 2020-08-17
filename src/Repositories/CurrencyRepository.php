@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
+use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedCurrencyException;
 use Aerni\Snipcart\Models\Currency as CurrencyModel;
 use Illuminate\Support\Facades\Config;
@@ -15,7 +16,6 @@ use Money\Parser\IntlLocalizedDecimalParser;
 use NumberFormatter;
 use Statamic\Facades\Site as SiteFacade;
 use Statamic\Sites\Site;
-use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
