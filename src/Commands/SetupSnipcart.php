@@ -8,6 +8,7 @@ use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\Collection;
 use Statamic\Facades\Taxonomy;
+use Statamic\Facades\Site;
 use Statamic\Support\Str;
 
 class SetupSnipcart extends Command
@@ -85,6 +86,7 @@ class SetupSnipcart extends Command
         if (! Collection::handleExists($this->products) || $this->force) {
             Collection::make($this->products)
                 ->title(Str::studlyToTitle($this->products))
+                ->sites($this->sites())
                 ->template($this->products . '/show')
                 ->layout('layout')
                 ->sortDirection('asc')
@@ -179,7 +181,7 @@ class SetupSnipcart extends Command
             ->merge([$this->categories])
             ->unique()
             ->toArray();
-            
+
         $productsCollection->taxonomies($taxonomies)
             ->save();
 
@@ -196,15 +198,27 @@ class SetupSnipcart extends Command
         $productBlueprint = StatamicBlueprint::find("collections/{$this->products}/product");
 
         $content = $productBlueprint->contents();
-    
+
         $content['sections']['basic']['fields'][5]['handle'] = $this->categories;
         $content['sections']['basic']['fields'][5]['field']['taxonomy'] = $this->categories;
-        
+
         $content['sections']['advanced']['fields'][10]['handle'] = $this->taxes;
         $content['sections']['advanced']['fields'][10]['field']['taxonomy'] = $this->taxes;
 
         $productBlueprint->setContents($content)->save();
 
         $this->info("Updated taxonomies in <comment>collections/{$this->products}/product</comment> blueprint");
+    }
+
+    /**
+     * Get all the site handles from config/statamic/sites.php
+     *
+     * @return array
+     */
+    protected function sites(): array
+    {
+        return Site::all()->map(function ($item) {
+            return $item->handle();
+        })->flatten()->toArray();
     }
 }
