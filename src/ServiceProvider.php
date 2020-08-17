@@ -30,7 +30,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $modifiers = [
-        Modifiers\StripCurrency::class,
+        Modifiers\StripUnit::class,
     ];
 
     protected $scripts = [

@@ -4,7 +4,7 @@ namespace Aerni\Snipcart\Modifiers;
 
 use Statamic\Modifiers\Modifier;
 
-class StripCurrency extends Modifier
+class StripUnit extends Modifier
 {
     /**
      * Modify a value.
