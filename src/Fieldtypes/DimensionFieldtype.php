@@ -93,7 +93,8 @@ class DimensionFieldtype extends Fieldtype
             ->short();
 
         $conversion = Converter::convert($data, $entryUnit, $siteUnit);
+        $rounded = round($conversion, 2);
 
-        return round($conversion, 2);
+        return "{$rounded} {$siteUnit}";
     }
 }
