@@ -37,6 +37,6 @@ class StockFieldtype extends Fieldtype
      */
     public function process($data)
     {
-        return $data;
+        return (int) $data;
     }
 }
