@@ -92,6 +92,8 @@ class DimensionFieldtype extends Fieldtype
             ->type($dimension)
             ->short();
 
-        return Converter::convert($data, $entryUnit, $siteUnit);
+        $conversion = Converter::convert($data, $entryUnit, $siteUnit);
+
+        return round($conversion, 2);
     }
 }

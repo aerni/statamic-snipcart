@@ -5,7 +5,7 @@
             :append="short"
             :isReadOnly="isReadOnly"
             min="0"
-            step="1"
+            step="0.01"
             :value="value"
             @input="update" />
     </div>

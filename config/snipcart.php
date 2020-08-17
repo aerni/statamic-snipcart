@@ -4,6 +4,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Sites
+    |--------------------------------------------------------------------------
+    |
+    | The site handles need to be in sync with your Statamic config.
+    | Make sure to add a new key for each site set in `config/statamic/site.php`.
+    |
+    | Snipcart's default currency, length and weight unit will be the ones
+    | defined within the key of Statamic's default site.
+    |
+    | If you add/remove a site or change a value, you need to run
+    | 'php please snipcart:migrate' to update the products collection and entries.
+    |
+    */
+
+    'sites' => [
+
+        'default' => [
+            'currency' => 'USD',
+            'length' => 'in',
+            'weight' => 'oz',
+        ],
+
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Collections & Taxonomies
     |--------------------------------------------------------------------------
     |
@@ -21,26 +47,6 @@ return [
     'taxonomies' => [
         'categories' => 'categories',
         'taxes' => 'taxes',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Sites
-    |--------------------------------------------------------------------------
-    |
-    | The site handles need to be in sync with your Statamic config.
-    | Make sure to add a new key for each site found in `config/statamic/site.php`.
-    |
-    */
-
-    'sites' => [
-
-        'default' => [
-            'currency' => 'USD',
-            'length' => 'in',
-            'weight' => 'oz',
-        ],
-
     ],
 
     /*

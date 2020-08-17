@@ -38,7 +38,7 @@ sections:
         handle: price_label
         field:
           type: text
-          localizable: false
+          localizable: true
           listable: hidden
           display: 'Price Label'
           instructions: 'A price label, e.g. `Starting at`.'
@@ -47,11 +47,11 @@ sections:
         handle: price
         field:
           type: money
-          localizable: false
+          localizable: true
           listable: true
           display: Price
           instructions: 'Rounded to two decimal places.'
-          validate: required|numeric
+          validate: required|numeric|regex:/^\d+(\.\d{1,2})?$/
           width: 50
       -
         handle: categories
@@ -322,7 +322,7 @@ sections:
                           localizable: false
                           listable: hidden
                           display: Price
-                          validate: numeric
+                          validate: numeric|regex:/^\d+(\.\d{1,2})?$/
                     mode: table
                     reorderable: true
                     type: grid

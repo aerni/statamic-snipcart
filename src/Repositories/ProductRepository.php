@@ -52,12 +52,8 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function data(): Collection
     {
-        if ($this->product->hasOrigin()) {
-            return $this->product->origin()->data()
-                ->merge($this->product->data()->filter());
-        }
-
-        return $this->product->data();
+        return $this->product->root()->data()
+            ->merge($this->product->data());
     }
 
     /**

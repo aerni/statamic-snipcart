@@ -17,7 +17,7 @@ class MoneyFieldtype extends Fieldtype
      */
     public function preload(): array
     {
-        return Currency::from(Site::current())->all();
+        return Currency::all();
     }
 
     /**
@@ -50,6 +50,6 @@ class MoneyFieldtype extends Fieldtype
      */
     public function augment($data)
     {
-        return Currency::from(Site::current())->formatDecimalIntl($data);
+        return Currency::from(Site::current())->formatCurrency($data);
     }
 }

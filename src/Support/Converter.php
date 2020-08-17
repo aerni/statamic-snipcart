@@ -114,7 +114,7 @@ class Converter
      */
     public function convertEntryDimensions(Entry $entry): void
     {
-        if (! $entry->hasOrigin()) {
+        if ($entry->isRoot()) {
             $data = $entry->data();
 
             $entryLengthUnit = $data->get('length_unit');
