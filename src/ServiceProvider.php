@@ -29,6 +29,10 @@ class ServiceProvider extends AddonServiceProvider
         ],
     ];
 
+    protected $modifiers = [
+        Modifiers\StripCurrency::class,
+    ];
+
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',
     ];
