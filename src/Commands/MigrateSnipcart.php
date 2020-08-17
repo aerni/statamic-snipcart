@@ -5,9 +5,9 @@ namespace Aerni\Snipcart\Commands;
 use Aerni\Snipcart\Facades\Converter;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
+use Statamic\Facades\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Site;
-use Statamic\Facades\Collection;
 
 class MigrateSnipcart extends Command
 {
