@@ -4,12 +4,15 @@ namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\ProductRepository as ProductRepositoryContract;
 use Aerni\Snipcart\Facades\Converter;
+use Aerni\Snipcart\Facades\Currency;
+use Aerni\Snipcart\Facades\Dimension;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
+use Statamic\Facades\Site;
 use Statamic\Support\Str;
 
 class ProductRepository implements ProductRepositoryContract
@@ -37,9 +40,20 @@ class ProductRepository implements ProductRepositoryContract
     public function find(string $id): self
     {
         $this->product = EntryFacade::find($id);
-        $this->data = $this->product->data();
-        
+        $this->data = $this->data();
+
         return $this;
+    }
+
+    /**
+     * Get the products data.
+     *
+     * @return Collection
+     */
+    protected function data(): Collection
+    {
+        return $this->product->root()->data()
+            ->merge($this->product->data());
     }
 
     /**
@@ -51,7 +65,7 @@ class ProductRepository implements ProductRepositoryContract
     {
         $attributes = $this->mapAttributes($this->data);
         $attributes->put('url', Request::url());
-        
+
         return Validator::onlyValidAttributes($attributes);
     }
 
@@ -83,7 +97,7 @@ class ProductRepository implements ProductRepositoryContract
             if ($key === config('snipcart.taxonomies.taxes') && ! empty($item)) {
                 return ['taxes' => $this->mapTaxes()];
             }
-            
+
             if ($key === 'custom_fields' && ! empty($item)) {
                 return $this->mapCustomFields($item);
             }
@@ -106,6 +120,10 @@ class ProductRepository implements ProductRepositoryContract
 
             if ($key === 'height' && ! empty($item)) {
                 return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            }
+
+            if ($key === 'price' && ! empty($item)) {
+                return [$key => Currency::from(Site::current())->formatDecimal($item)];
             }
 
             return [$key => $item];
@@ -222,7 +240,7 @@ class ProductRepository implements ProductRepositoryContract
             if (empty($price)) {
                 return $name;
             }
-            
+
             return "{$name}[{$price}]";
         })->implode('|');
 
@@ -291,22 +309,23 @@ class ProductRepository implements ProductRepositoryContract
     protected function calcPriceDifference($price)
     {
         if (array_key_exists('price', $this->data->toArray())) {
-            $originalPrice = $this->data['price'];
-            $priceDifference = $price - $originalPrice;
-
             if (is_null($price)) {
                 return null;
             }
 
+            $originalPrice = $this->data['price'];
+
             if ($originalPrice === $price) {
                 return null;
             }
-    
-            if (! Str::startsWith($priceDifference, '-')) {
-                return "+{$priceDifference}";
+
+            $priceDifference = Currency::from(Site::current())->formatDecimal($price - $originalPrice);
+
+            if (Str::startsWith($priceDifference, '-')) {
+                return $priceDifference;
             }
-            
-            return $priceDifference;
+
+            return "+{$priceDifference}";
         }
     }
 
@@ -333,7 +352,13 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function lengthUnit(): string
     {
-        return $this->data['length_unit'] ?? config('snipcart.length');
+        if ($this->data->has('length_unit')) {
+            return $this->data->get('length_unit');
+        }
+
+        return Dimension::from(Site::default())
+            ->type('length')
+            ->short();
     }
 
     /**
@@ -343,7 +368,13 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function weightUnit(): string
     {
-        return $this->data['weight_unit'] ?? config('snipcart.weight');
+        if ($this->data->has('weight_unit')) {
+            return $this->data->get('weight_unit');
+        }
+
+        return Dimension::from(Site::default())
+            ->type('weight')
+            ->short();
     }
 
     /**

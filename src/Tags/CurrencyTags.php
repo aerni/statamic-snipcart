@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart\Tags;
 
 use Aerni\Snipcart\Facades\Currency;
+use Statamic\Facades\Site;
 use Statamic\Tags\Tags;
 
 class CurrencyTags extends Tags
@@ -15,13 +16,6 @@ class CurrencyTags extends Tags
     protected static $handle = 'currency';
 
     /**
-     * An alias of the tag handle.
-     *
-     * @var array
-     */
-    protected static $aliases = ['cy'];
-
-    /**
      * Return the currency code.
      * {{ currency:code }}
      *
@@ -29,7 +23,7 @@ class CurrencyTags extends Tags
      */
     public function code(): string
     {
-        return Currency::code();
+        return Currency::from(Site::current())->code();
     }
 
     /**
@@ -40,7 +34,7 @@ class CurrencyTags extends Tags
      */
     public function name(): string
     {
-        return Currency::name();
+        return Currency::from(Site::current())->name();
     }
 
     /**
@@ -51,6 +45,6 @@ class CurrencyTags extends Tags
      */
     public function symbol(): string
     {
-        return Currency::symbol();
+        return Currency::from(Site::current())->symbol();
     }
 }

@@ -3,9 +3,10 @@
 namespace Aerni\Snipcart\Fieldtypes;
 
 use Aerni\Snipcart\Facades\Currency;
+use Statamic\Facades\Site;
 use Statamic\Fields\Fieldtype;
 
-class CurrencyFieldtype extends Fieldtype
+class MoneyFieldtype extends Fieldtype
 {
     protected $icon = 'tags';
 
@@ -22,22 +23,33 @@ class CurrencyFieldtype extends Fieldtype
     /**
      * Pre-process the data before it gets sent to the publish page.
      *
-     * @param mixed $data
-     * @return array|mixed
+     * @param int|null $data
+     * @return string|null
      */
     public function preProcess($data)
     {
-        return Currency::formatByDecimal($data);
+        return Currency::from(Site::current())->formatDecimalIntl($data);
     }
 
     /**
      * Process the data before it gets saved.
      *
-     * @param mixed $data
-     * @return array|mixed
+     * @param string|null $data
+     * @return int|null
      */
     public function process($data)
     {
-        return Currency::parseByDecimal($data);
+        return Currency::from(Site::current())->parseDecimal($data);
+    }
+
+    /**
+     * Process the data before it gets loaded into the view.
+     *
+     * @param int|null $data
+     * @return string|null
+     */
+    public function augment($data)
+    {
+        return Currency::from(Site::current())->formatCurrency($data);
     }
 }

@@ -3,66 +3,90 @@
 namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\DimensionRepository as DimensionRepositoryContract;
+use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionTypeException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionUnitException;
 use Aerni\Snipcart\Models\Dimension;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Config;
+use Statamic\Sites\Site;
 
 class DimensionRepository implements DimensionRepositoryContract
 {
     /**
-     * The dimension type
+     * The site to get the dimension from.
+     *
+     * @var Site
+     */
+    protected $site;
+
+    /**
+     * The dimension (length/weight)
      *
      * @var string
      */
-    protected $type;
+    protected $dimension;
 
     /**
-     * The length or width unit.
+     * Set the site property.
      *
-     * @var string
+     * @param Site $site
      */
-    protected $unit;
-
-    /**
-     * Set the dimension type and unit.
-     *
-     * @param string $type
-     * @return self
-     */
-    public function type(string $type): self
+    public function from(Site $site): self
     {
-        $this->type = $type;
+        $this->site = $site;
 
-        if ($type === 'length') {
-            $this->unit = config('snipcart.length');
-
-            return $this;
-        }
-        
-        if ($type === 'weight') {
-            $this->unit = config('snipcart.weight');
-
-            return $this;
-        }
-
-        throw new UnsupportedDimensionTypeException();
+        return $this;
     }
 
     /**
-     * Get an array of the unit's information.
+     * Set the dimension property
      *
-     * @return object
+     * @param string $dimension
+     * @return self
+     */
+    public function type(string $dimension): self
+    {
+        if ($dimension !== 'length' && $dimension !== 'weight') {
+            throw new UnsupportedDimensionTypeException($dimension);
+        }
+
+        $this->dimension = $dimension;
+
+        return $this;
+    }
+
+    /**
+     * Get an array of the unit's data.
+     *
+     * @return array
      */
     public function all(): array
     {
-        $unit = Dimension::firstWhere('short', $this->unit);
-        
-        if (is_null($unit)) {
-            throw new UnsupportedDimensionUnitException($this->type, $this->unit);
+        $sites = collect(Config::get('snipcart.sites'));
+
+        if (! $sites->has($this->site->handle())) {
+            throw new SitesNotInSyncException($this->site->handle());
         }
-        
-        return $unit->only(['short', 'singular', 'plural']);
+
+        $unitSetting = $sites->get($this->site->handle())[$this->dimension];
+
+        $unit = Dimension::where('dimension', $this->dimension)->where('short', $unitSetting)->first();
+
+        if (is_null($unit)) {
+            throw new UnsupportedDimensionUnitException($this->site->handle(), $this->dimension, $unitSetting);
+        }
+
+        return $unit->toArray();
+    }
+
+    /**
+     * Get a unit value by key.
+     *
+     * @return string
+     */
+    public function get(string $key): string
+    {
+        return $this->all()[$key];
     }
 
     /**
@@ -72,7 +96,7 @@ class DimensionRepository implements DimensionRepositoryContract
      */
     public function short(): string
     {
-        return $this->all()['short'];
+        return $this->get('short');
     }
 
     /**
@@ -82,7 +106,7 @@ class DimensionRepository implements DimensionRepositoryContract
      */
     public function singular(): string
     {
-        return $this->all()['singular'];
+        return $this->get('singular');
     }
 
     /**
@@ -92,44 +116,32 @@ class DimensionRepository implements DimensionRepositoryContract
      */
     public function plural(): string
     {
-        return $this->all()['plural'];
+        return $this->get('plural');
     }
 
     /**
-     * Get the unit's name as singular or plural.
+     * Get the unit's singular/plural name.
      *
-     * @param mixed $value
+     * @param string|null $value
      * @return string
      */
-    public function name($value): string
+    public function name(?string $value): string
     {
-        if (is_null($value)) {
-            $this->singular();
+        if ($value > 1) {
+            return $this->plural();
         }
 
-        if ($value <= 1) {
-            return $this->singular();
-        }
-        
-        return $this->plural();
+        return $this->singular();
     }
 
     /**
      * Parse the value.
      *
-     * @param mixed $value
-     * @return mixed
+     * @param string|null $value
+     * @return string|null
      */
-    public function parse($value)
+    public function parse(?string $value)
     {
-        if (Str::startsWith($value, '-')) {
-            return null;
-        }
-
-        if ($value === '0') {
-            return null;
-        }
-
         return $value;
     }
 }

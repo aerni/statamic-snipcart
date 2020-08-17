@@ -17,13 +17,6 @@ class SnipcartTags extends Tags
     protected static $handle = 'snipcart';
 
     /**
-     * An alias of the tag handle.
-     *
-     * @var array
-     */
-    protected static $aliases = ['sc'];
-
-    /**
      * The config of this addon.
      *
      * @var array
@@ -79,9 +72,9 @@ class SnipcartTags extends Tags
         $currency = $this->config['currency'];
 
         return
-            "<div hidden id='snipcart' 
-                data-api-key='{$key}' 
-                data-config-add-product-behavior='{$behaviour}' 
+            "<div hidden id='snipcart'
+                data-api-key='{$key}'
+                data-config-add-product-behavior='{$behaviour}'
                 data-currency='{$currency}'>
             </div>";
     }
@@ -193,7 +186,7 @@ class SnipcartTags extends Tags
     public function items(): string
     {
         $class = $this->params->get('class');
-        
+
         return "<span class='snipcart-items-count {$class}'></span>";
     }
 

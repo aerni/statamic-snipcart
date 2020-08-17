@@ -4,8 +4,9 @@
             type="number"
             :prepend="symbol"
             :placeholder="originalPrice"
+            :isReadOnly="isReadOnly"
             min="0"
-            step="1"
+            step="0.01"
             :value="value"
             @input="update" />
     </div>
@@ -13,17 +14,15 @@
 
 <script>
     export default {
-        name: 'currency-fieldtype',
+        name: 'money-fieldtype',
         mixins: [Fieldtype],
-        data() {
-            return {
-                symbol: this.meta.symbol
-            }
-        },
         computed: {
             originalPrice() {
                 return this.$store.state.publish.base.values.price;
             },
+            symbol() {
+                return this.meta[this.$store.state.publish.base.site]['symbol'];
+            }
         }
     };
 </script>

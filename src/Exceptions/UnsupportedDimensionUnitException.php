@@ -9,29 +9,23 @@ use Facade\IgnitionContracts\Solution;
 
 class UnsupportedDimensionUnitException extends Exception implements ProvidesSolution
 {
-    protected $type;
+    protected $siteHandle;
+    protected $dimension;
     protected $unit;
 
-    public function __construct(string $type, string $unit)
+    public function __construct(string $siteHandle, string $dimension, string $unit)
     {
         parent::__construct("The unit [{$unit}] is not supported.");
 
-        $this->type = $type;
+        $this->siteHandle = $siteHandle;
+        $this->dimension = $dimension;
         $this->unit = $unit;
     }
 
     public function getSolution(): Solution
     {
-        if ($this->type === 'length') {
-            $description = "Change the value of the `length` key to a supported length unit.";
-        }
-
-        if ($this->type === 'weight') {
-            $description = "Change the value of the `weight` key to a supported weight unit.";
-        }
-
-        return BaseSolution::create("Please set a valid {$this->type} unit in the config.")
-            ->setSolutionDescription($description)
+        return BaseSolution::create("Provide a valid {$this->dimension} unit in the config.")
+            ->setSolutionDescription("Set the value of `{$this->dimension}` of the `{$this->siteHandle}` site to a supported {$this->dimension} unit.")
             ->setDocumentationLinks([
                 'Read the config guide' => 'https://snipcart.docs.michaelaerni.ch/setup/configuration',
             ]);

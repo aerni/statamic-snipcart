@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
+use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Tags\SnipcartTags;
 use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Site;
@@ -17,9 +18,9 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $fieldtypes = [
-        Fieldtypes\CurrencyFieldtype::class,
         Fieldtypes\DimensionFieldtype::class,
         Fieldtypes\StockFieldtype::class,
+        Fieldtypes\MoneyFieldtype::class,
     ];
 
     protected $listen = [
@@ -27,6 +28,10 @@ class ServiceProvider extends AddonServiceProvider
             'Aerni\Snipcart\Listeners\ConvertDimensions',
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
         ],
+    ];
+
+    protected $modifiers = [
+        Modifiers\StripUnit::class,
     ];
 
     protected $scripts = [
@@ -46,6 +51,8 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::booted(function () {
             $this->bootVendorAssets();
+            $this->setMoneyConfig();
+            $this->setSnipcartApiConfig();
         });
 
         Statamic::afterInstalled(function ($command) {
@@ -58,8 +65,6 @@ class ServiceProvider extends AddonServiceProvider
         parent::register();
 
         Statamic::booted(function () {
-            $this->setSnipcartApiConfig();
-            $this->setMoneyConfig();
             $this->registerRepositories();
             $this->registerTags();
         });
@@ -108,8 +113,11 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function setMoneyConfig(): void
     {
-        Config::set('money.locale', Site::default()->locale());
-        Config::set('money.defaultCurrency', Config::get('snipcart.currency'));
+        $locale = Site::default()->locale();
+        $currency = Config::get('snipcart.currency');
+
+        Config::set('money.locale', $locale);
+        Config::set('money.defaultCurrency', $currency);
     }
 
     /**
@@ -136,7 +144,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind(SnipcartTags::class, function () {
             return new SnipcartTags([
                 'key' => $this->apiKey(),
-                'currency' => config('snipcart.currency'),
+                'currency' => $this->currency(),
                 'version' => config('snipcart.version'),
                 'behaviour' => config('snipcart.behaviour'),
             ]);
@@ -161,5 +169,15 @@ class ServiceProvider extends AddonServiceProvider
         }
 
         return $apiKey;
+    }
+
+    /**
+     * Returns the currency of the current site.
+     *
+     * @return string
+     */
+    protected function currency(): string
+    {
+        return Currency::from(Site::current())->code();
     }
 }

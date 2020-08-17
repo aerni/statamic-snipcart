@@ -3,43 +3,97 @@
 namespace Aerni\Snipcart\Repositories;
 
 use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
+use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedCurrencyException;
-use Aerni\Snipcart\Models\Currency;
-use Cknow\Money\Money;
+use Aerni\Snipcart\Models\Currency as CurrencyModel;
+use Illuminate\Support\Facades\Config;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
+use Money\Formatter\DecimalMoneyFormatter;
+use Money\Formatter\IntlMoneyFormatter;
+use Money\Money;
+use Money\Parser\IntlLocalizedDecimalParser;
+use NumberFormatter;
+use Statamic\Facades\Site as SiteFacade;
+use Statamic\Sites\Site;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
     /**
-     * The currency from the config.
+     * The site to get the currency from.
      *
-     * @var string
+     * @var Site
      */
-    protected $currency;
+    protected $site;
 
     /**
-     * Create a new repository instance.
+     * Set the site property.
      *
-     * @return void
+     * @param Site $site
      */
-    public function __construct()
+    public function from(Site $site): self
     {
-        $this->currency = config('snipcart.currency');
+        $this->site = $site;
+
+        return $this;
     }
 
     /**
-     * Get an array of the currency's information.
+     * Get an array of the currency's data.
      *
-     * @return object
+     * @return array
+     */
+    public function data(): array
+    {
+        $sites = collect(Config::get('snipcart.sites'));
+
+        if (! $sites->has($this->site->handle())) {
+            throw new SitesNotInSyncException($this->site->handle());
+        }
+
+        $currencySetting = $sites->get($this->site->handle())['currency'];
+
+        $currency = CurrencyModel::firstWhere('code', $currencySetting);
+
+        if (is_null($currency)) {
+            throw new UnsupportedCurrencyException($this->site->handle(), $currencySetting);
+        }
+
+        return $currency->toArray();
+    }
+
+    /**
+     * Get an array of the currency's data from all the sites.
+     *
+     * @return array
      */
     public function all(): array
     {
-        $currency = Currency::firstWhere('code', $this->currency);
+        $currencySettings = SiteFacade::all()->map(function ($item, $key) {
+            $sites = collect(Config::get('snipcart.sites'));
 
-        if (is_null($currency)) {
-            throw new UnsupportedCurrencyException($this->currency);
-        }
+            if (! $sites->has($key)) {
+                throw new SitesNotInSyncException($key);
+            }
 
-        return $currency->only(['code', 'name', 'symbol']);
+            return $sites->get($key)['currency'];
+        });
+
+        $currencies = $currencySettings->map(function ($item) {
+            return CurrencyModel::firstWhere('code', $item)->toArray();
+        })->toArray();
+
+        return $currencies;
+    }
+
+    /**
+     * Get a currency value by key.
+     *
+     * @return string
+     */
+    public function get(string $key): string
+    {
+        return $this->data()[$key];
     }
 
     /**
@@ -49,17 +103,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function code(): string
     {
-        return $this->all()['code'];
-    }
-
-    /**
-     * Get the currency's name.
-     *
-     * @return string
-     */
-    public function name(): string
-    {
-        return $this->all()['name'];
+        return $this->get('code');
     }
 
     /**
@@ -69,36 +113,90 @@ class CurrencyRepository implements CurrencyRepositoryContract
      */
     public function symbol(): string
     {
-        return $this->all()['symbol'];
+        return $this->get('symbol');
     }
 
     /**
-     * Parse integer to decimal string.
+     * Get the currency's name.
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->get('name');
+    }
+
+    /**
+     * Format an integer to a currency string.
      *
      * @param int|null $value
      * @return string|null
      */
-    public function formatByDecimal(int $value = null)
+    public function formatCurrency(?int $value)
     {
         if (is_null($value)) {
-            return null;
+            return $value;
         }
 
-        return (string) Money::USD($value)->absolute()->formatByDecimal();
+        $money = new Money($value, new Currency($this->code()));
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
+
+        return (string) $moneyFormatter->format($money);
     }
 
     /**
-     * Parse decimal string to integer.
+     * Format an integer to a decimal string.
+     *
+     * @param int|null $value
+     * @return string|null
+     */
+    public function formatDecimal(?int $value)
+    {
+        if (is_null($value)) {
+            return $value;
+        }
+
+        $money = new Money($value, new Currency($this->code()));
+        $moneyFormatter = new DecimalMoneyFormatter(new ISOCurrencies());
+
+        return (string) $moneyFormatter->format($money);
+    }
+
+    /**
+     * Format an integer to a decimal string.
+     *
+     * @param int|null $value
+     * @return string|null
+     */
+    public function formatDecimalIntl(?int $value)
+    {
+        if (is_null($value)) {
+            return $value;
+        }
+
+        $money = new Money($value, new Currency($this->code()));
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
+
+        return (string) $moneyFormatter->format($money);
+    }
+
+    /**
+     * Parse a decimal string to an integer.
      *
      * @param string|null $value
      * @return int|null
      */
-    public function parseByDecimal(string $value = null)
+    public function parseDecimal(?string $value)
     {
         if (is_null($value)) {
-            return null;
+            return $value;
         }
 
-        return (int) Money::parseByDecimal($value, $this->currency)->absolute()->getAmount();
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
+        $moneyParser = new IntlLocalizedDecimalParser($numberFormatter, new ISOCurrencies());
+
+        return (int) $moneyParser->parse($value, new Currency($this->code()))->getAmount();
     }
 }

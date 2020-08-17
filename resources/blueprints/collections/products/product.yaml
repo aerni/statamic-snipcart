@@ -16,7 +16,7 @@ sections:
         field:
           type: text
           required: true
-          localizable: false
+          localizable: true
           listable: true
           display: Name
           instructions: 'The name of the product.'
@@ -38,7 +38,7 @@ sections:
         handle: price_label
         field:
           type: text
-          localizable: false
+          localizable: true
           listable: hidden
           display: 'Price Label'
           instructions: 'A price label, e.g. `Starting at`.'
@@ -46,12 +46,12 @@ sections:
       -
         handle: price
         field:
-          type: currency
-          localizable: false
+          type: money
+          localizable: true
           listable: true
           display: Price
           instructions: 'Rounded to two decimal places.'
-          validate: required|numeric
+          validate: required|numeric|regex:/^\d+(\.\d{1,2})?$/
           width: 50
       -
         handle: categories
@@ -66,7 +66,7 @@ sections:
         handle: description
         field:
           type: textarea
-          localizable: false
+          localizable: true
           listable: hidden
           instructions: 'A short product description. This will show in the cart.'
           display: Description
@@ -318,12 +318,12 @@ sections:
                       -
                         handle: price
                         field:
-                          type: currency
+                          type: money
                           instructions: 'Leave empty to use the default price.'
                           localizable: false
                           listable: hidden
                           display: Price
-                          validate: numeric
+                          validate: numeric|regex:/^\d+(\.\d{1,2})?$/
                           width: 50
                       -
                         handle: stock
@@ -425,7 +425,7 @@ sections:
                     display: Required
                     replicator_preview: false
           type: replicator
-          localizable: false
+          localizable: true
           listable: false
           display: 'CUSTOM FIELDS'
           instructions: 'Create product variations for attributes like `Color` and `Size` or collect additional information like a `Gift Note`. <a href="https://docs.snipcart.com/v3/setup/products#custom-fields">Learn more</a>'
@@ -442,7 +442,7 @@ sections:
         field:
           type: slug
           required: true
-          localizable: false
+          localizable: true
           generate: true
           instructions: 'The slug of the product.'
           listable: hidden
