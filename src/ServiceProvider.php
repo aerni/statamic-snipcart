@@ -51,7 +51,6 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::booted(function () {
             $this->bootVendorAssets();
-            $this->setMoneyConfig();
             $this->setSnipcartApiConfig();
         });
 
@@ -104,20 +103,6 @@ class ServiceProvider extends AddonServiceProvider
         foreach ($mergedConfigs as $key => $value) {
             Config::set("snipcart-api.{$key}", $value);
         }
-    }
-
-    /**
-     * Set the config for the "cknow/laravel-money" package.
-     *
-     * @return void
-     */
-    protected function setMoneyConfig(): void
-    {
-        $locale = Site::default()->locale();
-        $currency = Config::get('snipcart.currency');
-
-        Config::set('money.locale', $locale);
-        Config::set('money.defaultCurrency', $currency);
     }
 
     /**
