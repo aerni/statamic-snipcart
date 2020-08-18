@@ -34,6 +34,10 @@ class ServiceProvider extends AddonServiceProvider
         Modifiers\StripUnit::class,
     ];
 
+    protected $routes = [
+        'web' => __DIR__ . '/../routes/web.php',
+    ];
+
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',
     ];
@@ -52,6 +56,7 @@ class ServiceProvider extends AddonServiceProvider
         Statamic::booted(function () {
             $this->bootVendorAssets();
             $this->setSnipcartApiConfig();
+            $this->setSnipcartWebhooksConfig();
         });
 
         Statamic::afterInstalled(function ($command) {
@@ -102,6 +107,23 @@ class ServiceProvider extends AddonServiceProvider
 
         foreach ($mergedConfigs as $key => $value) {
             Config::set("snipcart-api.{$key}", $value);
+        }
+    }
+
+    /**
+     * Set the config of the Snipcart Webhooks package.
+     *
+     * @return void
+     */
+    protected function setSnipcartWebhooksConfig(): void
+    {
+        $snipcartWebhooksConfig = Config::get('snipcart-webhooks');
+        $snipcartConfig = Config::get('snipcart');
+
+        $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartWebhooksConfig);
+
+        foreach ($mergedConfigs as $key => $value) {
+            Config::set("snipcart-webhooks.{$key}", $value);
         }
     }
 
