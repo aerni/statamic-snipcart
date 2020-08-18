@@ -2,8 +2,8 @@
 
 namespace Aerni\Snipcart\Listeners;
 
-use Aerni\SnipcartWebhooks\Events\OrderCompleted;
 use Aerni\Snipcart\Listeners\Concerns\ListenerGuards;
+use Aerni\SnipcartWebhooks\Events\OrderCompleted;
 use Statamic\Facades\Entry;
 
 class UpdateStock
