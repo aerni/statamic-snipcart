@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart\Commands;
 
 use Aerni\Snipcart\Facades\Converter;
+use Aerni\Snipcart\Facades\Dimension;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Collection;
@@ -56,11 +57,15 @@ class MigrateSnipcart extends Command
      */
     protected function convertUnits(): void
     {
+        $lengthUnit = Dimension::from(Site::default())->type('length')->short();
+        $weightUnit = Dimension::from(Site::default())->type('weight')->short();
+
         Entry::whereCollection($this->products)->each(function ($entry) {
             Converter::convertEntryDimensions($entry);
         });
 
-        $this->info("Converted the length and weight dimensions of the <comment>{$this->products}</comment> entries.");
+        $this->line("<info>[✓]</info> Converted length to <comment>{$lengthUnit}</comment>");
+        $this->line("<info>[✓]</info> Converted weight to <comment>{$weightUnit}</comment>");
     }
 
     /**
@@ -74,7 +79,7 @@ class MigrateSnipcart extends Command
             ->sites($this->sites())
             ->save();
 
-        $this->info("Updated the sites array in the <comment>{$this->products}</comment> configuration.");
+        $this->line("<info>[✓]</info> Updated sites in <comment>content/collections/{$this->products}.yaml</comment>");
     }
 
     /**

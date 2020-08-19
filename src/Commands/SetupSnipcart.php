@@ -96,7 +96,7 @@ class SetupSnipcart extends Command
                 ->taxonomies([$this->categories])
                 ->save();
 
-            $this->info("Created Collection: <comment>{$this->products}</comment>");
+            $this->line("<info>[✓]</info> Created collection at <comment>content/collections/{$this->products}.yaml</comment>");
         }
 
         if (! StatamicBlueprint::find("collections/{$this->products}/product") || $this->force) {
@@ -106,7 +106,7 @@ class SetupSnipcart extends Command
                 ->namespace("collections.{$this->products}")
                 ->save();
 
-            $this->info("Created Blueprint: <comment>collections/{$this->products}/product</comment>");
+            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/collections/{$this->products}/product.yaml</comment>");
         }
     }
 
@@ -122,7 +122,7 @@ class SetupSnipcart extends Command
                 ->title(Str::studlyToTitle($this->categories))
                 ->save();
 
-            $this->info("Created Taxonomy: <comment>{$this->categories}</comment>");
+            $this->line("<info>[✓]</info> Created taxonomy at <comment>content/taxonomies/{$this->categories}.yaml</comment>");
         }
 
         if (! StatamicBlueprint::find("taxonomies/{$this->categories}/category") || $this->force) {
@@ -132,7 +132,7 @@ class SetupSnipcart extends Command
                 ->namespace("taxonomies.{$this->categories}")
                 ->save();
 
-            $this->info("Created Blueprint: <comment>taxonomies/{$this->categories}/category</comment>");
+            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/taxonomies/{$this->categories}/category.yaml</comment>");
         }
 
         if (! Taxonomy::handleExists($this->taxes) || $this->force) {
@@ -140,7 +140,7 @@ class SetupSnipcart extends Command
                 ->title(Str::studlyToTitle($this->taxes))
                 ->save();
 
-            $this->info("Created Taxnomoy: <comment>{$this->taxes}</comment>");
+            $this->line("<info>[✓]</info> Created taxonomy at <comment>content/taxonomies/{$this->taxes}.yaml</comment>");
         }
 
         if (! StatamicBlueprint::find("taxonomies/{$this->taxes}/tax") || $this->force) {
@@ -150,7 +150,7 @@ class SetupSnipcart extends Command
                 ->namespace("taxonomies.{$this->taxes}")
                 ->save();
 
-            $this->info("Created Blueprint: <comment>taxonomies/{$this->taxes}/tax</comment>");
+            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/taxonomies/{$this->taxes}/tax.yaml</comment>");
         }
     }
 
@@ -185,7 +185,7 @@ class SetupSnipcart extends Command
         $productsCollection->taxonomies($taxonomies)
             ->save();
 
-        $this->info("Updated taxonomies in <comment>{$this->products}</comment> collection");
+        $this->line("<info>[✓]</info> Updated <comment>{$this->categories}</comment> and <comment>{$this->taxes}</comment> taxonomies in <comment>content/collections/{$this->products}.yaml</comment>");
     }
 
     /**
@@ -207,7 +207,7 @@ class SetupSnipcart extends Command
 
         $productBlueprint->setContents($content)->save();
 
-        $this->info("Updated taxonomies in <comment>collections/{$this->products}/product</comment> blueprint");
+        $this->line("<info>[✓]</info> Updated taxonomies in <comment>resources/blueprints/collections/{$this->products}/product.yaml</comment>");
     }
 
     /**
