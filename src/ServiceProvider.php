@@ -24,9 +24,9 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $listen = [
-        'Aerni\SnipcartWebhooks\Events\OrderCompleted' => [
-            'Aerni\Snipcart\Listeners\UpdateStock',
-        ],
+        // 'Aerni\SnipcartWebhooks\Events\OrderCompleted' => [
+        //     'Aerni\Snipcart\Listeners\UpdateStock',
+        // ],
         'Statamic\Events\EntryBlueprintFound' => [
             'Aerni\Snipcart\Listeners\ConvertDimensions',
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
@@ -37,9 +37,9 @@ class ServiceProvider extends AddonServiceProvider
         Modifiers\StripUnit::class,
     ];
 
-    protected $routes = [
-        'web' => __DIR__ . '/../routes/web.php',
-    ];
+    // protected $routes = [
+    //     'web' => __DIR__ . '/../routes/web.php',
+    // ];
 
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',

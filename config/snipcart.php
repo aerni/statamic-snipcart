@@ -78,21 +78,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Snipcart Webhooks
-    |--------------------------------------------------------------------------
-    |
-    | Wehbhooks are used to trigger events like updating the stock of a product
-    | when an order has been completed.
-    |
-    | Define the URL endpoint that Snipcart sends POST requests to.
-    | To use webhooks, you also have to set the URL in the Snipcart dashboard.
-    |
-    */
-
-    'webhooks' => '/snipcart-webhooks',
-
-    /*
-    |--------------------------------------------------------------------------
     | Snipcart Version
     |--------------------------------------------------------------------------
     |

@@ -322,29 +322,10 @@ sections:
                           instructions: 'A price increase/decrease relative to the default price.'
                           localizable: false
                           listable: hidden
-                          display: Price
+                          display: 'Price Difference'
                           validate: 'numeric|regex:/^-?\d+(\.\d{1,2})?$/'
                           width: 50
-                      -
-                        handle: stock
-                        field:
-                          type: stock
-                          instructions: 'Leave empty to use the default stock.'
-                          localizable: false
-                          listable: hidden
-                          display: Stock
-                          width: 50
-                      -
-                        handle: unlimited_stock
-                        field:
-                          type: toggle
-                          instructions: 'Activate to set the stock to unlimited.'
-                          localizable: false
-                          listable: hidden
-                          display: 'Unlimited Stock'
-                          width: 50
-                          validate: required
-                    mode: stacked
+                    mode: table
                     reorderable: true
                     type: grid
                     localizable: false
@@ -447,21 +428,3 @@ sections:
           instructions: 'The slug of the product.'
           listable: hidden
           display: Slug
-      -
-        handle: stock
-        field:
-          type: stock
-          instructions: 'Set the stock of this product.'
-          localizable: false
-          listable: hidden
-          display: Stock
-          validate: '|required_if:unlimited_stock,false'
-      -
-        handle: unlimited_stock
-        field:
-          type: toggle
-          instructions: 'Activate to set the stock to unlimited.'
-          localizable: false
-          listable: hidden
-          display: 'Unlimited Stock'
-          validate: required
