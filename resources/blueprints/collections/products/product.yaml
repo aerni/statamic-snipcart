@@ -319,11 +319,11 @@ sections:
                         handle: price
                         field:
                           type: money
-                          instructions: 'Leave empty to use the default price.'
+                          instructions: 'A price increase/decrease relative to the default price.'
                           localizable: false
                           listable: hidden
                           display: Price
-                          validate: 'numeric|regex:/^\d+(\.\d{1,2})?$/'
+                          validate: 'numeric|regex:/^-?\d+(\.\d{1,2})?$/'
                           width: 50
                       -
                         handle: stock
