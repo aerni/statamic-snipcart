@@ -57,7 +57,6 @@ class ServiceProvider extends AddonServiceProvider
         parent::boot();
 
         Statamic::booted(function () {
-            $this->bootVendorAssets();
             $this->setSnipcartApiConfig();
             $this->setSnipcartWebhooksConfig();
         });
@@ -75,25 +74,6 @@ class ServiceProvider extends AddonServiceProvider
             $this->registerRepositories();
             $this->registerTags();
         });
-    }
-
-    /**
-     * Publish the vendor assets.
-     *
-     * @return void
-     */
-    protected function bootVendorAssets(): void
-    {
-        $this->publishes([
-            __DIR__.'/../config/snipcart.php' => config_path('snipcart.php'),
-        ], 'snipcart-config');
-
-        $this->publishes([
-            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/snipcart'),
-        ], 'snipcart-translations');
-
-        $this->mergeConfigFrom(__DIR__.'/../config/snipcart.php', 'snipcart');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'snipcart');
     }
 
     /**
