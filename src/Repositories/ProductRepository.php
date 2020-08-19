@@ -235,7 +235,7 @@ class ProductRepository implements ProductRepositoryContract
     {
         $options = collect($item['options'])->map(function ($item) {
             $name = $item['name'];
-            $price = $this->calcPriceDifference($item['price']);
+            $price = $this->formatVariantPrice($item['price']);
 
             if (empty($price)) {
                 return $name;
@@ -301,32 +301,24 @@ class ProductRepository implements ProductRepositoryContract
     }
 
     /**
-     * Calculate the price difference between the original price and a variant price.
+     * Format the variant price.
      *
      * @param mixed $price
      * @return mixed
      */
-    protected function calcPriceDifference($price)
+    protected function formatVariantPrice($price)
     {
-        if (array_key_exists('price', $this->data->toArray())) {
-            if (is_null($price)) {
-                return null;
-            }
-
-            $originalPrice = $this->data['price'];
-
-            if ($originalPrice === $price) {
-                return null;
-            }
-
-            $priceDifference = Currency::from(Site::current())->formatDecimal($price - $originalPrice);
-
-            if (Str::startsWith($priceDifference, '-')) {
-                return $priceDifference;
-            }
-
-            return "+{$priceDifference}";
+        if (is_null($price)) {
+            return null;
         }
+
+        $price = Currency::from(Site::default())->formatDecimal($price);
+
+        if (Str::startsWith($price, '-')) {
+            return $price;
+        }
+
+        return "+{$price}";
     }
 
     /**
