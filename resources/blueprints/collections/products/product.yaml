@@ -51,17 +51,17 @@ sections:
           listable: true
           display: Price
           instructions: 'Rounded to two decimal places.'
-          validate: required|numeric|regex:/^\d+(\.\d{1,2})?$/
+          validate: 'required|numeric|regex:/^\d+(\.\d{1,2})?$/'
           width: 50
       -
         handle: categories
         field:
-          type: taxonomy
-          taxonomy: categories
+          type: terms
           display: Categories
           mode: select
           instructions: 'The categories of this product.'
           listable: hidden
+          taxonomies: categories
       -
         handle: description
         field:
@@ -177,12 +177,12 @@ sections:
       -
         handle: taxes
         field:
-          type: taxonomy
-          taxonomy: taxes
+          type: terms
           display: Taxes
           instructions: 'Apply specific taxes to this product.'
           mode: select
           listable: hidden
+          taxonomies: taxes
       -
         handle: quantity_section
         field:
@@ -323,7 +323,7 @@ sections:
                           localizable: false
                           listable: hidden
                           display: Price
-                          validate: numeric|regex:/^\d+(\.\d{1,2})?$/
+                          validate: 'numeric|regex:/^\d+(\.\d{1,2})?$/'
                           width: 50
                       -
                         handle: stock
