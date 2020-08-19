@@ -10,18 +10,6 @@ class MoneyFieldtype extends Fieldtype
 {
     protected $icon = 'text';
 
-    protected function configFieldItems(): array
-    {
-        return [
-            'options' => [
-                'display' => __('snipcart::fieldtypes.money.display'),
-                'instructions' => __('snipcart::fieldtypes.money.instructions'),
-                'type' => 'checkbox',
-                'width' => 50,
-            ],
-        ];
-    }
-
     /**
      * Preload some data to be available in the vue component.
      *
