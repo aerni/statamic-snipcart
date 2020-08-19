@@ -9,7 +9,7 @@ use Statamic\Fields\Fieldtype;
 
 class DimensionFieldtype extends Fieldtype
 {
-    protected $icon = 'tags';
+    protected $icon = 'integer';
 
     protected function configFieldItems(): array
     {

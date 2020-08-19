@@ -6,7 +6,7 @@ use Statamic\Fields\Fieldtype;
 
 class StockFieldtype extends Fieldtype
 {
-    protected $icon = 'tags';
+    protected $icon = 'integer';
 
     /**
      * Preload some data to be available in the vue component.

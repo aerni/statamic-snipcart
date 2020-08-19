@@ -8,7 +8,7 @@ use Statamic\Fields\Fieldtype;
 
 class MoneyFieldtype extends Fieldtype
 {
-    protected $icon = 'tags';
+    protected $icon = 'text';
 
     /**
      * Preload some data to be available in the vue component.
