@@ -4,65 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2d21268c61db669b62799dcff3f9c02",
+    "content-hash": "f4dfc42f093771f74d74dd1b974f29e5",
     "packages": [
-        {
-            "name": "aerni/snipcart-api",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aerni/laravel-snipcart-api.git",
-                "reference": "24be70d4e584ce5cb834af6c929d2bf4e9ff743e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aerni/laravel-snipcart-api/zipball/24be70d4e584ce5cb834af6c929d2bf4e9ff743e",
-                "reference": "24be70d4e584ce5cb834af6c929d2bf4e9ff743e",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.5",
-                "illuminate/support": "^7.0",
-                "php": "7.2.* || 7.3.* || 7.4.*"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Aerni\\SnipcartApi\\Providers\\SnipcartApiServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Aerni\\SnipcartApi\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Aerni",
-                    "email": "hello@michaelaerni.ch",
-                    "homepage": "https://www.michaelaerni.ch",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A Laravel wrapper for the Snipcart API",
-            "homepage": "https://github.com/aerni/snipcart-api",
-            "keywords": [
-                "api",
-                "e-commerce",
-                "laravel",
-                "shop",
-                "snipcart",
-                "snipcart-api",
-                "wrapper"
-            ],
-            "time": "2020-08-12T14:42:01+00:00"
-        },
         {
             "name": "aerni/snipcart-webhooks",
             "version": "dev-master",
@@ -121,16 +64,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.9.0",
+            "version": "0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "b69d0daabbb830b1dac93d757cdc5dab253574c2"
+                "reference": "283a40c901101e66de7061bd359252c013dcc43c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/b69d0daabbb830b1dac93d757cdc5dab253574c2",
-                "reference": "b69d0daabbb830b1dac93d757cdc5dab253574c2",
+                "url": "https://api.github.com/repos/brick/math/zipball/283a40c901101e66de7061bd359252c013dcc43c",
+                "reference": "283a40c901101e66de7061bd359252c013dcc43c",
                 "shasum": ""
             },
             "require": {
@@ -169,7 +112,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-18T09:40:56+00:00"
+            "time": "2020-08-18T23:57:15+00:00"
         },
         {
             "name": "calebporzio/sushi",
@@ -9072,7 +9015,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "aerni/snipcart-api": 20,
         "aerni/snipcart-webhooks": 20,
         "statamic/cms": 10
     },

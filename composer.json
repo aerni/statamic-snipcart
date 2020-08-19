@@ -17,7 +17,6 @@
     ],
     "require": {
         "php": "^7.4",
-        "aerni/snipcart-api": "dev-master",
         "aerni/snipcart-webhooks": "dev-master",
         "calebporzio/sushi": "^2.0",
         "jordanbrauer/unit-converter": "^0.8.4",
