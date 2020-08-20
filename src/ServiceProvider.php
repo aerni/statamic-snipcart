@@ -56,10 +56,10 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        Statamic::booted(function () {
-            $this->setSnipcartApiConfig();
-            $this->setSnipcartWebhooksConfig();
-        });
+        // Statamic::booted(function () {
+        //     $this->setSnipcartApiConfig();
+        //     $this->setSnipcartWebhooksConfig();
+        // });
 
         Statamic::afterInstalled(function ($command) {
             $command->call('snipcart:setup');
@@ -81,34 +81,34 @@ class ServiceProvider extends AddonServiceProvider
      *
      * @return void
      */
-    protected function setSnipcartApiConfig(): void
-    {
-        $snipcartApiConfig = Config::get('snipcart-api');
-        $snipcartConfig = Config::get('snipcart');
+    // protected function setSnipcartApiConfig(): void
+    // {
+    //     $snipcartApiConfig = Config::get('snipcart-api');
+    //     $snipcartConfig = Config::get('snipcart');
 
-        $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
+    //     $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
 
-        foreach ($mergedConfigs as $key => $value) {
-            Config::set("snipcart-api.{$key}", $value);
-        }
-    }
+    //     foreach ($mergedConfigs as $key => $value) {
+    //         Config::set("snipcart-api.{$key}", $value);
+    //     }
+    // }
 
     /**
      * Set the config of the Snipcart Webhooks package.
      *
      * @return void
      */
-    protected function setSnipcartWebhooksConfig(): void
-    {
-        $snipcartWebhooksConfig = Config::get('snipcart-webhooks');
-        $snipcartConfig = Config::get('snipcart');
+    // protected function setSnipcartWebhooksConfig(): void
+    // {
+    //     $snipcartWebhooksConfig = Config::get('snipcart-webhooks');
+    //     $snipcartConfig = Config::get('snipcart');
 
-        $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartWebhooksConfig);
+    //     $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartWebhooksConfig);
 
-        foreach ($mergedConfigs as $key => $value) {
-            Config::set("snipcart-webhooks.{$key}", $value);
-        }
-    }
+    //     foreach ($mergedConfigs as $key => $value) {
+    //         Config::set("snipcart-webhooks.{$key}", $value);
+    //     }
+    // }
 
     /**
      * Bind the repositories.
