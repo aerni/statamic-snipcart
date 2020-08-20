@@ -51,7 +51,10 @@ sections:
           listable: true
           display: Price
           instructions: 'Rounded to two decimal places.'
-          validate: 'required|numeric|regex:/^\d+(\.\d{1,2})?$/'
+          validate:
+            - required
+            - numeric
+            - 'regex:/^\d+(\.\d{1,2})?$/'
           width: 50
       -
         handle: categories
@@ -323,7 +326,9 @@ sections:
                           localizable: false
                           listable: hidden
                           display: 'Price Difference'
-                          validate: 'numeric|regex:/^-?\d+(\.\d{1,2})?$/'
+                          validate:
+                            - numeric
+                            - 'regex:/^-?\d+(\.\d{1,2})?$/'
                           width: 50
                     mode: table
                     reorderable: true
