@@ -4,14 +4,6 @@ sections:
     display: Basic
     fields:
       -
-        handle: basic_information_section
-        field:
-          type: section
-          instructions: 'Add the basic product information. <a href="https://docs.snipcart.com/v3/setup/products">Learn more</a>'
-          localizable: false
-          listable: false
-          display: 'Basic Information'
-      -
         handle: title
         field:
           type: text
@@ -60,11 +52,11 @@ sections:
         handle: categories
         field:
           type: terms
+          taxonomies: categories
           display: Categories
           mode: select
           instructions: 'The categories of this product.'
           listable: hidden
-          taxonomies: categories
       -
         handle: description
         field:
@@ -413,7 +405,7 @@ sections:
           type: replicator
           localizable: true
           listable: false
-          display: 'CUSTOM FIELDS'
+          display: 'Custom Fields'
           instructions: 'Create product variations for attributes like `Color` and `Size` or collect additional information like a `Gift Note`. <a href="https://docs.snipcart.com/v3/setup/products#custom-fields">Learn more</a>'
   sidebar:
     display: Sidebar
