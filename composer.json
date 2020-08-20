@@ -22,7 +22,7 @@
         "calebporzio/sushi": "^2.0",
         "jordanbrauer/unit-converter": "^0.8.4",
         "moneyphp/money": "^3.3",
-        "statamic/cms": "^3.0@beta"
+        "statamic/cms": "3.0.*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",
