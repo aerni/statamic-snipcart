@@ -30,12 +30,12 @@ return [
 
         'taxonomies' => [
             'class' => Stores\TaxonomiesStore::class,
-            'directory' => base_path('content/taxonomies'),
+            'directory' => __DIR__.'/../../content/taxonomies',
         ],
 
         'terms' => [
             'class' => Stores\TermsStore::class,
-            'directory' => base_path('content/taxonomies'),
+            'directory' => __DIR__.'/../../content/taxonomies',
         ],
 
         'collections' => [
