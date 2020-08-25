@@ -13,8 +13,11 @@ return [
     | Snipcart's default currency, length and weight unit will be the ones
     | defined within the key of Statamic's default site.
     |
-    | If you add/remove a site or change a value, you need to run
+    | If you add or remove a site or change a value, you need to run
     | 'php please snipcart:migrate' to update the products collection and entries.
+    |
+    | Accepted length units: cm, m, in, ft
+    | Accepted weight units: g, kg, oz, lb
     |
     */
 
