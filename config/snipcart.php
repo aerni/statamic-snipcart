@@ -7,8 +7,8 @@ return [
     | Sites
     |--------------------------------------------------------------------------
     |
-    | The site handles need to be in sync with your Statamic config.
-    | Make sure to add a new key for each site set in `config/statamic/site.php`.
+    | The sites need to be in sync with your Statamic config. Make sure to
+    | add a new key for each site set in `config/statamic/sites.php`.
     |
     | Snipcart's default currency, length and weight unit will be the ones
     | defined within the key of Statamic's default site.
@@ -69,7 +69,7 @@ return [
     | Test Mode
     |--------------------------------------------------------------------------
     |
-    | Set this to "false" to start processing real transactions.
+    | Set this to 'false' to start processing real transactions.
     | You probably want to do this in production only.
     |
     */
@@ -92,8 +92,8 @@ return [
     | Cart Behaviour
     |--------------------------------------------------------------------------
     |
-    | Set this to "none" to prevent the cart from opening every time
-    | a product is added. Default is "null".
+    | Set this to 'none' to prevent the cart from opening every time
+    | a product is added. Default is 'null'.
     |
     */
 
