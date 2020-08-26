@@ -195,7 +195,6 @@ sections:
           listable: hidden
           display: 'Default Quantity'
           width: 33
-          default: 1
       -
         handle: min_quantity
         field:
@@ -222,7 +221,6 @@ sections:
           localizable: false
           listable: hidden
           display: 'Quantity Step'
-          default: 1
       -
         handle: stackable
         field:
