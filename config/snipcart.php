@@ -69,7 +69,7 @@ return [
     | Test Mode
     |--------------------------------------------------------------------------
     |
-    | Set this to "false" to start processing real transactions.
+    | Set this to 'false' to start processing real transactions.
     | You probably want to do this in production only.
     |
     */
@@ -92,8 +92,8 @@ return [
     | Cart Behaviour
     |--------------------------------------------------------------------------
     |
-    | Set this to "none" to prevent the cart from opening every time
-    | a product is added. Default is "null".
+    | Set this to 'none' to prevent the cart from opening every time
+    | a product is added. Default is 'null'.
     |
     */
 
