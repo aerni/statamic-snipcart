@@ -21,20 +21,10 @@
                 return this.$store.state.publish.base.values.price;
             },
             symbol() {
-                if (this.meta[this.site]) {
-                    return this.meta[this.site]['symbol'];
-                }
-
-                return this.meta[this.siteHandle()]['symbol'];
+                return this.meta[this.site]['symbol'];
             },
             site() {
                 return this.$store.state.publish.base.site;
-            }
-        },
-        methods: {
-            siteHandle() {
-                let pathArray = window.location.pathname.split('/');
-                return pathArray[pathArray.length - 1];
             }
         }
     };
