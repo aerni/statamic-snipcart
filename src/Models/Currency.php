@@ -2,8 +2,6 @@
 
 namespace Aerni\Snipcart\Models;
 
-use Aerni\Snipcart\Models\Model;
-
 class Currency extends Model
 {
     protected static function getRows(): array

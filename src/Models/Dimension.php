@@ -2,8 +2,6 @@
 
 namespace Aerni\Snipcart\Models;
 
-use Aerni\Snipcart\Models\Model;
-
 class Dimension extends Model
 {
     protected static function getRows(): array
