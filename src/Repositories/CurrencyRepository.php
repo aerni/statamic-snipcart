@@ -59,7 +59,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
             throw new UnsupportedCurrencyException($this->site->handle(), $currencySetting);
         }
 
-        return $currency->toArray();
+        return $currency;
     }
 
     /**
@@ -80,7 +80,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
         });
 
         $currencies = $currencySettings->map(function ($item) {
-            return CurrencyModel::firstWhere('code', $item)->toArray();
+            return CurrencyModel::firstWhere('code', $item);
         })->toArray();
 
         return $currencies;

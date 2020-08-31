@@ -2,14 +2,11 @@
 
 namespace Aerni\Snipcart\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Sushi\Sushi;
+use Aerni\Snipcart\Models\Model;
 
 class Dimension extends Model
 {
-    use Sushi;
-
-    public function getRows()
+    protected static function getRows(): array
     {
         return [
             [
