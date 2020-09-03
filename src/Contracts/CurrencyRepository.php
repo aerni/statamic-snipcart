@@ -27,4 +27,6 @@ interface CurrencyRepository
     public function formatDecimalIntl(?int $value);
 
     public function parseDecimalIntl(?string $value);
+
+    public function parseCurrency(?string $value);
 }

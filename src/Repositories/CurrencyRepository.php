@@ -2,20 +2,21 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
+use Money\Money;
+use Money\Currency;
+use NumberFormatter;
+use Statamic\Sites\Site;
+use Money\Parser\IntlMoneyParser;
+use Money\Currencies\ISOCurrencies;
+use Illuminate\Support\Facades\Config;
+use Money\Formatter\IntlMoneyFormatter;
+use Statamic\Facades\Site as SiteFacade;
+use Money\Formatter\DecimalMoneyFormatter;
+use Money\Parser\IntlLocalizedDecimalParser;
+use Aerni\Snipcart\Models\Currency as CurrencyModel;
 use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedCurrencyException;
-use Aerni\Snipcart\Models\Currency as CurrencyModel;
-use Illuminate\Support\Facades\Config;
-use Money\Currencies\ISOCurrencies;
-use Money\Currency;
-use Money\Formatter\DecimalMoneyFormatter;
-use Money\Formatter\IntlMoneyFormatter;
-use Money\Money;
-use Money\Parser\IntlLocalizedDecimalParser;
-use NumberFormatter;
-use Statamic\Facades\Site as SiteFacade;
-use Statamic\Sites\Site;
+use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
 
 class CurrencyRepository implements CurrencyRepositoryContract
 {
@@ -198,5 +199,23 @@ class CurrencyRepository implements CurrencyRepositoryContract
         $moneyParser = new IntlLocalizedDecimalParser($numberFormatter, new ISOCurrencies());
 
         return (int) $moneyParser->parse($value, new Currency($this->code()))->getAmount();
+    }
+
+    /**
+     * Parse a decimal string to an integer.
+     *
+     * @param string|null $value
+     * @return int|null
+     */
+    public function parseCurrency(?string $value)
+    {
+        if (is_null($value)) {
+            return $value;
+        }
+
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::CURRENCY);
+        $moneyParser = new IntlMoneyParser($numberFormatter, new ISOCurrencies());
+
+        return (int) $moneyParser->parse($value)->getAmount();
     }
 }
