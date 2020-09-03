@@ -39,7 +39,7 @@ class MoneyFieldtype extends Fieldtype
      */
     public function process($data)
     {
-        return Currency::from(Site::current())->parseDecimal($data);
+        return Currency::from(Site::current())->parseDecimalIntl($data);
     }
 
     /**

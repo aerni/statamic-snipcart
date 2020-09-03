@@ -188,7 +188,7 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * @param string|null $value
      * @return int|null
      */
-    public function parseDecimal(?string $value)
+    public function parseDecimalIntl(?string $value)
     {
         if (is_null($value)) {
             return $value;
