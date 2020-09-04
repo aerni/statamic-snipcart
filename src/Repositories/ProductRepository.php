@@ -50,7 +50,7 @@ class ProductRepository implements ProductRepositoryContract
      *
      * @return Collection
      */
-    protected function data(): Collection
+    public function data(): Collection
     {
         return $this->product->root()->data()
             ->merge($this->product->data());

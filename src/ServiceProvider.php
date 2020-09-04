@@ -51,6 +51,7 @@ class ServiceProvider extends AddonServiceProvider
         Tags\CurrencyTags::class,
         Tags\LengthTags::class,
         Tags\SnipcartTags::class,
+        Tags\VariantsTags::class,
         Tags\WeightTags::class,
     ];
 
@@ -124,6 +125,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
         $this->app->bind('Dimension', Repositories\DimensionRepository::class);
         $this->app->bind('Product', Repositories\ProductRepository::class);
+        $this->app->bind('Variant', Repositories\VariantRepository::class);
     }
 
     /**
