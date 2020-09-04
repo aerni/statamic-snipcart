@@ -46,6 +46,17 @@ class ProductRepository implements ProductRepositoryContract
     }
 
     /**
+     * Get an augmented value from the product.
+     *
+     * @param string $key
+     * @return \Statamic\Fields\Value
+     */
+    public function augmentedValue(string $key): \Statamic\Fields\Value
+    {
+        return $this->product->augmentedValue($key);
+    }
+
+    /**
      * Get the products data.
      *
      * @return Collection
