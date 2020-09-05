@@ -18,7 +18,11 @@
         mixins: [Fieldtype],
         computed: {
             originalPrice() {
-                return this.$store.state.publish.base.values.price;
+                let basePrice = this.$store.state.publish.base.values.price;
+
+                if (basePrice) {
+                    return `Base Price: ${basePrice}`;
+                }
             },
             symbol() {
                 return this.meta[this.site]['symbol'];
