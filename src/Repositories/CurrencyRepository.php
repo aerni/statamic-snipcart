@@ -194,41 +194,4 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
         return $moneyParser->parse($value, $this->code())->getAmount();
     }
-
-    /**
-     * Format an integer to an international decimal string.
-     * e.g. 1000 -> 10,00
-     * e.g. null -> 0,00
-     *
-     * @param int|null $value
-     * @return string
-     */
-    public function formatDecimalIntl(?int $value): string
-    {
-        $money = new Money($value, new Currency($this->code()));
-        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
-        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
-
-        return $moneyFormatter->format($money);
-    }
-
-    /**
-     * Parse an international decimal string to an integer.
-     * e.g. 10,00 -> 1000
-     * e.g. null -> 0
-     *
-     * @param string|null $value
-     * @return int
-     */
-    public function parseDecimalIntl(?string $value): int
-    {
-        if (is_null($value)) {
-            return (int) $value;
-        }
-
-        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
-        $moneyParser = new IntlLocalizedDecimalParser($numberFormatter, new ISOCurrencies());
-
-        return $moneyParser->parse($value, new Currency($this->code()))->getAmount();
-    }
 }
