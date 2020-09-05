@@ -9,8 +9,6 @@ use Aerni\Snipcart\Facades\Dimension;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
-use Statamic\Entries\Entry;
-use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Facades\Site;
 use Statamic\Support\Str;
@@ -20,44 +18,46 @@ class ProductRepository implements ProductRepositoryContract
     /**
      * The product entry.
      *
-     * @var Entry
+     * @var \Statamic\Entries\Entry
      */
     protected $product;
 
     /**
-     * The product data.
+     * The selected product variant options.
      *
-     * @var Collection
+     * @var array
      */
-    protected $data;
+    protected $selectedVariantOptions;
 
     /**
-     * Get the product entry and data by its id.
+     * Set the selected variant options property.
      *
-     * @param string $id
+     * @param array $options
      * @return self
      */
-    public function find(string $id): self
+    public function selectedVariantOptions(array $options): self
     {
-        $this->product = EntryFacade::find($id);
-        $this->data = $this->data();
+        $this->selectedVariantOptions = $options;
 
         return $this;
     }
 
     /**
-     * Get an augmented value from the product.
+     * Get the Snipcart attributes from the product entry.
      *
-     * @param string $key
-     * @return \Statamic\Fields\Value
+     * @return Collection
      */
-    public function augmentedValue(string $key): \Statamic\Fields\Value
+    public function processAttributes(\Statamic\Entries\Entry $entry)
     {
-        return $this->product->augmentedValue($key);
+        $this->product = $entry;
+
+        $attributes = $this->mapAttributes();
+
+        return Validator::onlyValidAttributes($attributes);
     }
 
     /**
-     * Get the products data.
+     * Merge the product root data with the localized data.
      *
      * @return Collection
      */
@@ -68,27 +68,13 @@ class ProductRepository implements ProductRepositoryContract
     }
 
     /**
-     * Get the Snipcart attributes from the product entry.
-     *
-     * @return Collection
-     */
-    public function attributes(): Collection
-    {
-        $attributes = $this->mapAttributes($this->data);
-        $attributes->put('url', Request::url());
-
-        return Validator::onlyValidAttributes($attributes);
-    }
-
-    /**
      * Map the attributes to match the format that Snipcart expects.
      *
-     * @param Collection $data
      * @return Collection
      */
-    protected function mapAttributes(Collection $data): Collection
+    protected function mapAttributes(): Collection
     {
-        $mappedAttributes = $data->mapWithKeys(function ($item, $key) {
+        $mappedAttributes = $this->data()->mapWithKeys(function ($item, $key) {
             if ($key === 'title') {
                 return ['name' => $item];
             }
@@ -148,7 +134,7 @@ class ProductRepository implements ProductRepositoryContract
             return [
                 $this->underscoreToDash($key) => $item,
             ];
-        });
+        })->put('url', Request::url());
 
         return $mappedAttributes;
     }
@@ -242,11 +228,11 @@ class ProductRepository implements ProductRepositoryContract
      * @param string $key
      * @return array
      */
-    protected function mapDropdown(array $item, string $key): array
+    protected function mapDropdown(array $dropdown, string $key): array
     {
-        $options = collect($item['options'])->map(function ($item) {
-            $name = $item['name'];
-            $price = $this->formatVariantPrice($item['price']);
+        $options = collect($dropdown['options'])->map(function ($option) {
+            $name = $option['name'];
+            $price = $this->formatVariantPrice($option['price']);
 
             if (empty($price)) {
                 return $name;
@@ -255,8 +241,22 @@ class ProductRepository implements ProductRepositoryContract
             return "{$name}[{$price}]";
         })->implode('|');
 
+        if (! empty($this->selectedVariantOptions)) {
+            $selectedOption = collect($dropdown['options'])->flatMap(function ($option) {
+                return collect($this->selectedVariantOptions)->filter(function ($selectedOption) use ($option) {
+                    return $option['name'] === $selectedOption['name']->value();
+                })->pluck('name');
+            })->first()->value();
+
+            return [
+                "custom{$key}-name" => $dropdown['name'],
+                "custom{$key}-options" => $options,
+                "custom{$key}-value" => $selectedOption,
+            ];
+        }
+
         return [
-            "custom{$key}-name" => $item['name'],
+            "custom{$key}-name" => $dropdown['name'],
             "custom{$key}-options" => $options,
         ];
     }
@@ -355,13 +355,15 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function lengthUnit(): string
     {
-        if ($this->data->has('length_unit')) {
-            return $this->data->get('length_unit');
+        $lengthUnit = $this->product->value('length_unit');
+
+        if (is_null($lengthUnit)) {
+            return Dimension::from(Site::default())
+                ->type('length')
+                ->short();
         }
 
-        return Dimension::from(Site::default())
-            ->type('length')
-            ->short();
+        return $lengthUnit;
     }
 
     /**
@@ -371,13 +373,15 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function weightUnit(): string
     {
-        if ($this->data->has('weight_unit')) {
-            return $this->data->get('weight_unit');
+        $weightUnit = $this->product->value('weight_unit');
+
+        if (is_null($weightUnit)) {
+            return Dimension::from(Site::default())
+                ->type('weight')
+                ->short();
         }
 
-        return Dimension::from(Site::default())
-            ->type('weight')
-            ->short();
+        return $weightUnit;
     }
 
     /**

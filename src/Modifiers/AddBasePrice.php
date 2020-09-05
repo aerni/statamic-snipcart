@@ -5,7 +5,7 @@ namespace Aerni\Snipcart\Modifiers;
 use Statamic\Facades\Site;
 use Statamic\Modifiers\Modifier;
 use Aerni\Snipcart\Facades\Currency;
-use Aerni\Snipcart\Facades\Product;
+use Statamic\Facades\Entry;
 
 class AddBasePrice extends Modifier
 {
@@ -19,7 +19,7 @@ class AddBasePrice extends Modifier
      */
     public function index($value, $params, $context)
     {
-        $basePrice = Product::find($context['id'])->augmentedValue('price')->raw();
+        $basePrice = Entry::find($context['id'])->augmentedValue('price')->raw();
         $variantPrice = Currency::from(Site::current())->parseCurrency($value);
         $totalPrice = $basePrice + $variantPrice;
 
