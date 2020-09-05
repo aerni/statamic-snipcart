@@ -8,6 +8,7 @@ use NumberFormatter;
 use Statamic\Sites\Site;
 use Money\Parser\IntlMoneyParser;
 use Money\Currencies\ISOCurrencies;
+use Money\Parser\DecimalMoneyParser;
 use Illuminate\Support\Facades\Config;
 use Money\Formatter\IntlMoneyFormatter;
 use Statamic\Facades\Site as SiteFacade;
@@ -128,94 +129,106 @@ class CurrencyRepository implements CurrencyRepositoryContract
     }
 
     /**
-     * Format an integer to a currency string.
+     * Format an integer to an international currency string.
+     * e.g. 1000 -> $10.00
+     * e.g. null -> $0.00
      *
      * @param int|null $value
-     * @return string|null
+     * @return string
      */
-    public function formatCurrency(?int $value)
+    public function formatCurrency(?int $value): string
     {
-        if (is_null($value)) {
-            return $value;
-        }
-
         $money = new Money($value, new Currency($this->code()));
         $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::CURRENCY);
         $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
 
-        return (string) $moneyFormatter->format($money);
+        return $moneyFormatter->format($money);
+    }
+
+    /**
+     * Parse an international currency string to an integer.
+     * e.g. $10.00 -> 1000
+     *
+     * @param string $value
+     * @return int
+     */
+    public function parseCurrency(string $value): int
+    {
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::CURRENCY);
+        $moneyParser = new IntlMoneyParser($numberFormatter, new ISOCurrencies());
+
+        return $moneyParser->parse($value)->getAmount();
     }
 
     /**
      * Format an integer to a decimal string.
+     * e.g. 1000 -> 10.00
+     * e.g. null -> 0.00
      *
      * @param int|null $value
-     * @return string|null
+     * @return string
      */
-    public function formatDecimal(?int $value)
+    public function formatDecimal(?int $value): string
     {
-        if (is_null($value)) {
-            return $value;
-        }
-
         $money = new Money($value, new Currency($this->code()));
         $moneyFormatter = new DecimalMoneyFormatter(new ISOCurrencies());
 
-        return (string) $moneyFormatter->format($money);
-    }
-
-    /**
-     * Format an integer to a decimal string.
-     *
-     * @param int|null $value
-     * @return string|null
-     */
-    public function formatDecimalIntl(?int $value)
-    {
-        if (is_null($value)) {
-            return $value;
-        }
-
-        $money = new Money($value, new Currency($this->code()));
-        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
-        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
-
-        return (string) $moneyFormatter->format($money);
+        return $moneyFormatter->format($money);
     }
 
     /**
      * Parse a decimal string to an integer.
+     * e.g. 10.00 -> 1000
+     * e.g. null -> 0
      *
      * @param string|null $value
-     * @return int|null
+     * @return int
      */
-    public function parseDecimalIntl(?string $value)
+    public function parseDecimal(?string $value): int
     {
         if (is_null($value)) {
-            return $value;
+            return (int) $value;
+        }
+
+        $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
+
+        return $moneyParser->parse($value, $this->code())->getAmount();
+    }
+
+    /**
+     * Format an integer to an international decimal string.
+     * e.g. 1000 -> 10,00
+     * e.g. null -> 0,00
+     *
+     * @param int|null $value
+     * @return string
+     */
+    public function formatDecimalIntl(?int $value): string
+    {
+        $money = new Money($value, new Currency($this->code()));
+        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
+
+        return $moneyFormatter->format($money);
+    }
+
+    /**
+     * Parse an international decimal string to an integer.
+     * e.g. 10,00 -> 1000
+     * e.g. null -> 0
+     *
+     * @param string|null $value
+     * @return int
+     */
+    public function parseDecimalIntl(?string $value): int
+    {
+        if (is_null($value)) {
+            return (int) $value;
         }
 
         $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::DECIMAL);
         $moneyParser = new IntlLocalizedDecimalParser($numberFormatter, new ISOCurrencies());
 
-        return (int) $moneyParser->parse($value, new Currency($this->code()))->getAmount();
-    }
-
-    /**
-     * Parse a decimal string to an integer.
-     *
-     * @param string|null $value
-     * @return int|null
-     */
-    public function parseCurrency(?string $value)
-    {
-        if (is_null($value)) {
-            return $value;
-        }
-
-        $numberFormatter = new NumberFormatter($this->site->locale(), NumberFormatter::CURRENCY);
-        $moneyParser = new IntlMoneyParser($numberFormatter, new ISOCurrencies());
-
-        return (int) $moneyParser->parse($value)->getAmount();
+        return $moneyParser->parse($value, new Currency($this->code()))->getAmount();
     }
 }

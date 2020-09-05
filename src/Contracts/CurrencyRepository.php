@@ -20,13 +20,15 @@ interface CurrencyRepository
 
     public function name(): string;
 
-    public function formatCurrency(?int $value);
+    public function formatCurrency(?int $value): string;
 
-    public function formatDecimal(?int $value);
+    public function parseCurrency(string $value): int;
 
-    public function formatDecimalIntl(?int $value);
+    public function formatDecimal(?int $value): string;
 
-    public function parseDecimalIntl(?string $value);
+    public function parseDecimal(?string $value): int;
 
-    public function parseCurrency(?string $value);
+    public function formatDecimalIntl(?int $value): string;
+
+    public function parseDecimalIntl(?string $value): int;
 }
