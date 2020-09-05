@@ -5,7 +5,6 @@ namespace Aerni\Snipcart;
 use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
 use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Tags\SnipcartTags;
-use Illuminate\Support\Facades\Config;
 use Statamic\Facades\Site;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
