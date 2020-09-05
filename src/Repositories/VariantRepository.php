@@ -2,10 +2,11 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\Snipcart\Facades\Currency;
-use Illuminate\Support\Collection;
-use Aerni\Snipcart\Support\Cartesian;
 use Statamic\Facades\Site;
+use Illuminate\Support\Collection;
+use Aerni\Snipcart\Support\Helpers;
+use Aerni\Snipcart\Facades\Currency;
+use Aerni\Snipcart\Support\Cartesian;
 
 class VariantRepository
 {
@@ -50,7 +51,7 @@ class VariantRepository
      */
     public function all(): Collection
     {
-        return collect($this->context->get('custom_fields'))
+        $productVariants = collect($this->context->get('custom_fields'))
             ->filter(function ($customField) {
                 return $customField['type'] === 'dropdown';
             })
@@ -60,6 +61,8 @@ class VariantRepository
                     'options' => $customField['options'],
                 ];
             });
+
+        return Helpers::resetCollectionIndex($productVariants);
     }
 
     /**
