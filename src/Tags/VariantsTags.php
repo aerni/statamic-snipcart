@@ -17,13 +17,13 @@ class VariantsTags extends Tags
     protected static $handle = 'variants';
 
     /**
-     * Returns an array of all product variants.
+     * Returns all product variants.
      *
      * @return Collection
      */
     public function index(): Collection
     {
-        return Variant::from($this->context->get('id'))->all();
+        return Variant::context($this->context)->all();
     }
 
     /**
@@ -38,20 +38,23 @@ class VariantsTags extends Tags
         }
 
         if ($this->params->bool('allow_query')) {
-            $params = $this->params->merge(Request::all())->forget('allow_query');
-            return Variant::from($this->context->get('id'))->combine($params);
+            $params = $this->params
+                ->merge(Request::all())
+                ->forget('allow_query');
+
+            return Variant::context($this->context)->params($params)->get();
         }
 
-        return Variant::from($this->context->get('id'))->combine($this->params);
+        return Variant::context($this->context)->params($this->params)->get();
     }
 
     /**
-     * Get a list of all possible product variations.
+     * Returns a complete list of all possible product variations.
      *
      * @return Collection
      */
     public function list(): Collection
     {
-        return Variant::from($this->context->get('id'))->combinations();
+        return Variant::context($this->context)->list();
     }
 }

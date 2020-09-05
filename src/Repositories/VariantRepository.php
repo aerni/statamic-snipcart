@@ -5,54 +5,101 @@ namespace Aerni\Snipcart\Repositories;
 use Aerni\Snipcart\Facades\Currency;
 use Illuminate\Support\Collection;
 use Aerni\Snipcart\Support\Cartesian;
-use Statamic\Facades\Entry;
-use Aerni\Snipcart\Facades\Product;
 use Statamic\Facades\Site;
-use Illuminate\Support\Facades\Request;
 
 class VariantRepository
 {
-    protected $data;
+    protected $context;
+    protected $params;
 
     /**
-     * Set the data property.
+     * Set the context property.
      *
-     * @param string $id
+     * @param Collection $context
+     * @return self
      */
-    public function from(string $id): self
+    public function context(Collection $context): self
     {
-        $this->data = Product::find($id)->data();
+        $this->context = $context;
 
         return $this;
     }
 
-    public function all()
+    /**
+     * Set the params property
+     *
+     * @param Collection $params
+     * @return self
+     */
+    public function params(Collection $params): self
     {
-        return collect($this->data->get('custom_fields'))
-            ->filter(function ($item) {
-                return $item['type'] === 'dropdown' && $item['enabled'] === true;
+        $this->params = $params->map(function ($item, $key) {
+            return [
+                'type' => $key,
+                'name' => $item
+            ];
+        })->values();
+
+        return $this;
+    }
+
+    /**
+     * Returns all product variants.
+     *
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return collect($this->context->get('custom_fields'))
+            ->filter(function ($customField) {
+                return $customField['type'] === 'dropdown';
             })
-            ->map(function ($item) {
+            ->map(function ($customField) {
                 return [
-                    'type' => $item['name'],
-                    'options' => $item['options'],
+                    'type' => $customField['name'],
+                    'options' => $customField['options'],
                 ];
             });
     }
 
-    public function get(string $key)
+    /**
+     * Get product variants based on a parameter filter.
+     *
+     * @return array
+     */
+    public function get(): array
     {
-        return $this->all()->get($key);
+        $filtered = $this->filter();
+
+        return [
+            'options' => $filtered,
+            'price' => $this->price($filtered),
+        ];
     }
 
-    public function variants(): Collection
+    /**
+     * Returns a complete list of all possible product variations.
+     *
+     * @return Collection
+     */
+    public function list(): Collection
     {
-        return $this->all()->map(function ($item) {
-            return $item['options'];
+        $cartesian = Cartesian::build($this->options()->all());
+
+        return collect($cartesian)->map(function ($item) {
+            return [
+                'options' => $item,
+                'price' => $this->price($item),
+            ];
         });
     }
 
-    public function options(): Collection
+    /**
+     * Returns all variation options.
+     *
+     * @return Collection
+     */
+    protected function options(): Collection
     {
         return $this->all()->map(function ($item, $key) {
             return collect($item['options'])->map(function ($item) use ($key) {
@@ -61,84 +108,49 @@ class VariantRepository
         });
     }
 
-    public function optionsWithPrice(): Collection
+    /**
+     * Calculates the total price of product variants.
+     *
+     * @param array $item
+     * @return string
+     */
+    protected function price(array $item): string
     {
-        return $this->variants()->map(function ($item) {
-            return collect($item)->mapWithKeys(function ($item, $key) {
-                return [$key => [
-                    $item['name'] => $item['price']
-                ]];
-            })->all();
-        });
-    }
+        $variantsSum = collect($item)->pluck('price')->map(function ($item) {
+            return $item->raw();
+        })->sum();
 
-    public function cartesian(): Collection
-    {
-        return collect(Cartesian::build($this->options()->all()));
-    }
-
-    protected function calcTotalPrice(string $price): string
-    {
-        $basePrice = $this->data->get('price');
-        $total = $basePrice + $price;
+        $basePrice = $this->context->raw('price');
+        $total = $basePrice + $variantsSum;
 
         return Currency::from(Site::current())->formatCurrency($total);
     }
 
-    protected function price(array $item): string
+    /**
+     * Filter the variants based on parameters.
+     *
+     * @return array
+     */
+    public function filter(): array
     {
-        return $this->calcTotalPrice(
-            collect($item)->pluck('price')->sum()
-        );
-    }
-
-    public function combinations()
-    {
-        return $this->cartesian()->map(function ($item) {
-            if (empty($item)) {
-                return $item;
-            }
-
-            return [
-                'options' => $item,
-                'price' => $this->price($item),
-            ];
-        })->filter();
-    }
-
-    public function names(): Collection
-    {
-        return $this->all()->pluck('type');
-    }
-
-    public function combine(?Collection $params)
-    {
-        return [
-            'options' => $this->filter($params),
-            'price' => $this->price($this->filter($params))
-        ];
-    }
-
-    public function filter(?Collection $params)
-    {
-        return $this->query($params)->flatMap(function ($query) {
-            return $this->options()->flatMap(function ($item) use ($query) {
-                return collect($item)->filter(function ($item) use ($query) {
-                    $sameType = ! strcasecmp($item['type'], $query['type']);
-                    $sameName = ! strcasecmp($item['name'], $query['name']);
+        return $this->params->flatMap(function ($param) {
+            return $this->options()->flatMap(function ($item) use ($param) {
+                return collect($item)->filter(function ($item) use ($param) {
+                    $sameType = ! strcasecmp($item['type']->value(), $param['type']);
+                    $sameName = ! strcasecmp($item['name']->value(), $param['name']);
                     return $sameType && $sameName;
                 })->all();
             })->all();
         })->all();
     }
 
-    protected function query(?Collection $params)
+    /**
+     * Returns the variant names.
+     *
+     * @return Collection
+     */
+    protected function names(): Collection
     {
-        return $params->map(function ($item, $key) {
-            return [
-                'type' => $key,
-                'name' => $item
-            ];
-        })->values();
+        return $this->all()->pluck('type');
     }
 }
