@@ -35,6 +35,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $modifiers = [
         Modifiers\AddBasePrice::class,
+        Modifiers\PrependOperator::class,
         Modifiers\StripUnit::class,
     ];
 
