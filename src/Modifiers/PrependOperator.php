@@ -2,8 +2,8 @@
 
 namespace Aerni\Snipcart\Modifiers;
 
-use Statamic\Support\Str;
 use Statamic\Modifiers\Modifier;
+use Statamic\Support\Str;
 
 class PrependOperator extends Modifier
 {

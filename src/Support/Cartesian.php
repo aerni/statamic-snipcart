@@ -6,14 +6,14 @@ class Cartesian
 {
     public static function build(array $set): array
     {
-        if (!$set) {
-            return array(array());
+        if (! $set) {
+            return [[]];
         }
 
         $subset = array_shift($set);
         $cartesianSubset = self::build($set);
 
-        $result = array();
+        $result = [];
         foreach ($subset as $value) {
             foreach ($cartesianSubset as $p) {
                 array_unshift($p, $value);

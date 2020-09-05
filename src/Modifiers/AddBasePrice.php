@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Modifiers;
 
-use Statamic\Facades\Site;
-use Statamic\Modifiers\Modifier;
 use Aerni\Snipcart\Facades\Currency;
 use Statamic\Facades\Entry;
+use Statamic\Facades\Site;
+use Statamic\Modifiers\Modifier;
 
 class AddBasePrice extends Modifier
 {

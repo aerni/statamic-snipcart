@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Statamic\Tags\Tags;
-use Illuminate\Support\Collection;
 use Aerni\Snipcart\Facades\Variant;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
+use Statamic\Tags\Tags;
 
 class VariantsTags extends Tags
 {
