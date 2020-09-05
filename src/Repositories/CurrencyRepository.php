@@ -163,13 +163,17 @@ class CurrencyRepository implements CurrencyRepositoryContract
     /**
      * Format an integer to a decimal string.
      * e.g. 1000 -> 10.00
-     * e.g. null -> 0.00
+     * e.g. null -> null
      *
      * @param int|null $value
-     * @return string
+     * @return string|null
      */
-    public function formatDecimal(?int $value): string
+    public function formatDecimal(?int $value)
     {
+        if (is_null($value)) {
+            return $value;
+        }
+
         $money = new Money($value, new Currency($this->code()));
         $moneyFormatter = new DecimalMoneyFormatter(new ISOCurrencies());
 
