@@ -21,7 +21,7 @@
                 let basePrice = this.$store.state.publish.base.values.price;
 
                 if (basePrice) {
-                    return `Base Price: ${basePrice}`;
+                    return `${basePrice} (Base Price)`;
                 }
             },
             symbol() {
