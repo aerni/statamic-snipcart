@@ -199,11 +199,11 @@ class SetupSnipcart extends Command
 
         $content = $productBlueprint->contents();
 
-        $content['sections']['basic']['fields'][4]['handle'] = $this->categories;
-        $content['sections']['basic']['fields'][4]['field']['taxonomies'] = $this->categories;
+        $content['sections']['sidebar']['fields'][2]['handle'] = $this->categories;
+        $content['sections']['sidebar']['fields'][2]['field']['taxonomies'] = $this->categories;
 
-        $content['sections']['advanced']['fields'][10]['handle'] = $this->taxes;
-        $content['sections']['advanced']['fields'][10]['field']['taxonomies'] = $this->taxes;
+        $content['sections']['settings']['fields'][8]['handle'] = $this->taxes;
+        $content['sections']['settings']['fields'][8]['field']['taxonomies'] = $this->taxes;
 
         $productBlueprint->setContents($content)->save();
 
