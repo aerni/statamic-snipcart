@@ -15,6 +15,11 @@ class VariationsTags extends Tags
      */
     protected static $handle = 'variations';
 
+    public function index(): array
+    {
+        return $this->context->value('variations');
+    }
+
     /**
      * Returns a specific product variation.
      *
