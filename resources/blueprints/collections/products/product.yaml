@@ -63,13 +63,13 @@ sections:
         field:
           fields:
             -
-              handle: name
+              handle: type
               field:
                 input_type: text
                 type: text
                 listable: hidden
-                display: Name
-                instructions: 'The name of this variation, eg. Size.'
+                display: Type
+                instructions: 'The type of this variation, eg. Size.'
                 localizable: true
             -
               handle: options
