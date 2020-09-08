@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Statamic\Facades\Site;
-use Illuminate\Support\Collection;
 use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Support\Cartesian;
+use Illuminate\Support\Collection;
+use Statamic\Facades\Site;
 
 class VariationsRepository
 {
@@ -36,7 +36,7 @@ class VariationsRepository
         return $params->map(function ($item, $key) {
             return [
                 'type' => $key,
-                'name' => $item
+                'name' => $item,
             ];
         })->values();
     }
@@ -112,6 +112,7 @@ class VariationsRepository
                 return collect($item)->filter(function ($item) use ($param) {
                     $sameType = ! strcasecmp($item['type']->value(), $param['type']);
                     $sameName = ! strcasecmp($item['name']->value(), $param['name']);
+
                     return $sameType && $sameName;
                 })->all();
             })->all();
