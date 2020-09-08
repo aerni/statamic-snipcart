@@ -126,7 +126,7 @@ class ProductRepository implements ProductRepositoryContract
             return [$key => $basicField];
         })->mapWithKeys(function ($basicField, $key) {
             return [
-                $this->underscoreToDash($key) => (is_bool($basicField)) ? $this->boolToString($basicField) : $basicField
+                $this->underscoreToDash($key) => (is_bool($basicField)) ? $this->boolToString($basicField) : $basicField,
             ];
         })->put('url', Request::url());
 
@@ -222,7 +222,7 @@ class ProductRepository implements ProductRepositoryContract
             })->pluck('name');
         })->first();
 
-        if (!is_null($value)) {
+        if (! is_null($value)) {
             $value = $value->value();
         }
 
@@ -304,6 +304,7 @@ class ProductRepository implements ProductRepositoryContract
 
             return collect($customField)->mapWithKeys(function ($value, $key) use ($id) {
                 $keyWithId = Str::replaceFirst('{key}', $id, $key);
+
                 return [$keyWithId => $value];
             })->filter()->all();
         });
