@@ -318,7 +318,7 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function mapCategories(): string
     {
-        return $this->product->augmentedValue('categories')->value()
+        return $this->product->augmentedValue(config('snipcart.taxonomies.categories'))->value()
             ->filter(function ($category) {
                 return ! $category->get('hide_from_snipcart');
             })->map(function ($category) {
@@ -333,7 +333,7 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function mapTaxes(): string
     {
-        return $this->product->augmentedValue('taxes')->value()
+        return $this->product->augmentedValue(config('snipcart.taxonomies.taxes'))->value()
             ->map(function ($tax) {
                 return $tax->title();
             })->implode('|');
