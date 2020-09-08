@@ -43,10 +43,14 @@ trait GetsProductAttributes
     protected function productAttributes(): Collection
     {
         if ($this->isProduct()) {
-            $selectedVariantOptions = $this->context->get('options');
             $entry = Entry::find($this->context->get('id'));
 
-            return Product::selectedVariantOptions($selectedVariantOptions)->processAttributes($entry);
+            if ($this->context->has('options')) {
+                return Product::selectedVariationOptions($this->context->get('options'))
+                    ->processAttributes($entry);
+            };
+
+            return Product::processAttributes($entry);
         }
 
         return collect();

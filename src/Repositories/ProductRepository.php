@@ -22,12 +22,14 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected $product;
 
+    protected $customFields;
+
     /**
      * The selected product variant options.
      *
      * @var array
      */
-    protected $selectedVariantOptions;
+    protected $selectedVariationOptions;
 
     /**
      * Set the selected variant options property.
@@ -35,9 +37,9 @@ class ProductRepository implements ProductRepositoryContract
      * @param array $options
      * @return self
      */
-    public function selectedVariantOptions(array $options): self
+    public function selectedVariationOptions(array $options): self
     {
-        $this->selectedVariantOptions = $options;
+        $this->selectedVariationOptions = $options;
 
         return $this;
     }
@@ -51,9 +53,11 @@ class ProductRepository implements ProductRepositoryContract
     {
         $this->product = $entry;
 
-        $attributes = $this->mapAttributes();
+        $basicFields = $this->mapBasicFields();
+        $customFields = $this->mapCustomFields();
+        $allFields = $basicFields->merge($customFields);
 
-        return Validator::onlyValidAttributes($attributes);
+        return Validator::onlyValidAttributes($allFields);
     }
 
     /**
@@ -72,268 +76,271 @@ class ProductRepository implements ProductRepositoryContract
      *
      * @return Collection
      */
-    protected function mapAttributes(): Collection
+    protected function mapBasicFields(): Collection
     {
-        $mappedAttributes = $this->data()->mapWithKeys(function ($item, $key) {
+        $basicFields = $this->data()->mapWithKeys(function ($basicField, $key) {
             if ($key === 'title') {
-                return ['name' => $item];
+                return ['name' => $basicField];
             }
 
             if ($key === 'sku') {
-                return ['id' => $item];
+                return ['id' => $basicField];
             }
 
-            if ($key === 'images' && ! empty($item)) {
+            if ($key === 'images' && ! empty($basicField)) {
                 return ['image' => $this->imageUrl()];
             }
 
-            if ($key === config('snipcart.taxonomies.categories') && ! empty($item)) {
+            if ($key === config('snipcart.taxonomies.categories') && ! empty($basicField)) {
                 return ['categories' => $this->mapCategories()];
             }
 
-            if ($key === config('snipcart.taxonomies.taxes') && ! empty($item)) {
+            if ($key === config('snipcart.taxonomies.taxes') && ! empty($basicField)) {
                 return ['taxes' => $this->mapTaxes()];
             }
 
-            if ($key === 'custom_fields' && ! empty($item)) {
-                return $this->mapCustomFields($item);
+            if ($key === 'metadata' && ! empty($basicField)) {
+                return [$key => json_encode($basicField)];
             }
 
-            if ($key === 'metadata' && ! empty($item)) {
-                return [$key => json_encode($item)];
+            if ($key === 'weight' && ! empty($basicField)) {
+                return [$key => Converter::toGrams($basicField, $this->weightUnit())];
             }
 
-            if ($key === 'weight' && ! empty($item)) {
-                return [$key => Converter::toGrams($item, $this->weightUnit())];
+            if ($key === 'length' && ! empty($basicField)) {
+                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
             }
 
-            if ($key === 'length' && ! empty($item)) {
-                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            if ($key === 'width' && ! empty($basicField)) {
+                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
             }
 
-            if ($key === 'width' && ! empty($item)) {
-                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            if ($key === 'height' && ! empty($basicField)) {
+                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
             }
 
-            if ($key === 'height' && ! empty($item)) {
-                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            if ($key === 'price' && ! empty($basicField)) {
+                return [$key => Currency::from(Site::current())->formatDecimal($basicField)];
             }
 
-            if ($key === 'price' && ! empty($item)) {
-                return [$key => Currency::from(Site::current())->formatDecimal($item)];
-            }
-
-            return [$key => $item];
-        })->mapWithKeys(function ($item, $key) {
-            if (is_bool($item)) {
-                return [
-                    $this->underscoreToDash($key) => $this->boolToString($item),
-                ];
-            }
-
+            return [$key => $basicField];
+        })->mapWithKeys(function ($basicField, $key) {
             return [
-                $this->underscoreToDash($key) => $item,
+                $this->underscoreToDash($key) => (is_bool($basicField)) ? $this->boolToString($basicField) : $basicField
             ];
         })->put('url', Request::url());
 
-        return $mappedAttributes;
+        return $basicFields;
     }
 
     /**
-     * Get the Snipcart categories.
+     * Map the custom fields of the product.
+     *
+     * @return Collection
+     */
+    protected function mapCustomFields(): Collection
+    {
+        $customFields = $this->data()->flatMap(function ($item, $key) {
+            if ($key === 'variations') {
+                return $this->mapVariations($item);
+            }
+
+            if ($key === 'checkboxes') {
+                return $this->mapCheckboxes($item);
+            }
+
+            if ($key === 'text_fields') {
+                return $this->mapTextFields($item);
+            }
+        })->pipe(function ($customFields) {
+            return $this->addCustomFieldIds($customFields);
+        });
+
+        return $customFields->collapse();
+    }
+
+    /**
+     * Returns an array of mapped product variations.
+     *
+     * @param array $variations
+     * @return Collection
+     */
+    protected function mapVariations(array $variations): Collection
+    {
+        $variations = collect($variations)->map(function ($variation) {
+            $name = $variation['type'];
+            $options = $this->mapVariationOptions($variation['options']);
+            $value = $this->mapVariationValue($variation['options']);
+
+            return [
+                "custom{key}-name" => $name,
+                "custom{key}-options" => $options,
+                "custom{key}-value" => $value,
+            ];
+        });
+
+        return $variations;
+    }
+
+    /**
+     * Returns a string of variation options with modifier price.
+     *
+     * Small[-1.00]|Medium|Large[+1.00]
+     *
+     * @param array $options
+     * @return string
+     */
+    protected function mapVariationOptions(array $options): string
+    {
+        $options = collect($options)->map(function ($option) {
+            $name = $option['name'];
+            $price = $this->formatPriceModifier($option['price_modifier']);
+
+            return (empty($price))
+                ? $name
+                : "{$name}[{$price}]";
+        });
+
+        return $options->implode('|');
+    }
+
+    /**
+     * Returns the selected variation option.
+     *
+     * @param array $options
+     * @return string|null
+     */
+    protected function mapVariationValue(array $options)
+    {
+        if (empty($this->selectedVariationOptions)) {
+            return null;
+        }
+
+        $value = collect($options)->flatMap(function ($option) {
+            return collect($this->selectedVariationOptions)->filter(function ($selectedOption) use ($option) {
+                return $option['name'] === $selectedOption['name']->value();
+            })->pluck('name');
+        })->first();
+
+        if (!is_null($value)) {
+            $value = $value->value();
+        }
+
+        return $value;
+    }
+
+    /**
+     * Format the price modifier of a variation option.
+     *
+     * null -> null
+     * 2000 -> +2.00
+     * -2000 -> -2.00
+     *
+     * @param int $price
+     * @return string|null
+     */
+    protected function formatPriceModifier(?int $price)
+    {
+        if (empty($price)) {
+            return null;
+        }
+
+        $decimalPrice = Currency::from(Site::default())->formatDecimal($price);
+
+        return (Str::startsWith($decimalPrice, '-'))
+            ? $decimalPrice
+            : "+$decimalPrice";
+    }
+
+    /**
+     * Returns an array of mapped checkboxes.
+     *
+     * @param array $checkboxes
+     * @return Collection
+     */
+    protected function mapCheckboxes(array $checkboxes): Collection
+    {
+        $checkboxes = collect($checkboxes)->map(function ($checkbox) {
+            return [
+                "custom{key}-name" => $checkbox['name'],
+                "custom{key}-type" => 'checkbox',
+            ];
+        });
+
+        return $checkboxes;
+    }
+
+    /**
+     * Returns an array of mapped text fields.
+     *
+     * @param array $textFields
+     * @return Collection
+     */
+    protected function mapTextFields(array $textFields): Collection
+    {
+        $textFields = collect($textFields)->map(function ($textField) {
+            return [
+                "custom{key}-name" => $textField['name'],
+                "custom{key}-type" => $textField['field_type'],
+                "custom{key}-value" => $textField['default'],
+                "custom{key}-placeholder" => $textField['placeholder'],
+                "custom{key}-required" => json_encode($textField['required']),
+            ];
+        });
+
+        return $textFields;
+    }
+
+    /**
+     * Adds a unique id to all custom fields by replacing {key}.
+     *
+     * @param Collection $customFields
+     * @return Collection
+     */
+    protected function addCustomFieldIds(Collection $customFields): Collection
+    {
+        $customFieldsWithId = $customFields->map(function ($customField, $id) {
+            $id++;
+
+            return collect($customField)->mapWithKeys(function ($value, $key) use ($id) {
+                $keyWithId = Str::replaceFirst('{key}', $id, $key);
+                return [$keyWithId => $value];
+            })->filter()->all();
+        });
+
+        return $customFieldsWithId;
+    }
+
+    /**
+     * Returns a string of categories.
      *
      * @return string
      */
     protected function mapCategories(): string
     {
         return $this->product->augmentedValue('categories')->value()
-            ->filter(function ($item) {
-                return ! $item->data()->get('hide_from_snipcart');
-            })->map(function ($item) {
-                return $item->title();
+            ->filter(function ($category) {
+                return ! $category->get('hide_from_snipcart');
+            })->map(function ($category) {
+                return $category->title();
             })->implode('|');
     }
 
     /**
-     * Get the Snipcart taxes.
+     * Returns a string of taxes.
      *
      * @return string
      */
     protected function mapTaxes(): string
     {
         return $this->product->augmentedValue('taxes')->value()
-            ->map(function ($item) {
-                return $item->title();
+            ->map(function ($tax) {
+                return $tax->title();
             })->implode('|');
     }
 
     /**
-     * Transform the custom fields to fit the expected format.
-     *
-     * @param array $customFields
-     * @return array
-     */
-    protected function mapCustomFields(array $customFields): Collection
-    {
-        $customFields = collect($customFields)->map(function ($item, $key) {
-            $key++;
-
-            if (! $item['enabled']) {
-                return;
-            }
-
-            if ($item['type'] === 'dropdown') {
-                return $this->mapDropdown($item, $key);
-            }
-
-            if ($item['type'] === 'checkbox') {
-                return $this->mapCheckbox($item, $key);
-            }
-
-            if ($item['type'] === 'text' && $item['field_type'] === 'text') {
-                return $this->mapTextField($item, $key);
-            }
-
-            if ($item['type'] === 'text' && $item['field_type'] === 'textarea') {
-                return $this->mapTextarea($item, $key);
-            }
-        })->filter()->values();
-
-        return $this->reassignFieldIndex($customFields);
-    }
-
-    /**
-     * Make sure to start properly index custom fields starting with 1.
-     *
-     * @param Collection $customFields
-     * @return Collection
-     */
-    protected function reassignFieldIndex(Collection $customFields): Collection
-    {
-        return $customFields->flatMap(function ($item, $index) {
-            $index++;
-
-            return collect($item)->mapWithKeys(function ($item, $key) use ($index) {
-                $newKey = preg_replace("/[0-9]/", $index, $key);
-
-                return [$newKey => $item];
-            });
-        });
-    }
-
-    /**
-     * Map dropdowns to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapDropdown(array $dropdown, string $key): array
-    {
-        $options = collect($dropdown['options'])->map(function ($option) {
-            $name = $option['name'];
-            $price = $this->formatVariantPrice($option['price']);
-
-            if (empty($price)) {
-                return $name;
-            }
-
-            return "{$name}[{$price}]";
-        })->implode('|');
-
-        if (! empty($this->selectedVariantOptions)) {
-            $selectedOption = collect($dropdown['options'])->flatMap(function ($option) {
-                return collect($this->selectedVariantOptions)->filter(function ($selectedOption) use ($option) {
-                    return $option['name'] === $selectedOption['name']->value();
-                })->pluck('name');
-            })->first()->value();
-
-            return [
-                "custom{$key}-name" => $dropdown['name'],
-                "custom{$key}-options" => $options,
-                "custom{$key}-value" => $selectedOption,
-            ];
-        }
-
-        return [
-            "custom{$key}-name" => $dropdown['name'],
-            "custom{$key}-options" => $options,
-        ];
-    }
-
-    /**
-     * Map checkboxes to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapCheckbox(array $item, string $key): array
-    {
-        return [
-            "custom{$key}-name" => $item['name'],
-            "custom{$key}-type" => 'checkbox',
-        ];
-    }
-
-    /**
-     * Map text fields to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapTextField(array $item, string $key): array
-    {
-        return [
-            "custom{$key}-name" => $item['name'],
-            "custom{$key}-value" => $item['default'],
-            "custom{$key}-placeholder" => $item['placeholder'],
-            "custom{$key}-required" => json_encode($item['required']),
-        ];
-    }
-
-    /**
-     * Map textarea fields to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapTextarea(array $item, string $key): array
-    {
-        return [
-            "custom{$key}-name" => $item['name'],
-            "custom{$key}-type" => $item['field_type'],
-            "custom{$key}-value" => $item['default'],
-            "custom{$key}-placeholder" => $item['placeholder'],
-            "custom{$key}-required" => json_encode($item['required']),
-        ];
-    }
-
-    /**
-     * Format the variant price.
-     *
-     * @param mixed $price
-     * @return mixed
-     */
-    protected function formatVariantPrice($price)
-    {
-        if (is_null($price)) {
-            return null;
-        }
-
-        $price = Currency::from(Site::default())->formatDecimal($price);
-
-        if (Str::startsWith($price, '-')) {
-            return $price;
-        }
-
-        return "+{$price}";
-    }
-
-    /**
-     * Get the URL of an image.
+     * Returns the URL of an image.
      *
      * @return string
      */
