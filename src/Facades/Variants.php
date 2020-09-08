@@ -4,10 +4,10 @@ namespace Aerni\Snipcart\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Variations extends Facade
+class Variants extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'Variations';
+        return 'Variants';
     }
 }

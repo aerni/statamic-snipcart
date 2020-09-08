@@ -7,7 +7,7 @@ use Aerni\Snipcart\Support\Cartesian;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Site;
 
-class VariationsRepository
+class VariantsRepository
 {
     protected $context;
     protected $params;

@@ -2,18 +2,18 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Aerni\Snipcart\Facades\Variations;
+use Aerni\Snipcart\Facades\Variants;
 use Illuminate\Support\Facades\Request;
 use Statamic\Tags\Tags;
 
-class VariationsTags extends Tags
+class VariantsTags extends Tags
 {
     /**
      * The handle of the tag.
      *
      * @var string
      */
-    protected static $handle = 'variations';
+    protected static $handle = 'variants';
 
     public function index(): array
     {
@@ -37,7 +37,7 @@ class VariationsTags extends Tags
                 ->forget('allow_query');
         }
 
-        return Variations::context($this->context)->get($this->params);
+        return Variants::context($this->context)->get($this->params);
     }
 
     /**
@@ -47,6 +47,6 @@ class VariationsTags extends Tags
      */
     public function all(): array
     {
-        return Variations::context($this->context)->all();
+        return Variants::context($this->context)->all();
     }
 }
