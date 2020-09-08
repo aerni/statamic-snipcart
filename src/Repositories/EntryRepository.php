@@ -32,7 +32,7 @@ class EntryRepository extends StatamicEntryRepository
      * Returns true when the given collection is a product
      *
      * @param \Statamic\Entries\Collection $collection
-     * @return boolean
+     * @return bool
      */
     protected function isProduct($collection): bool
     {
