@@ -46,7 +46,7 @@ trait GetsProductAttributes
             $entry = Entry::find($this->context->get('id'));
 
             if ($this->context->has('options')) {
-                return Product::selectedVariationOptions($this->context->get('options'))
+                return Product::selectedVariantOptions($this->context->get('options'))
                     ->processAttributes($entry);
             };
 

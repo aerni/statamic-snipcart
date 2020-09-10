@@ -52,14 +52,14 @@ sections:
           display: Description
           character_limit: '150'
       -
-        handle: variations_section
+        handle: variants_section
         field:
           type: section
-          instructions: 'Create product variations for attributes like size and color.'
+          instructions: 'Create product variants for attributes like size and color.'
           listable: hidden
-          display: Variations
+          display: Variants
       -
-        handle: variations
+        handle: variants
         field:
           fields:
             -
@@ -69,7 +69,7 @@ sections:
                 type: text
                 listable: hidden
                 display: Type
-                instructions: 'The type of this variation, eg. Size.'
+                instructions: 'The type of this variant, eg. Size.'
                 localizable: true
                 validate: required
             -
@@ -102,7 +102,7 @@ sections:
                 type: grid
                 listable: hidden
                 display: Options
-                instructions: 'Add variation options, eg. Small, Medium, Large.'
+                instructions: 'Add variant options, eg. Small, Medium, Large.'
                 add_row: 'Add Option'
                 localizable: true
                 validate: required
@@ -110,9 +110,9 @@ sections:
           reorderable: true
           type: grid
           listable: hidden
-          display: Variations
-          instructions: 'Each variation will create a dropdown in the cart.'
-          add_row: 'Add Variation'
+          display: Variants
+          instructions: 'Each variant type will create a dropdown in the cart.'
+          add_row: 'Add Variant'
           localizable: true
       -
         handle: dimensions_section

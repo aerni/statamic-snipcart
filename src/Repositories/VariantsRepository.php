@@ -42,7 +42,7 @@ class VariantsRepository
     }
 
     /**
-     * Get product variations based on a parameter filter.
+     * Get product variants based on a parameter filter.
      *
      * @param Collection $params
      * @return array
@@ -60,7 +60,7 @@ class VariantsRepository
     }
 
     /**
-     * Returns a complete list of all possible product variations.
+     * Returns a complete list of all possible product variants.
      *
      * @return array
      */
@@ -77,41 +77,41 @@ class VariantsRepository
     }
 
     /**
-     * Returns all product variations.
+     * Returns all product variants.
      *
      * @return Collection
      */
-    protected function variations(): Collection
+    protected function variants(): Collection
     {
-        return collect($this->context->value('variations'));
+        return collect($this->context->value('variants'));
     }
 
     /**
-     * Returns all variation options.
+     * Returns all variant options.
      *
      * @return Collection
      */
     protected function options(): Collection
     {
-        return $this->variations()->map(function ($item, $key) {
-            return collect($item['options'])->map(function ($item) use ($key) {
-                return [ 'type' => $this->types()[$key] ] + $item;
+        return $this->variants()->map(function ($variant, $key) {
+            return collect($variant['options'])->map(function ($option) use ($key) {
+                return [ 'type' => $this->types()[$key] ] + $option;
             })->all();
         });
     }
 
     /**
-     * Filter the variation options based on parameters.
+     * Filter the variant options based on parameters.
      *
      * @return array
      */
     protected function filterOptions(): array
     {
         return $this->params->flatMap(function ($param) {
-            return $this->options()->flatMap(function ($item) use ($param) {
-                return collect($item)->filter(function ($item) use ($param) {
-                    $sameType = ! strcasecmp($item['type']->value(), $param['type']);
-                    $sameName = ! strcasecmp($item['name']->value(), $param['name']);
+            return $this->options()->flatMap(function ($options) use ($param) {
+                return collect($options)->filter(function ($option) use ($param) {
+                    $sameType = ! strcasecmp($option['type']->value(), $param['type']);
+                    $sameName = ! strcasecmp($option['name']->value(), $param['name']);
 
                     return $sameType && $sameName;
                 })->all();
@@ -120,17 +120,17 @@ class VariantsRepository
     }
 
     /**
-     * Returns the variation types (names).
+     * Returns the variant types.
      *
      * @return Collection
      */
     protected function types(): Collection
     {
-        return $this->variations()->pluck('type');
+        return $this->variants()->pluck('type');
     }
 
     /**
-     * Calculates the total price of a product variation option.
+     * Calculates the total price of a product variant option.
      *
      * @param array $options
      * @return string

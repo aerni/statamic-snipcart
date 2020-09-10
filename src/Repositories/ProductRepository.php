@@ -29,7 +29,7 @@ class ProductRepository implements ProductRepositoryContract
      *
      * @var array
      */
-    protected $selectedVariationOptions;
+    protected $selectedVariantOptions;
 
     /**
      * Set the selected variant options property.
@@ -37,9 +37,9 @@ class ProductRepository implements ProductRepositoryContract
      * @param array $options
      * @return self
      */
-    public function selectedVariationOptions(array $options): self
+    public function selectedVariantOptions(array $options): self
     {
-        $this->selectedVariationOptions = $options;
+        $this->selectedVariantOptions = $options;
 
         return $this;
     }
@@ -141,8 +141,8 @@ class ProductRepository implements ProductRepositoryContract
     protected function mapCustomFields(): Collection
     {
         $customFields = $this->data()->flatMap(function ($item, $key) {
-            if ($key === 'variations') {
-                return $this->mapVariations($item);
+            if ($key === 'variants') {
+                return $this->mapVariants($item);
             }
 
             if ($key === 'checkboxes') {
@@ -160,17 +160,17 @@ class ProductRepository implements ProductRepositoryContract
     }
 
     /**
-     * Returns an array of mapped product variations.
+     * Returns an array of mapped product variants.
      *
-     * @param array $variations
+     * @param array $variants
      * @return Collection
      */
-    protected function mapVariations(array $variations): Collection
+    protected function mapVariants(array $variants): Collection
     {
-        $variations = collect($variations)->map(function ($variation) {
-            $name = $variation['type'];
-            $options = $this->mapVariationOptions($variation['options']);
-            $value = $this->mapVariationValue($variation['options']);
+        $variants = collect($variants)->map(function ($variant) {
+            $name = $variant['type'];
+            $options = $this->mapVariantOptions($variant['options']);
+            $value = $this->mapVariantValue($variant['options']);
 
             return [
                 "custom{key}-name" => $name,
@@ -179,18 +179,18 @@ class ProductRepository implements ProductRepositoryContract
             ];
         });
 
-        return $variations;
+        return $variants;
     }
 
     /**
-     * Returns a string of variation options with modifier price.
+     * Returns a string of variant options with modifier price.
      *
      * Small[-1.00]|Medium|Large[+1.00]
      *
      * @param array $options
      * @return string
      */
-    protected function mapVariationOptions(array $options): string
+    protected function mapVariantOptions(array $options): string
     {
         $options = collect($options)->map(function ($option) {
             $name = $option['name'];
@@ -205,19 +205,19 @@ class ProductRepository implements ProductRepositoryContract
     }
 
     /**
-     * Returns the selected variation option.
+     * Returns the selected variant option.
      *
      * @param array $options
      * @return string|null
      */
-    protected function mapVariationValue(array $options)
+    protected function mapVariantValue(array $options)
     {
-        if (empty($this->selectedVariationOptions)) {
+        if (empty($this->selectedVariantOptions)) {
             return null;
         }
 
         $value = collect($options)->flatMap(function ($option) {
-            return collect($this->selectedVariationOptions)->filter(function ($selectedOption) use ($option) {
+            return collect($this->selectedVariantOptions)->filter(function ($selectedOption) use ($option) {
                 return $option['name'] === $selectedOption['name']->value();
             })->pluck('name');
         })->first();
@@ -230,7 +230,7 @@ class ProductRepository implements ProductRepositoryContract
     }
 
     /**
-     * Format the price modifier of a variation option.
+     * Format the price modifier of a variant option.
      *
      * null -> null
      * 2000 -> +2.00

@@ -17,18 +17,18 @@ class VariantsTags extends Tags
 
     public function index(): array
     {
-        return $this->context->value('variations');
+        return $this->context->value('variants');
     }
 
     /**
-     * Returns a specific product variation.
+     * Returns a specific product variant.
      *
      * @return array
      */
     public function get(): array
     {
         if ($this->params->isEmpty()) {
-            return $this->context->value('variations');
+            return $this->context->value('variants');
         }
 
         if ($this->params->bool('allow_query')) {
@@ -41,7 +41,7 @@ class VariantsTags extends Tags
     }
 
     /**
-     * Returns a complete list of all possible product variations.
+     * Returns a complete list of all possible product variants.
      *
      * @return array
      */
