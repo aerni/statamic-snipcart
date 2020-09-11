@@ -45,7 +45,7 @@ trait GetsProductAttributes
         if ($this->isProduct()) {
             $entry = Entry::find($this->context->get('id'));
 
-            if ($this->context->has('options')) {
+            if ($this->isVariant()) {
                 return Product::selectedVariantOptions($this->context->get('options'))
                     ->processAttributes($entry);
             };
@@ -78,5 +78,23 @@ trait GetsProductAttributes
         }
 
         return false;
+    }
+
+    /**
+     * Returns true if it's a product variant.
+     *
+     * @return bool
+     */
+    protected function isVariant(): bool
+    {
+        if (! $this->context->has('options')) {
+            return false;
+        }
+
+        if (! is_array($this->context->get('options'))) {
+            return false;
+        }
+
+        return true;
     }
 }
