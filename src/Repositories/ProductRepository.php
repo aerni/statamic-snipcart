@@ -95,7 +95,7 @@ class ProductRepository implements ProductRepositoryContract
                 return ['categories' => $this->mapCategories()];
             }
 
-            if ($key === config('snipcart.taxonomies.taxes') && ! empty($basicField)) {
+            if ($key === 'taxes' && ! empty($basicField)) {
                 return ['taxes' => $this->mapTaxes()];
             }
 
@@ -334,10 +334,9 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function mapTaxes(): string
     {
-        return $this->product->augmentedValue(config('snipcart.taxonomies.taxes'))->value()
-            ->map(function ($tax) {
-                return $tax->title();
-            })->implode('|');
+        $taxes = $this->product->augmentedValue('taxes')->value();
+
+        return implode('|', $taxes);
     }
 
     /**

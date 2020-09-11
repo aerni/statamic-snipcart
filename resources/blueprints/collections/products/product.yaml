@@ -318,12 +318,10 @@ sections:
       -
         handle: taxes
         field:
-          type: terms
+          type: taggable
+          listable: hidden
           display: Taxes
           instructions: 'Only apply specific taxes.'
-          mode: select
-          listable: hidden
-          taxonomies: taxes
           width: 33
       -
         handle: quantity_section

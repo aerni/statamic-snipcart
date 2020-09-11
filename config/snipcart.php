@@ -49,7 +49,6 @@ return [
 
     'taxonomies' => [
         'categories' => 'categories',
-        'taxes' => 'taxes',
     ],
 
     /*
