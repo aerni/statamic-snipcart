@@ -4,9 +4,9 @@ namespace Aerni\Snipcart\Tests;
 
 use Aerni\Snipcart\ServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Statamic\Statamic;
 use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
+use Statamic\Statamic;
 
 abstract class TestCase extends OrchestraTestCase
 {

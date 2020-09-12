@@ -2,8 +2,6 @@
 
 namespace Aerni\Snipcart\Tests;
 
-use Aerni\Snipcart\Tests\TestCase;
-
 class FailingTest extends TestCase
 {
     /** @test */
