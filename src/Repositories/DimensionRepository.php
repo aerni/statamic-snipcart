@@ -76,7 +76,7 @@ class DimensionRepository implements DimensionRepositoryContract
             throw new UnsupportedDimensionUnitException($this->site->handle(), $this->dimension, $unitSetting);
         }
 
-        return $unit->toArray();
+        return $unit;
     }
 
     /**

@@ -1,4 +1,4 @@
-title: 'Category'
+title: Category
 sections:
   main:
     display: Main
@@ -12,7 +12,7 @@ sections:
         handle: hide_from_snipcart
         field:
           type: toggle
-          instructions: 'Hide this category from Snipcart buy buttons.'
+          instructions: 'Activate to hide this category from Snipcart.'
           localizable: false
           listable: hidden
           display: 'Hide from Snipcart'

@@ -5,6 +5,7 @@ namespace Aerni\Snipcart\Tags\Concerns;
 use Aerni\Snipcart\Facades\Product;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
+use Statamic\Facades\Entry;
 
 trait GetsProductAttributes
 {
@@ -42,7 +43,14 @@ trait GetsProductAttributes
     protected function productAttributes(): Collection
     {
         if ($this->isProduct()) {
-            return Product::find($this->context->get('id'))->attributes();
+            $entry = Entry::find($this->context->get('id'));
+
+            if ($this->isVariant()) {
+                return Product::selectedVariantOptions($this->context->get('options'))
+                    ->processAttributes($entry);
+            };
+
+            return Product::processAttributes($entry);
         }
 
         return collect();
@@ -70,5 +78,23 @@ trait GetsProductAttributes
         }
 
         return false;
+    }
+
+    /**
+     * Returns true if it's a product variant.
+     *
+     * @return bool
+     */
+    protected function isVariant(): bool
+    {
+        if (! $this->context->has('options')) {
+            return false;
+        }
+
+        if (! is_array($this->context->get('options'))) {
+            return false;
+        }
+
+        return true;
     }
 }

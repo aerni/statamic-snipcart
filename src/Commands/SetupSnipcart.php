@@ -51,13 +51,6 @@ class SetupSnipcart extends Command
     protected $categories;
 
     /**
-     * The taxes taxonomy handle.
-     *
-     * @var string
-     */
-    protected $taxes;
-
-    /**
      * Execute the console command.
      *
      * @return void
@@ -66,7 +59,6 @@ class SetupSnipcart extends Command
     {
         $this->products = config('snipcart.collections.products');
         $this->categories = config('snipcart.taxonomies.categories');
-        $this->taxes = config('snipcart.taxonomies.taxes');
         $this->force = $this->option('force');
 
         $this->setupCollection();
@@ -134,24 +126,6 @@ class SetupSnipcart extends Command
 
             $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/taxonomies/{$this->categories}/category.yaml</comment>");
         }
-
-        if (! Taxonomy::handleExists($this->taxes) || $this->force) {
-            Taxonomy::make($this->taxes)
-                ->title(Str::studlyToTitle($this->taxes))
-                ->save();
-
-            $this->line("<info>[✓]</info> Created taxonomy at <comment>content/taxonomies/{$this->taxes}.yaml</comment>");
-        }
-
-        if (! StatamicBlueprint::find("taxonomies/{$this->taxes}/tax") || $this->force) {
-            (new Blueprint())
-                ->parse("taxonomies/taxes/tax.yaml")
-                ->make('tax')
-                ->namespace("taxonomies.{$this->taxes}")
-                ->save();
-
-            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/taxonomies/{$this->taxes}/tax.yaml</comment>");
-        }
     }
 
     /**
@@ -185,11 +159,11 @@ class SetupSnipcart extends Command
         $productsCollection->taxonomies($taxonomies)
             ->save();
 
-        $this->line("<info>[✓]</info> Updated <comment>{$this->categories}</comment> and <comment>{$this->taxes}</comment> taxonomies in <comment>content/collections/{$this->products}.yaml</comment>");
+        $this->line("<info>[✓]</info> Updated <comment>{$this->categories}</comment> taxonomies in <comment>content/collections/{$this->products}.yaml</comment>");
     }
 
     /**
-     * Update the product blueprint with the new categories and taxes taxonomies.
+     * Update the product blueprint with the new categories taxonomies.
      *
      * @return void
      */
@@ -199,11 +173,8 @@ class SetupSnipcart extends Command
 
         $content = $productBlueprint->contents();
 
-        $content['sections']['basic']['fields'][5]['handle'] = $this->categories;
-        $content['sections']['basic']['fields'][5]['field']['taxonomies'] = $this->categories;
-
-        $content['sections']['advanced']['fields'][10]['handle'] = $this->taxes;
-        $content['sections']['advanced']['fields'][10]['field']['taxonomies'] = $this->taxes;
+        $content['sections']['sidebar']['fields'][2]['handle'] = $this->categories;
+        $content['sections']['sidebar']['fields'][2]['field']['taxonomies'] = $this->categories;
 
         $productBlueprint->setContents($content)->save();
 

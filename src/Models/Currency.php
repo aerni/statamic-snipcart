@@ -2,14 +2,9 @@
 
 namespace Aerni\Snipcart\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Sushi\Sushi;
-
 class Currency extends Model
 {
-    use Sushi;
-
-    public function getRows()
+    protected static function getRows(): array
     {
         return [
             [

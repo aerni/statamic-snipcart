@@ -3,8 +3,9 @@
 namespace Aerni\Snipcart\Modifiers;
 
 use Statamic\Modifiers\Modifier;
+use Statamic\Support\Str;
 
-class StripUnit extends Modifier
+class AddOperator extends Modifier
 {
     /**
      * Modify a value.
@@ -16,6 +17,10 @@ class StripUnit extends Modifier
      */
     public function index($value, $params, $context)
     {
-        return preg_replace('/[^0-9,.+-]/', '', $value);
+        if (Str::startsWith($value, '-')) {
+            return $value;
+        }
+
+        return Str::ensureRight('+', $value);
     }
 }

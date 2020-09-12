@@ -2,9 +2,11 @@
 
 namespace Aerni\Snipcart\Modifiers;
 
+use Aerni\Snipcart\Facades\Currency;
+use Statamic\Facades\Site;
 use Statamic\Modifiers\Modifier;
 
-class StripUnit extends Modifier
+class Total extends Modifier
 {
     /**
      * Modify a value.
@@ -16,6 +18,11 @@ class StripUnit extends Modifier
      */
     public function index($value, $params, $context)
     {
-        return preg_replace('/[^0-9,.+-]/', '', $value);
+        $total = collect($context)->only(['price', 'price_modifier'])
+            ->map(function ($price) {
+                return $price->raw();
+            })->sum();
+
+        return Currency::from(Site::current())->formatCurrency($total);
     }
 }

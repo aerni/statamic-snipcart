@@ -10,7 +10,7 @@ class EntryRepository extends StatamicEntryRepository
     {
         $rules = parent::createRules($collection, $site);
 
-        if ($collection->handle() === 'products') {
+        if ($this->isProduct($collection)) {
             $rules['sku'] = 'required|unique_entry_value:'.$collection->handle().',null,'.$site->handle();
         }
 
@@ -21,10 +21,29 @@ class EntryRepository extends StatamicEntryRepository
     {
         $rules = parent::updateRules($collection, $entry);
 
-        if ($collection->handle() === 'products') {
+        if ($this->isProduct($collection)) {
             $rules['sku'] = 'required|unique_entry_value:'.$collection->handle().','.$entry->id().','.$entry->locale();
         }
 
         return $rules;
+    }
+
+    /**
+     * Returns true when the given collection is a product
+     *
+     * @param \Statamic\Entries\Collection $collection
+     * @return bool
+     */
+    protected function isProduct($collection): bool
+    {
+        if ($collection->handle() !== 'products') {
+            return false;
+        }
+
+        if (! $collection->entryBlueprints()->has('product')) {
+            return false;
+        }
+
+        return true;
     }
 }
