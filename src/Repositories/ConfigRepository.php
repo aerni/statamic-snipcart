@@ -10,7 +10,7 @@ use Statamic\Facades\Site;
 class ConfigRepository implements ConfigRepositoryContract
 {
     /**
-     * Returns the Snipcart API Key.
+     * Get the Snipcart API Key by mode.
      *
      * @return string
      */
@@ -30,7 +30,7 @@ class ConfigRepository implements ConfigRepositoryContract
     }
 
     /**
-     * Returns the currency of the current site.
+     * Get the currency code of the current site.
      *
      * @return string
      */
