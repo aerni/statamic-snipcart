@@ -31,3 +31,5 @@ jobs:
 
       - name: Run PHPUnit
         run: composer test
+        env:
+          SNIPCART_TEST_KEY: ${{ secrets.SNIPCART_TEST_KEY }}
