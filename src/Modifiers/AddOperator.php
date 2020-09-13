@@ -8,14 +8,12 @@ use Statamic\Support\Str;
 class AddOperator extends Modifier
 {
     /**
-     * Modify a value.
+     * Add + or - operator to a value.
      *
-     * @param mixed  $value    The value to be modified
-     * @param array  $params   Any parameters used in the modifier
-     * @param array  $context  Contextual values
-     * @return mixed
+     * @param string $value
+     * @return string
      */
-    public function index($value, $params, $context)
+    public function index(string $value): string
     {
         if (Str::startsWith($value, '-')) {
             return $value;
