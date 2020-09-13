@@ -2,10 +2,10 @@
 
 namespace Aerni\Snipcart\Tests\Tags;
 
-use Statamic\Facades\Site;
-use Aerni\Snipcart\Tests\TestCase;
 use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Tags\CurrencyTags;
+use Aerni\Snipcart\Tests\TestCase;
+use Statamic\Facades\Site;
 
 class CurrencyTagsTest extends TestCase
 {
