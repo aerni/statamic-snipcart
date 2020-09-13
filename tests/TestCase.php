@@ -4,10 +4,11 @@ namespace Aerni\Snipcart\Tests;
 
 use Aerni\Snipcart\ServiceProvider;
 use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Statamic\Statamic;
 use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
-use Statamic\Statamic;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -48,6 +49,10 @@ abstract class TestCase extends OrchestraTestCase
     protected function getEnvironmentSetUp($app): void
     {
         parent::getEnvironmentSetUp($app);
+
+        // Make sure the .env file is loaded
+        $app->useEnvironmentPath(__DIR__.'/..');
+        $app->bootstrapWith([LoadEnvironmentVariables::class]);
 
         $app->make(Manifest::class)->manifest = [
             'aerni/snipcart' => [
