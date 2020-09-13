@@ -2,7 +2,6 @@
 
 namespace Aerni\Snipcart\Tests\Fieldtypes;
 
-use Aerni\Snipcart\Fieldtypes\DimensionFieldtype;
 use Aerni\Snipcart\Tests\TestCase;
 
 class DimensionFieldtypeTest extends TestCase
