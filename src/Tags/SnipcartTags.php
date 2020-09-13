@@ -17,7 +17,7 @@ class SnipcartTags extends Tags
     protected static $handle = 'snipcart';
 
     /**
-     * The config of this addon.
+     * The config of this tag.
      *
      * @var array
      */
@@ -34,7 +34,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the Snipcart preconnect hints.
+     * Returns the Snipcart preconnect hints.
      * {{ snipcart:preconnect }}
      *
      * @return string
@@ -47,7 +47,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the Snipcart stylesheet.
+     * Returns the Snipcart stylesheet.
      * {{ snipcart:stylesheet }}
      *
      * @return string
@@ -60,7 +60,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the Snipcart container.
+     * Returns the Snipcart container.
      * {{ snipcart:container }}
      *
      * @return string
@@ -80,7 +80,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the Snipcart script.
+     * Returns the Snipcart script.
      * {{ snipcart:script }}
      *
      * @return string
@@ -93,7 +93,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the Snipcart preconnect hints and the stylesheet.
+     * Returns the Snipcart preconnect hints and the stylesheet.
      * {{ snipcart:head }}
      *
      * @return string
@@ -104,7 +104,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the Snipcart container and the script.
+     * Returns the Snipcart container and the script.
      * {{ snipcart:body }}
      *
      * @return string
@@ -115,7 +115,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return a simple Snipcart product buy button.
+     * Returns a simple Snipcart product buy button.
      * {{ snipcart:buy }}
      *
      * @return string
@@ -133,7 +133,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the product attributes.
+     * Returns the Snipcart product attributes.
      * {{ snipcart:attributes }}
      *
      * @return string
@@ -144,7 +144,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return a Snipcart cart button.
+     * Returns a Snipcart cart button.
      * {{ snipcart:cart }}
      *
      * @return string
@@ -161,7 +161,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return a Snipcart customer signin button.
+     * Returns a Snipcart customer signin button.
      * {{ snipcart:signin }}
      *
      * @return string
@@ -178,7 +178,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the number of items in the cart.
+     * Returns the number of items in the cart.
      * {{ snipcart:items }}
      *
      * @return string
@@ -191,7 +191,7 @@ class SnipcartTags extends Tags
     }
 
     /**
-     * Return the total price of all the items in the cart.
+     * Returns the total price of all the items in the cart.
      * {{ snipcart:price }}
      *
      * @return string
