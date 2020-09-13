@@ -20,17 +20,17 @@ class MoneyFieldtypeTest extends TestCase
     }
 
     /** @test */
-    public function it_can_pre_process_data()
+    public function it_can_pre_process_money()
     {
         $value = 1999;
 
-        $process = (new MoneyFieldtype())->preProcess($value);
+        $preProcess = (new MoneyFieldtype())->preProcess($value);
 
-        $this->assertSame('19.99', $process);
+        $this->assertSame('19.99', $preProcess);
     }
 
     /** @test */
-    public function it_can_process_data()
+    public function it_can_process_money()
     {
         $value = '19.99';
 
@@ -40,7 +40,7 @@ class MoneyFieldtypeTest extends TestCase
     }
 
     /** @test */
-    public function it_can_augment_data()
+    public function it_can_augment_money()
     {
         $value = 1999;
 
@@ -48,20 +48,4 @@ class MoneyFieldtypeTest extends TestCase
 
         $this->assertSame('$19.99', $augment);
     }
-
-    // /** @test */
-    // public function has_a_title()
-    // {
-    //     $title = (new MoneyFieldtype())->title();
-
-    //     $this->assertSame('Money', $title);
-    // }
-
-    // /** @test */
-    // public function has_a_component()
-    // {
-    //     $title = (new MoneyFieldtype())->component();
-
-    //     $this->assertSame('money', $title);
-    // }
 }
