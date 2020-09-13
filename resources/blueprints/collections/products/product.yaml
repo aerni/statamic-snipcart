@@ -38,7 +38,7 @@ sections:
           container: assets
           restrict: false
           allow_uploads: true
-          listable: false
+          listable: hidden
           localizable: true
           display: Images
           instructions: 'One or more product images. The first image will show in the cart.'
@@ -47,7 +47,7 @@ sections:
         field:
           type: textarea
           localizable: true
-          listable: hidden
+          listable: false
           instructions: 'A short product description. This will show in the cart.'
           display: Description
           character_limit: '150'
@@ -56,7 +56,7 @@ sections:
         field:
           type: section
           instructions: 'Create product variants for attributes like size and color.'
-          listable: hidden
+          listable: false
           display: Variants
       -
         handle: variants
@@ -67,7 +67,7 @@ sections:
               field:
                 input_type: text
                 type: text
-                listable: hidden
+                listable: false
                 display: Type
                 instructions: 'The type of this variant, eg. Size.'
                 localizable: true
@@ -81,7 +81,7 @@ sections:
                     field:
                       input_type: text
                       type: text
-                      listable: hidden
+                      listable: false
                       display: Name
                       instructions: 'The name of this option, eg. Large.'
                       localizable: true
@@ -90,7 +90,7 @@ sections:
                     handle: price_modifier
                     field:
                       type: money
-                      listable: hidden
+                      listable: false
                       display: 'Price Modifier'
                       instructions: 'Modify the product price for this option. Product Price + Price Modifier = Option Price.'
                       localizable: true
@@ -100,7 +100,7 @@ sections:
                 mode: table
                 reorderable: true
                 type: grid
-                listable: hidden
+                listable: false
                 display: Options
                 instructions: 'Add variant options, eg. Small, Medium, Large.'
                 add_row: 'Add Option'
@@ -109,7 +109,7 @@ sections:
           mode: stacked
           reorderable: true
           type: grid
-          listable: hidden
+          listable: false
           display: Variants
           instructions: 'Each variant type will create a dropdown in the cart.'
           add_row: 'Add Variant'
@@ -126,7 +126,7 @@ sections:
         field:
           type: dimension
           options: weight
-          listable: hidden
+          listable: false
           display: Weight
           width: 25
       -
@@ -134,7 +134,7 @@ sections:
         field:
           type: dimension
           options: length
-          listable: hidden
+          listable: false
           display: Length
           width: 25
       -
@@ -142,7 +142,7 @@ sections:
         field:
           type: dimension
           options: length
-          listable: hidden
+          listable: false
           display: Width
           width: 25
       -
@@ -150,7 +150,7 @@ sections:
         field:
           type: dimension
           options: length
-          listable: hidden
+          listable: false
           display: Height
           width: 25
       -
@@ -166,7 +166,7 @@ sections:
           input_type: text
           type: text
           instructions: 'The file GUID of the digital good.'
-          listable: hidden
+          listable: false
           display: 'File GUID'
           localizable: true
       -
@@ -204,7 +204,7 @@ sections:
                 input_type: text
                 type: text
                 instructions: 'The name of this checkbox, eg. Gift'
-                listable: hidden
+                listable: false
                 display: Name
                 localizable: true
                 validate:
@@ -214,7 +214,7 @@ sections:
           reorderable: true
           type: grid
           instructions: 'Let your customers label a product with a predefined option.'
-          listable: hidden
+          listable: false
           display: Checkboxes
           localizable: true
       -
@@ -228,7 +228,7 @@ sections:
                   text: Text
                   textarea: Textarea
                 type: button_group
-                listable: hidden
+                listable: false
                 display: Type
                 instructions: 'Choose the type of field. A textarea is great for longer messages.'
                 validate: required
@@ -239,7 +239,7 @@ sections:
                 input_type: text
                 type: text
                 instructions: 'The name of this text field, eg. Gift Note.'
-                listable: hidden
+                listable: false
                 display: Name
                 validate: required
                 localizable: true
@@ -249,7 +249,7 @@ sections:
                 input_type: text
                 type: text
                 instructions: 'An optional placeholder.'
-                listable: hidden
+                listable: false
                 display: Placeholder
                 localizable: true
             -
@@ -258,7 +258,7 @@ sections:
                 input_type: text
                 type: text
                 instructions: 'An optional default value.'
-                listable: hidden
+                listable: false
                 display: Default
                 localizable: true
             -
@@ -266,13 +266,13 @@ sections:
               field:
                 type: toggle
                 instructions: 'Activate to make this field required.'
-                listable: hidden
+                listable: false
                 display: Required
           mode: stacked
           add_row: 'Add Text Field'
           reorderable: true
           type: grid
-          listable: hidden
+          listable: false
           display: 'Text Fields'
           instructions: 'Let your customers provide a note or message.'
           localizable: true
@@ -288,7 +288,7 @@ sections:
         field:
           type: toggle
           instructions: 'Activate if you ship this product.'
-          listable: hidden
+          listable: false
           display: Shippable
           default: true
       -
@@ -303,7 +303,7 @@ sections:
         field:
           type: toggle
           instructions: 'Activate if this product is taxable.'
-          listable: hidden
+          listable: false
           display: Taxable
           default: true
           width: 33
@@ -312,14 +312,14 @@ sections:
         field:
           type: toggle
           instructions: 'Activate if the price includes taxes.'
-          listable: hidden
+          listable: false
           display: 'Taxes Included'
           width: 33
       -
         handle: taxes
         field:
           type: taggable
-          listable: hidden
+          listable: false
           display: Taxes
           instructions: 'Only apply specific taxes.'
           width: 33
@@ -330,37 +330,6 @@ sections:
           instructions: 'Customize how the <a href="https://docs.snipcart.com/v3/setup/products#product-quantity">product quantity</a> can be updated.'
           listable: false
           display: Quantity
-      -
-        handle: quantity
-        field:
-          type: integer
-          instructions: 'The default product quantity.'
-          listable: hidden
-          display: 'Default Quantity'
-          width: 33
-      -
-        handle: min_quantity
-        field:
-          type: integer
-          instructions: 'The minimum allowed product quantity.'
-          listable: hidden
-          display: 'Minimum Quantity'
-          width: 33
-      -
-        handle: max_quantity
-        field:
-          type: integer
-          instructions: 'The maximum allowed product quantity.'
-          listable: hidden
-          display: 'Maximum Quantity'
-          width: 33
-      -
-        handle: quantity_step
-        field:
-          type: integer
-          instructions: 'The quantity step when using the + and - buttons in the cart.'
-          listable: hidden
-          display: 'Quantity Step'
       -
         handle: stackable
         field:
@@ -376,9 +345,41 @@ sections:
           push_tags: false
           cast_booleans: false
           type: select
-          instructions: 'The cart''s behaviour when adding multiple items of the same product.'
-          listable: hidden
+          instructions: 'The stackable setting when adding multiple items of the same product to the cart.'
+          listable: false
           display: Stackable
+      -
+        handle: quantity
+        field:
+          type: integer
+          instructions: 'The default product quantity.'
+          listable: false
+          display: 'Default Quantity'
+          width: 50
+      -
+        handle: quantity_step
+        field:
+          type: integer
+          instructions: 'The quantity step in the cart.'
+          listable: false
+          display: 'Quantity Step'
+          width: 50
+      -
+        handle: min_quantity
+        field:
+          type: integer
+          instructions: 'The minimum allowed product quantity.'
+          listable: false
+          display: 'Minimum Quantity'
+          width: 50
+      -
+        handle: max_quantity
+        field:
+          type: integer
+          instructions: 'The maximum allowed product quantity.'
+          listable: false
+          display: 'Maximum Quantity'
+          width: 50
   sidebar:
     display: Sidebar
     fields:
