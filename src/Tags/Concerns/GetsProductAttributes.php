@@ -4,7 +4,6 @@ namespace Aerni\Snipcart\Tags\Concerns;
 
 use Aerni\Snipcart\Facades\Product;
 use Aerni\Snipcart\Support\Validator;
-use Aerni\Snipcart\Tags\Concerns\TagGuards;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Entry;
 
