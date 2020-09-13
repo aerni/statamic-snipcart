@@ -4,11 +4,14 @@ namespace Aerni\Snipcart\Tags\Concerns;
 
 use Aerni\Snipcart\Facades\Product;
 use Aerni\Snipcart\Support\Validator;
+use Aerni\Snipcart\Tags\Concerns\TagGuards;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Entry;
 
 trait GetsProductAttributes
 {
+    use TagGuards;
+
     /**
      * Get all the Snipcart attributes as an HTML-ready string.
      *
@@ -16,7 +19,7 @@ trait GetsProductAttributes
      */
     protected function dataAttributes(): string
     {
-        return $this->mergedAttributes()->map(function ($value, $key) {
+        return $this->validAttributes()->map(function ($value, $key) {
             return "data-item-{$key}='{$value}'";
         })->implode(' ');
     }
@@ -26,7 +29,7 @@ trait GetsProductAttributes
      *
      * @return Collection
      */
-    protected function mergedAttributes(): Collection
+    protected function validAttributes(): Collection
     {
         $productAttributes = $this->productAttributes();
         $tagAttributes = $this->tagAttributes();
@@ -45,7 +48,7 @@ trait GetsProductAttributes
         if ($this->isProduct()) {
             $entry = Entry::find($this->context->get('id'));
 
-            if ($this->isVariant()) {
+            if ($this->isProductVariant()) {
                 return Product::selectedVariantOptions($this->context->get('options'))
                     ->processAttributes($entry);
             };
@@ -64,37 +67,5 @@ trait GetsProductAttributes
     protected function tagAttributes(): Collection
     {
         return Validator::onlyValidAttributes($this->params);
-    }
-
-    /**
-     * Return true if it's a Snipcart product.
-     *
-     * @return bool
-     */
-    protected function isProduct(): bool
-    {
-        if ($this->context->has('is_snipcart_product')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns true if it's a product variant.
-     *
-     * @return bool
-     */
-    protected function isVariant(): bool
-    {
-        if (! $this->context->has('options')) {
-            return false;
-        }
-
-        if (! is_array($this->context->get('options'))) {
-            return false;
-        }
-
-        return true;
     }
 }
