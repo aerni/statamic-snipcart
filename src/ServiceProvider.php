@@ -2,10 +2,8 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
-use Aerni\Snipcart\Facades\Currency;
+use Aerni\Snipcart\Facades\Config;
 use Aerni\Snipcart\Tags\SnipcartTags;
-use Statamic\Facades\Site;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -120,6 +118,7 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerRepositories(): void
     {
         $this->app->bind(\Statamic\Contracts\Entries\EntryRepository::class, Repositories\EntryRepository::class);
+        $this->app->bind('Config', Repositories\ConfigRepository::class);
         $this->app->bind('Converter', Support\Converter::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
         $this->app->bind('Dimension', Repositories\DimensionRepository::class);
@@ -136,41 +135,11 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->app->bind(SnipcartTags::class, function () {
             return new SnipcartTags([
-                'key' => $this->apiKey(),
-                'currency' => $this->currency(),
+                'key' => Config::apiKey(),
+                'currency' => Config::currency(),
                 'version' => config('snipcart.version'),
                 'behaviour' => config('snipcart.behaviour'),
             ]);
         });
-    }
-
-    /**
-     * Returns the Snipcart API Key.
-     *
-     * @return mixed
-     */
-    protected function apiKey()
-    {
-        $mode = config('snipcart.test_mode');
-
-        $apiKey = $mode
-            ? config('snipcart.test_key')
-            : config('snipcart.live_key');
-
-        if (! $apiKey) {
-            throw new ApiKeyNotFoundException($mode);
-        }
-
-        return $apiKey;
-    }
-
-    /**
-     * Returns the currency of the current site.
-     *
-     * @return string
-     */
-    protected function currency(): string
-    {
-        return Currency::from(Site::current())->code();
     }
 }
