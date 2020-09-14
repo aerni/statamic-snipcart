@@ -111,6 +111,19 @@ return [
     'image' => [
         'manipulation' => true,
         'preset' => ['w' => 240, 'q' => 75],
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Webhook Route
+    |--------------------------------------------------------------------------
+    |
+    | Define the route where the Snipcart webhook requests will be sent to.
+    | Don't forget to add this URL in your Snipcart Dashboard:
+    | https://app.snipcart.com/dashboard/webhooks
+    |
+    */
+
+    'webhook' => 'snipcart-webhook',
 
 ];
