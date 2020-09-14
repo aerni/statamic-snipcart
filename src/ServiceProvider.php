@@ -36,9 +36,9 @@ class ServiceProvider extends AddonServiceProvider
         Modifiers\Total::class,
     ];
 
-    // protected $routes = [
-    //     'web' => __DIR__ . '/../routes/web.php',
-    // ];
+    protected $routes = [
+        'web' => __DIR__ . '/../routes/web.php',
+    ];
 
     protected $scripts = [
         __DIR__.'/../resources/dist/js/cp.js',
@@ -56,10 +56,10 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        // Statamic::booted(function () {
-        //     $this->setSnipcartApiConfig();
-        //     $this->setSnipcartWebhooksConfig();
-        // });
+        Statamic::booted(function () {
+            // $this->setSnipcartApiConfig();
+            $this->setSnipcartWebhooksConfig();
+        });
 
         Statamic::afterInstalled(function ($command) {
             $command->call('snipcart:setup');
@@ -98,17 +98,17 @@ class ServiceProvider extends AddonServiceProvider
      *
      * @return void
      */
-    // protected function setSnipcartWebhooksConfig(): void
-    // {
-    //     $snipcartWebhooksConfig = Config::get('snipcart-webhooks');
-    //     $snipcartConfig = Config::get('snipcart');
+    protected function setSnipcartWebhooksConfig(): void
+    {
+        $snipcartWebhooksConfig = config('snipcart-webhooks');
+        $snipcartConfig = config('snipcart');
 
-    //     $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartWebhooksConfig);
+        $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartWebhooksConfig);
 
-    //     foreach ($mergedConfigs as $key => $value) {
-    //         Config::set("snipcart-webhooks.{$key}", $value);
-    //     }
-    // }
+        foreach ($mergedConfigs as $key => $value) {
+            config()->set("snipcart-webhooks.{$key}", $value);
+        }
+    }
 
     /**
      * Bind the repositories.
