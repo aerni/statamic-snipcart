@@ -61,7 +61,10 @@ return [
     */
 
     'live_key' => env('SNIPCART_LIVE_KEY'),
+    'live_secret' => env('SNIPCART_LIVE_SECRET'),
+
     'test_key' => env('SNIPCART_TEST_KEY'),
+    'test_secret' => env('SNIPCART_TEST_SECRET'),
 
     /*
     |--------------------------------------------------------------------------
