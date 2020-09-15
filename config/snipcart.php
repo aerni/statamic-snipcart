@@ -125,8 +125,10 @@ return [
     | Don't forget to add this URL in your Snipcart Dashboard:
     | https://app.snipcart.com/dashboard/webhooks
     |
+    | Set this to 'null' to remove the route.
+    |
     */
 
-    'webhook' => 'snipcart-webhook',
+    'webhook' => 'webhooks/snipcart'
 
 ];

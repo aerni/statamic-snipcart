@@ -2,4 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::snipcart(config('snipcart.webhook'));
+$route = config('snipcart.webhook');
+
+if ($route && is_string($route)) {
+    Route::snipcart(config('snipcart.webhook'));
+}
