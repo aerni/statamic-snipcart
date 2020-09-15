@@ -21,6 +21,8 @@ class StockTags extends Tags
      */
     public function index(): string
     {
-        return ProductApi::stock($this->context->get('sku'));
+        return ProductApi::context($this->context)
+            ->find($this->context->get('sku'))
+            ->stock();
     }
 }
