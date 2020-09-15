@@ -5,9 +5,12 @@ namespace Aerni\Snipcart\Tags\Concerns;
 use Aerni\Snipcart\Facades\Product;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
+use Statamic\Facades\Entry;
 
 trait GetsProductAttributes
 {
+    use TagGuards;
+
     /**
      * Get all the Snipcart attributes as an HTML-ready string.
      *
@@ -15,7 +18,7 @@ trait GetsProductAttributes
      */
     protected function dataAttributes(): string
     {
-        return $this->mergedAttributes()->map(function ($value, $key) {
+        return $this->validAttributes()->map(function ($value, $key) {
             return "data-item-{$key}='{$value}'";
         })->implode(' ');
     }
@@ -25,7 +28,7 @@ trait GetsProductAttributes
      *
      * @return Collection
      */
-    protected function mergedAttributes(): Collection
+    protected function validAttributes(): Collection
     {
         $productAttributes = $this->productAttributes();
         $tagAttributes = $this->tagAttributes();
@@ -42,7 +45,14 @@ trait GetsProductAttributes
     protected function productAttributes(): Collection
     {
         if ($this->isProduct()) {
-            return Product::find($this->context->get('id'))->attributes();
+            $entry = Entry::find($this->context->get('id'));
+
+            if ($this->isProductVariant()) {
+                return Product::selectedVariantOptions($this->context->get('options'))
+                    ->processAttributes($entry);
+            };
+
+            return Product::processAttributes($entry);
         }
 
         return collect();
@@ -56,19 +66,5 @@ trait GetsProductAttributes
     protected function tagAttributes(): Collection
     {
         return Validator::onlyValidAttributes($this->params);
-    }
-
-    /**
-     * Return true if it's a Snipcart product.
-     *
-     * @return bool
-     */
-    protected function isProduct(): bool
-    {
-        if ($this->context->has('is_snipcart_product')) {
-            return true;
-        }
-
-        return false;
     }
 }

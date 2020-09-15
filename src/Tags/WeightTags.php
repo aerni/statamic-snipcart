@@ -16,7 +16,7 @@ class WeightTags extends Tags
     protected static $handle = 'weight';
 
     /**
-     * Return the unit's abbreviation.
+     * Returns the unit's abbreviation.
      * {{ weight:short }}
      *
      * @return string
@@ -29,7 +29,7 @@ class WeightTags extends Tags
     }
 
     /**
-     * Return the unit's singular name.
+     * Returns the unit's singular name.
      * {{ weight:singular }}
      *
      * @return string
@@ -42,7 +42,7 @@ class WeightTags extends Tags
     }
 
     /**
-     * Return the unit's plural name.
+     * Returns the unit's plural name.
      * {{ weight:plural }}
      *
      * @return string
@@ -55,7 +55,7 @@ class WeightTags extends Tags
     }
 
     /**
-     * Return the unit's singular/plural name.
+     * Returns the unit's singular/plural name.
      * {{ weight:name }}
      *
      * @return string

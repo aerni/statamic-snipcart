@@ -2,8 +2,10 @@
 
 namespace Aerni\Snipcart\Tests;
 
-use Aerni\Snipcart\ServiceProvider;
-use Illuminate\Foundation\Testing\WithFaker;
+use Aerni\Snipcart\ServiceProvider as SnipcartServiceProvider;
+use Aerni\SnipcartWebhooks\SnipcartWebhooksServiceProvider;
+use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Statamic\Extend\Manifest;
 use Statamic\Providers\StatamicServiceProvider;
@@ -11,53 +13,79 @@ use Statamic\Statamic;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    use WithFaker;
-
-    protected function getPackageProviders($app)
+    /**
+     * Load package service provider
+     *
+     * @param \Illuminate\Foundation\Application $app
+     * @return array
+     */
+    protected function getPackageProviders($app): array
     {
         return [
+            SnipcartServiceProvider::class,
+            SnipcartWebhooksServiceProvider::class,
             StatamicServiceProvider::class,
-            ServiceProvider::class,
         ];
     }
 
-    protected function getPackageAliases($app)
+    /**
+     * Load package aliases
+     *
+     * @param \Illuminate\Foundation\Application $app
+     * @return array
+     */
+    protected function getPackageAliases($app): array
     {
         return [
             'Statamic' => Statamic::class,
+            'config' => ConfigRepository::class,
         ];
     }
 
-    protected function getEnvironmentSetUp($app)
+    /**
+     * Load Environment
+     *
+     * @param \Illuminate\Foundation\Application $app
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app): void
     {
         parent::getEnvironmentSetUp($app);
 
+        // Make sure the .env file is loaded
+        $app->useEnvironmentPath(__DIR__.'/..');
+        $app->bootstrapWith([LoadEnvironmentVariables::class]);
+
         $app->make(Manifest::class)->manifest = [
-            'aerni/statamic-snipcart' => [
+            'aerni/snipcart' => [
                 'id' => 'aerni/snipcart',
                 'namespace' => 'Aerni\\Snipcart\\',
             ],
         ];
-
-        Statamic::pushActionRoutes(function () {
-            return require_once realpath(__DIR__.'/../routes/actions.php');
-        });
     }
 
-    protected function resolveApplicationConfiguration($app)
+    /**
+     * Resolve the application configuration and set the Statamic configuration
+     *
+     * @param \Illuminate\Foundation\Application $app
+     * @return void
+     */
+    protected function resolveApplicationConfiguration($app): void
     {
         parent::resolveApplicationConfiguration($app);
 
         $configs = [
-            'assets', 'cp', 'forms', 'static_caching',
-            'sites', 'stache', 'system', 'users',
+            'assets', 'cp', 'forms', 'routes', 'sites',
+            'stache', 'static_caching', 'system', 'users',
         ];
 
         foreach ($configs as $config) {
-            $app['config']->set("statamic.$config", require(__DIR__."/../vendor/statamic/cms/config/{$config}.php"));
+            $app['config']->set("statamic.$config", require(__DIR__ . "/../vendor/statamic/cms/config/{$config}.php"));
         }
 
-        $app['config']->set('statamic.users.repository', 'file');
-        $app['config']->set('statamic.stache', require(__DIR__.'/__fixtures__/config/statamic/stache.php'));
+        $app['config']->set('statamic.editions.pro', true);
+
+        $app['config']->set('snipcart', require(__DIR__.'/../config/snipcart.php'));
+        $app['config']->set('snipcart-webhooks', require(__DIR__.'/../vendor/aerni/snipcart-webhooks/config/snipcart-webhooks.php'));
     }
 }

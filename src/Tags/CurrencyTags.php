@@ -16,7 +16,7 @@ class CurrencyTags extends Tags
     protected static $handle = 'currency';
 
     /**
-     * Return the currency code.
+     * Returns the currency code.
      * {{ currency:code }}
      *
      * @return string
@@ -27,7 +27,7 @@ class CurrencyTags extends Tags
     }
 
     /**
-     * Return the currency name.
+     * Returns the currency name.
      * {{ currency:name }}
      *
      * @return string
@@ -38,7 +38,7 @@ class CurrencyTags extends Tags
     }
 
     /**
-     * Return the currency symbol.
+     * Returns the currency symbol.
      * {{ currency:symbol }}
      *
      * @return string

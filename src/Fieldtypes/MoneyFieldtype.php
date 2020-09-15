@@ -23,19 +23,19 @@ class MoneyFieldtype extends Fieldtype
     /**
      * Pre-process the data before it gets sent to the publish page.
      *
-     * @param int|null $data
-     * @return string|null
+     * @param mixed $data
+     * @return string
      */
     public function preProcess($data)
     {
-        return Currency::from(Site::current())->formatDecimalIntl($data);
+        return Currency::from(Site::current())->formatDecimal($data);
     }
 
     /**
      * Process the data before it gets saved.
      *
-     * @param string|null $data
-     * @return int|null
+     * @param mixed $data
+     * @return int
      */
     public function process($data)
     {
@@ -45,10 +45,10 @@ class MoneyFieldtype extends Fieldtype
     /**
      * Process the data before it gets loaded into the view.
      *
-     * @param int|null $data
-     * @return string|null
+     * @param mixed $data
+     * @return string
      */
-    public function augment($data)
+    public function augment($data): string
     {
         return Currency::from(Site::current())->formatCurrency($data);
     }

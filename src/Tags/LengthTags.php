@@ -16,7 +16,7 @@ class LengthTags extends Tags
     protected static $handle = 'length';
 
     /**
-     * Return the unit's abbreviation.
+     * Returns the unit's abbreviation.
      * {{ length:short }}
      *
      * @return string
@@ -29,7 +29,7 @@ class LengthTags extends Tags
     }
 
     /**
-     * Return the unit's singular name.
+     * Returns the unit's singular name.
      * {{ length:singular }}
      *
      * @return string
@@ -42,7 +42,7 @@ class LengthTags extends Tags
     }
 
     /**
-     * Return the unit's plural name.
+     * Returns the unit's plural name.
      * {{ length:plural }}
      *
      * @return string
@@ -55,7 +55,7 @@ class LengthTags extends Tags
     }
 
     /**
-     * Return the unit's length singular/plural name.
+     * Returns the unit's length singular/plural name.
      * {{ length:lengthName }}
      *
      * @return string
@@ -68,7 +68,7 @@ class LengthTags extends Tags
     }
 
     /**
-     * Return the unit's width singular/plural name.
+     * Returns the unit's width singular/plural name.
      * {{ length:widthName }}
      *
      * @return string
@@ -81,7 +81,7 @@ class LengthTags extends Tags
     }
 
     /**
-     * Return the unit's height singular/plural name.
+     * Returns the unit's height singular/plural name.
      * {{ length:heightName }}
      *
      * @return string

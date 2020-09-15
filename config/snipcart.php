@@ -7,14 +7,17 @@ return [
     | Sites
     |--------------------------------------------------------------------------
     |
-    | The site handles need to be in sync with your Statamic config.
-    | Make sure to add a new key for each site set in `config/statamic/site.php`.
+    | The sites need to be in sync with your Statamic config. Make sure to
+    | add a new key for each site set in `config/statamic/sites.php`.
     |
     | Snipcart's default currency, length and weight unit will be the ones
     | defined within the key of Statamic's default site.
     |
-    | If you add/remove a site or change a value, you need to run
+    | If you add or remove a site or change a value, you need to run
     | 'php please snipcart:migrate' to update the products collection and entries.
+    |
+    | Accepted length units: cm, m, in, ft
+    | Accepted weight units: g, kg, oz, lb
     |
     */
 
@@ -46,7 +49,6 @@ return [
 
     'taxonomies' => [
         'categories' => 'categories',
-        'taxes' => 'taxes',
     ],
 
     /*
@@ -69,27 +71,12 @@ return [
     | Test Mode
     |--------------------------------------------------------------------------
     |
-    | Set this to "false" to start processing real transactions.
+    | Set this to 'false' to start processing real transactions.
     | You probably want to do this in production only.
     |
     */
 
     'test_mode' => env('SNIPCART_TEST_MODE', true),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Snipcart Webhooks
-    |--------------------------------------------------------------------------
-    |
-    | Wehbhooks are used to trigger events like updating the stock of a product
-    | when an order has been completed.
-    |
-    | Define the URL endpoint that Snipcart sends POST requests to.
-    | To use webhooks, you also have to set the URL in the Snipcart dashboard.
-    |
-    */
-
-    'webhooks' => '/snipcart-webhooks',
 
     /*
     |--------------------------------------------------------------------------
@@ -107,8 +94,8 @@ return [
     | Cart Behaviour
     |--------------------------------------------------------------------------
     |
-    | Set this to "none" to prevent the cart from opening every time
-    | a product is added. Default is "null".
+    | Set this to 'none' to prevent the cart from opening every time
+    | a product is added. Default is 'null'.
     |
     */
 
@@ -127,6 +114,21 @@ return [
     'image' => [
         'manipulation' => true,
         'preset' => ['w' => 240, 'q' => 75],
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Webhook Route
+    |--------------------------------------------------------------------------
+    |
+    | Define the route where the Snipcart webhook requests will be sent to.
+    | Don't forget to add this URL in your Snipcart Dashboard:
+    | https://app.snipcart.com/dashboard/webhooks
+    |
+    | Set this to 'null' to remove the route.
+    |
+    */
+
+    'webhook' => 'webhooks/snipcart'
 
 ];

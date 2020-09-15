@@ -1,6 +1,6 @@
 name: Tests
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   php_tests:
@@ -31,3 +31,5 @@ jobs:
 
       - name: Run PHPUnit
         run: composer test
+        env:
+          SNIPCART_TEST_KEY: ${{ secrets.SNIPCART_TEST_KEY }}

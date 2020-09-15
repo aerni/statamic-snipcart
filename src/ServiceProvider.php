@@ -2,11 +2,8 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Exceptions\ApiKeyNotFoundException;
-use Aerni\Snipcart\Facades\Currency;
+use Aerni\Snipcart\Facades\Config;
 use Aerni\Snipcart\Tags\SnipcartTags;
-use Illuminate\Support\Facades\Config;
-use Statamic\Facades\Site;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -24,9 +21,9 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $listen = [
-        'Aerni\SnipcartWebhooks\Events\OrderCompleted' => [
-            'Aerni\Snipcart\Listeners\UpdateStock',
-        ],
+        // 'Aerni\SnipcartWebhooks\Events\OrderCompleted' => [
+        //     'Aerni\Snipcart\Listeners\UpdateStock',
+        // ],
         'Statamic\Events\EntryBlueprintFound' => [
             'Aerni\Snipcart\Listeners\ConvertDimensions',
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
@@ -34,7 +31,9 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $modifiers = [
+        Modifiers\AddOperator::class,
         Modifiers\StripUnit::class,
+        Modifiers\Total::class,
     ];
 
     protected $routes = [
@@ -49,6 +48,7 @@ class ServiceProvider extends AddonServiceProvider
         Tags\CurrencyTags::class,
         Tags\LengthTags::class,
         Tags\SnipcartTags::class,
+        Tags\VariantsTags::class,
         Tags\WeightTags::class,
     ];
 
@@ -57,7 +57,7 @@ class ServiceProvider extends AddonServiceProvider
         parent::boot();
 
         Statamic::booted(function () {
-            $this->setSnipcartApiConfig();
+            // $this->setSnipcartApiConfig();
             $this->setSnipcartWebhooksConfig();
         });
 
@@ -81,17 +81,17 @@ class ServiceProvider extends AddonServiceProvider
      *
      * @return void
      */
-    protected function setSnipcartApiConfig(): void
-    {
-        $snipcartApiConfig = Config::get('snipcart-api');
-        $snipcartConfig = Config::get('snipcart');
+    // protected function setSnipcartApiConfig(): void
+    // {
+    //     $snipcartApiConfig = Config::get('snipcart-api');
+    //     $snipcartConfig = Config::get('snipcart');
 
-        $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
+    //     $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
 
-        foreach ($mergedConfigs as $key => $value) {
-            Config::set("snipcart-api.{$key}", $value);
-        }
-    }
+    //     foreach ($mergedConfigs as $key => $value) {
+    //         Config::set("snipcart-api.{$key}", $value);
+    //     }
+    // }
 
     /**
      * Set the config of the Snipcart Webhooks package.
@@ -100,13 +100,13 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function setSnipcartWebhooksConfig(): void
     {
-        $snipcartWebhooksConfig = Config::get('snipcart-webhooks');
-        $snipcartConfig = Config::get('snipcart');
+        $snipcartWebhooksConfig = config('snipcart-webhooks');
+        $snipcartConfig = config('snipcart');
 
         $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartWebhooksConfig);
 
         foreach ($mergedConfigs as $key => $value) {
-            Config::set("snipcart-webhooks.{$key}", $value);
+            config()->set("snipcart-webhooks.{$key}", $value);
         }
     }
 
@@ -118,10 +118,12 @@ class ServiceProvider extends AddonServiceProvider
     protected function registerRepositories(): void
     {
         $this->app->bind(\Statamic\Contracts\Entries\EntryRepository::class, Repositories\EntryRepository::class);
+        $this->app->bind('Config', Repositories\ConfigRepository::class);
         $this->app->bind('Converter', Support\Converter::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
         $this->app->bind('Dimension', Repositories\DimensionRepository::class);
         $this->app->bind('Product', Repositories\ProductRepository::class);
+        $this->app->bind('Variants', Repositories\VariantsRepository::class);
     }
 
     /**
@@ -133,41 +135,11 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->app->bind(SnipcartTags::class, function () {
             return new SnipcartTags([
-                'key' => $this->apiKey(),
-                'currency' => $this->currency(),
+                'key' => Config::apiKey(),
+                'currency' => Config::currency(),
                 'version' => config('snipcart.version'),
                 'behaviour' => config('snipcart.behaviour'),
             ]);
         });
-    }
-
-    /**
-     * Returns the Snipcart API Key.
-     *
-     * @return mixed
-     */
-    protected function apiKey()
-    {
-        $mode = config('snipcart.test_mode');
-
-        $apiKey = $mode
-            ? config('snipcart.test_key')
-            : config('snipcart.live_key');
-
-        if (! $apiKey) {
-            throw new ApiKeyNotFoundException($mode);
-        }
-
-        return $apiKey;
-    }
-
-    /**
-     * Returns the currency of the current site.
-     *
-     * @return string
-     */
-    protected function currency(): string
-    {
-        return Currency::from(Site::current())->code();
     }
 }

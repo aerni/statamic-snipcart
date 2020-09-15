@@ -9,8 +9,6 @@ use Aerni\Snipcart\Facades\Dimension;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
-use Statamic\Entries\Entry;
-use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Image;
 use Statamic\Facades\Site;
 use Statamic\Support\Str;
@@ -20,40 +18,30 @@ class ProductRepository implements ProductRepositoryContract
     /**
      * The product entry.
      *
-     * @var Entry
+     * @var \Statamic\Entries\Entry
      */
     protected $product;
 
-    /**
-     * The product data.
-     *
-     * @var Collection
-     */
-    protected $data;
+    protected $customFields;
 
     /**
-     * Get the product entry and data by its id.
+     * The selected product variant options.
      *
-     * @param string $id
+     * @var array
+     */
+    protected $selectedVariantOptions;
+
+    /**
+     * Set the selected variant options property.
+     *
+     * @param array $options
      * @return self
      */
-    public function find(string $id): self
+    public function selectedVariantOptions(array $options): self
     {
-        $this->product = EntryFacade::find($id);
-        $this->data = $this->data();
+        $this->selectedVariantOptions = $options;
 
         return $this;
-    }
-
-    /**
-     * Get the products data.
-     *
-     * @return Collection
-     */
-    protected function data(): Collection
-    {
-        return $this->product->root()->data()
-            ->merge($this->product->data());
     }
 
     /**
@@ -61,268 +49,298 @@ class ProductRepository implements ProductRepositoryContract
      *
      * @return Collection
      */
-    public function attributes(): Collection
+    public function processAttributes(\Statamic\Entries\Entry $entry)
     {
-        $attributes = $this->mapAttributes($this->data);
-        $attributes->put('url', Request::url());
+        $this->product = $entry;
 
-        return Validator::onlyValidAttributes($attributes);
+        $basicFields = $this->mapBasicFields();
+        $customFields = $this->mapCustomFields();
+        $allFields = $basicFields->merge($customFields);
+
+        return Validator::onlyValidAttributes($allFields);
+    }
+
+    /**
+     * Merge the product root data with the localized data.
+     *
+     * @return Collection
+     */
+    public function data(): Collection
+    {
+        return $this->product->root()->data()
+            ->merge($this->product->data());
     }
 
     /**
      * Map the attributes to match the format that Snipcart expects.
      *
-     * @param Collection $data
      * @return Collection
      */
-    protected function mapAttributes(Collection $data): Collection
+    protected function mapBasicFields(): Collection
     {
-        $mappedAttributes = $data->mapWithKeys(function ($item, $key) {
+        $basicFields = $this->data()->mapWithKeys(function ($basicField, $key) {
             if ($key === 'title') {
-                return ['name' => $item];
+                return ['name' => $basicField];
             }
 
             if ($key === 'sku') {
-                return ['id' => $item];
+                return ['id' => $basicField];
             }
 
-            if ($key === 'images' && ! empty($item)) {
+            if ($key === 'images' && ! empty($basicField)) {
                 return ['image' => $this->imageUrl()];
             }
 
-            if ($key === config('snipcart.taxonomies.categories') && ! empty($item)) {
+            if ($key === config('snipcart.taxonomies.categories') && ! empty($basicField)) {
                 return ['categories' => $this->mapCategories()];
             }
 
-            if ($key === config('snipcart.taxonomies.taxes') && ! empty($item)) {
+            if ($key === 'taxes' && ! empty($basicField)) {
                 return ['taxes' => $this->mapTaxes()];
             }
 
-            if ($key === 'custom_fields' && ! empty($item)) {
-                return $this->mapCustomFields($item);
+            if ($key === 'metadata' && ! empty($basicField)) {
+                return [$key => json_encode($basicField)];
             }
 
-            if ($key === 'metadata' && ! empty($item)) {
-                return [$key => json_encode($item)];
+            if ($key === 'weight' && ! empty($basicField)) {
+                return [$key => Converter::toGrams($basicField, $this->weightUnit())];
             }
 
-            if ($key === 'weight' && ! empty($item)) {
-                return [$key => Converter::toGrams($item, $this->weightUnit())];
+            if ($key === 'length' && ! empty($basicField)) {
+                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
             }
 
-            if ($key === 'length' && ! empty($item)) {
-                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            if ($key === 'width' && ! empty($basicField)) {
+                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
             }
 
-            if ($key === 'width' && ! empty($item)) {
-                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            if ($key === 'height' && ! empty($basicField)) {
+                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
             }
 
-            if ($key === 'height' && ! empty($item)) {
-                return [$key => Converter::toCentimeters($item, $this->lengthUnit())];
+            if ($key === 'price' && ! empty($basicField)) {
+                return [$key => Currency::from(Site::current())->formatDecimal($basicField)];
             }
 
-            if ($key === 'price' && ! empty($item)) {
-                return [$key => Currency::from(Site::current())->formatDecimal($item)];
-            }
-
-            return [$key => $item];
-        })->mapWithKeys(function ($item, $key) {
-            if (is_bool($item)) {
-                return [
-                    $this->underscoreToDash($key) => $this->boolToString($item),
-                ];
-            }
-
+            return [$key => $basicField];
+        })->mapWithKeys(function ($basicField, $key) {
             return [
-                $this->underscoreToDash($key) => $item,
+                $this->underscoreToDash($key) => (is_bool($basicField)) ? $this->boolToString($basicField) : $basicField,
             ];
-        });
+        })->put('url', Request::url());
 
-        return $mappedAttributes;
+        return $basicFields;
     }
 
     /**
-     * Get the Snipcart categories.
+     * Map the custom fields of the product.
+     *
+     * @return Collection
+     */
+    protected function mapCustomFields(): Collection
+    {
+        $customFields = $this->data()->flatMap(function ($item, $key) {
+            if ($key === 'variants') {
+                return $this->mapVariants($item);
+            }
+
+            if ($key === 'checkboxes') {
+                return $this->mapCheckboxes($item);
+            }
+
+            if ($key === 'text_fields') {
+                return $this->mapTextFields($item);
+            }
+        })->pipe(function ($customFields) {
+            return $this->addCustomFieldIds($customFields);
+        });
+
+        return $customFields->collapse();
+    }
+
+    /**
+     * Returns an array of mapped product variants.
+     *
+     * @param array $variants
+     * @return Collection
+     */
+    protected function mapVariants(array $variants): Collection
+    {
+        $variants = collect($variants)->map(function ($variant) {
+            $name = $variant['type'];
+            $options = $this->mapVariantOptions($variant['options']);
+            $value = $this->mapVariantValue($variant['options']);
+
+            return [
+                "custom{key}-name" => $name,
+                "custom{key}-options" => $options,
+                "custom{key}-value" => $value,
+            ];
+        });
+
+        return $variants;
+    }
+
+    /**
+     * Returns a string of variant options with modifier price.
+     *
+     * Small[-1.00]|Medium|Large[+1.00]
+     *
+     * @param array $options
+     * @return string
+     */
+    protected function mapVariantOptions(array $options): string
+    {
+        $options = collect($options)->map(function ($option) {
+            $name = $option['name'];
+            $price = $this->formatPriceModifier($option['price_modifier']);
+
+            return (empty($price))
+                ? $name
+                : "{$name}[{$price}]";
+        });
+
+        return $options->implode('|');
+    }
+
+    /**
+     * Returns the selected variant option.
+     *
+     * @param array $options
+     * @return string|null
+     */
+    protected function mapVariantValue(array $options)
+    {
+        if (empty($this->selectedVariantOptions)) {
+            return null;
+        }
+
+        $value = collect($options)->flatMap(function ($option) {
+            return collect($this->selectedVariantOptions)->filter(function ($selectedOption) use ($option) {
+                return $option['name'] === $selectedOption['name']->value();
+            })->pluck('name');
+        })->first();
+
+        if (! is_null($value)) {
+            $value = $value->value();
+        }
+
+        return $value;
+    }
+
+    /**
+     * Format the price modifier of a variant option.
+     *
+     * null -> null
+     * 2000 -> +2.00
+     * -2000 -> -2.00
+     *
+     * @param int $price
+     * @return string|null
+     */
+    protected function formatPriceModifier(?int $price)
+    {
+        if (empty($price)) {
+            return null;
+        }
+
+        $decimalPrice = Currency::from(Site::default())->formatDecimal($price);
+
+        return (Str::startsWith($decimalPrice, '-'))
+            ? $decimalPrice
+            : "+$decimalPrice";
+    }
+
+    /**
+     * Returns an array of mapped checkboxes.
+     *
+     * @param array $checkboxes
+     * @return Collection
+     */
+    protected function mapCheckboxes(array $checkboxes): Collection
+    {
+        $checkboxes = collect($checkboxes)->map(function ($checkbox) {
+            return [
+                "custom{key}-name" => $checkbox['name'],
+                "custom{key}-type" => 'checkbox',
+            ];
+        });
+
+        return $checkboxes;
+    }
+
+    /**
+     * Returns an array of mapped text fields.
+     *
+     * @param array $textFields
+     * @return Collection
+     */
+    protected function mapTextFields(array $textFields): Collection
+    {
+        $textFields = collect($textFields)->map(function ($textField) {
+            return [
+                "custom{key}-name" => $textField['name'],
+                "custom{key}-type" => $textField['field_type'],
+                "custom{key}-value" => $textField['default'],
+                "custom{key}-placeholder" => $textField['placeholder'],
+                "custom{key}-required" => json_encode($textField['required']),
+            ];
+        });
+
+        return $textFields;
+    }
+
+    /**
+     * Adds a unique id to all custom fields by replacing {key}.
+     *
+     * @param Collection $customFields
+     * @return Collection
+     */
+    protected function addCustomFieldIds(Collection $customFields): Collection
+    {
+        $customFieldsWithId = $customFields->map(function ($customField, $id) {
+            $id++;
+
+            return collect($customField)->mapWithKeys(function ($value, $key) use ($id) {
+                $keyWithId = Str::replaceFirst('{key}', $id, $key);
+
+                return [$keyWithId => $value];
+            })->filter()->all();
+        });
+
+        return $customFieldsWithId;
+    }
+
+    /**
+     * Returns a string of categories.
      *
      * @return string
      */
     protected function mapCategories(): string
     {
-        return $this->product->augmentedValue('categories')->value()
-            ->filter(function ($item) {
-                return ! $item->data()->get('hide_from_snipcart');
-            })->map(function ($item) {
-                return $item->title();
+        return $this->product->augmentedValue(config('snipcart.taxonomies.categories'))->value()
+            ->filter(function ($category) {
+                return ! $category->get('hide_from_snipcart');
+            })->map(function ($category) {
+                return $category->title();
             })->implode('|');
     }
 
     /**
-     * Get the Snipcart taxes.
+     * Returns a string of taxes.
      *
      * @return string
      */
     protected function mapTaxes(): string
     {
-        return $this->product->augmentedValue('taxes')->value()
-            ->map(function ($item) {
-                return $item->title();
-            })->implode('|');
+        $taxes = $this->product->augmentedValue('taxes')->value();
+
+        return implode('|', $taxes);
     }
 
     /**
-     * Transform the custom fields to fit the expected format.
-     *
-     * @param array $customFields
-     * @return array
-     */
-    protected function mapCustomFields(array $customFields): Collection
-    {
-        $customFields = collect($customFields)->map(function ($item, $key) {
-            $key++;
-
-            if (! $item['enabled']) {
-                return;
-            }
-
-            if ($item['type'] === 'dropdown') {
-                return $this->mapDropdown($item, $key);
-            }
-
-            if ($item['type'] === 'checkbox') {
-                return $this->mapCheckbox($item, $key);
-            }
-
-            if ($item['type'] === 'text' && $item['field_type'] === 'text') {
-                return $this->mapTextField($item, $key);
-            }
-
-            if ($item['type'] === 'text' && $item['field_type'] === 'textarea') {
-                return $this->mapTextarea($item, $key);
-            }
-        })->filter()->values();
-
-        return $this->reassignFieldIndex($customFields);
-    }
-
-    /**
-     * Make sure to start properly index custom fields starting with 1.
-     *
-     * @param Collection $customFields
-     * @return Collection
-     */
-    protected function reassignFieldIndex(Collection $customFields): Collection
-    {
-        return $customFields->flatMap(function ($item, $index) {
-            $index++;
-
-            return collect($item)->mapWithKeys(function ($item, $key) use ($index) {
-                $newKey = preg_replace("/[0-9]/", $index, $key);
-
-                return [$newKey => $item];
-            });
-        });
-    }
-
-    /**
-     * Map dropdowns to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapDropdown(array $item, string $key): array
-    {
-        $options = collect($item['options'])->map(function ($item) {
-            $name = $item['name'];
-            $price = $this->formatVariantPrice($item['price']);
-
-            if (empty($price)) {
-                return $name;
-            }
-
-            return "{$name}[{$price}]";
-        })->implode('|');
-
-        return [
-            "custom{$key}-name" => $item['name'],
-            "custom{$key}-options" => $options,
-        ];
-    }
-
-    /**
-     * Map checkboxes to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapCheckbox(array $item, string $key): array
-    {
-        return [
-            "custom{$key}-name" => $item['name'],
-            "custom{$key}-type" => 'checkbox',
-        ];
-    }
-
-    /**
-     * Map text fields to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapTextField(array $item, string $key): array
-    {
-        return [
-            "custom{$key}-name" => $item['name'],
-            "custom{$key}-value" => $item['default'],
-            "custom{$key}-placeholder" => $item['placeholder'],
-            "custom{$key}-required" => json_encode($item['required']),
-        ];
-    }
-
-    /**
-     * Map textarea fields to the proper structure.
-     *
-     * @param array $item
-     * @param string $key
-     * @return array
-     */
-    protected function mapTextarea(array $item, string $key): array
-    {
-        return [
-            "custom{$key}-name" => $item['name'],
-            "custom{$key}-type" => $item['field_type'],
-            "custom{$key}-value" => $item['default'],
-            "custom{$key}-placeholder" => $item['placeholder'],
-            "custom{$key}-required" => json_encode($item['required']),
-        ];
-    }
-
-    /**
-     * Format the variant price.
-     *
-     * @param mixed $price
-     * @return mixed
-     */
-    protected function formatVariantPrice($price)
-    {
-        if (is_null($price)) {
-            return null;
-        }
-
-        $price = Currency::from(Site::default())->formatDecimal($price);
-
-        if (Str::startsWith($price, '-')) {
-            return $price;
-        }
-
-        return "+{$price}";
-    }
-
-    /**
-     * Get the URL of an image.
+     * Returns the URL of an image.
      *
      * @return string
      */
@@ -344,13 +362,15 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function lengthUnit(): string
     {
-        if ($this->data->has('length_unit')) {
-            return $this->data->get('length_unit');
+        $lengthUnit = $this->product->value('length_unit');
+
+        if (is_null($lengthUnit)) {
+            return Dimension::from(Site::default())
+                ->type('length')
+                ->short();
         }
 
-        return Dimension::from(Site::default())
-            ->type('length')
-            ->short();
+        return $lengthUnit;
     }
 
     /**
@@ -360,13 +380,15 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function weightUnit(): string
     {
-        if ($this->data->has('weight_unit')) {
-            return $this->data->get('weight_unit');
+        $weightUnit = $this->product->value('weight_unit');
+
+        if (is_null($weightUnit)) {
+            return Dimension::from(Site::default())
+                ->type('weight')
+                ->short();
         }
 
-        return Dimension::from(Site::default())
-            ->type('weight')
-            ->short();
+        return $weightUnit;
     }
 
     /**
