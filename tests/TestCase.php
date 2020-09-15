@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart\Tests;
 
 use Aerni\Snipcart\ServiceProvider as SnipcartServiceProvider;
+use Aerni\SnipcartApi\Providers\SnipcartApiServiceProvider;
 use Aerni\SnipcartWebhooks\SnipcartWebhooksServiceProvider;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
@@ -23,6 +24,7 @@ abstract class TestCase extends OrchestraTestCase
     {
         return [
             SnipcartServiceProvider::class,
+            SnipcartApiServiceProvider::class,
             SnipcartWebhooksServiceProvider::class,
             StatamicServiceProvider::class,
         ];
