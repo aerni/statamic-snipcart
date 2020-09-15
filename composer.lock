@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ed5a857997aab7696f2600c9ab7fcff",
+    "content-hash": "f33476fb70575d534dbc4017b719a3e1",
     "packages": [
+        {
+            "name": "aerni/snipcart-api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aerni/laravel-snipcart-api.git",
+                "reference": "20255377f7dccc43787f2d3c9c3640fce190cd62"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aerni/laravel-snipcart-api/zipball/20255377f7dccc43787f2d3c9c3640fce190cd62",
+                "reference": "20255377f7dccc43787f2d3c9c3640fce190cd62",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^7.0",
+                "php": "^7.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Aerni\\SnipcartApi\\Providers\\SnipcartApiServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aerni\\SnipcartApi\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Aerni",
+                    "email": "hello@michaelaerni.ch",
+                    "homepage": "https://www.michaelaerni.ch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel wrapper for the Snipcart API",
+            "homepage": "https://github.com/aerni/snipcart-api",
+            "keywords": [
+                "api",
+                "e-commerce",
+                "laravel",
+                "shop",
+                "snipcart",
+                "snipcart-api",
+                "wrapper"
+            ],
+            "time": "2020-08-19T08:47:37+00:00"
+        },
         {
             "name": "aerni/snipcart-webhooks",
             "version": "v1.0.0",
@@ -7656,16 +7712,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.1.8",
+            "version": "9.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "f98f8466126d83b55b924a94d2244c53c216b8fb"
+                "reference": "cf6582906d4b2502c5f4c6be6a3d0b4cd5b3ef7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/f98f8466126d83b55b924a94d2244c53c216b8fb",
-                "reference": "f98f8466126d83b55b924a94d2244c53c216b8fb",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/cf6582906d4b2502c5f4c6be6a3d0b4cd5b3ef7f",
+                "reference": "cf6582906d4b2502c5f4c6be6a3d0b4cd5b3ef7f",
                 "shasum": ""
             },
             "require": {
@@ -7673,7 +7729,7 @@
                 "ext-libxml": "*",
                 "ext-xmlwriter": "*",
                 "nikic/php-parser": "^4.8",
-                "php": "^7.3 || ^8.0",
+                "php": ">=7.3",
                 "phpunit/php-file-iterator": "^3.0.3",
                 "phpunit/php-text-template": "^2.0.2",
                 "sebastian/code-unit-reverse-lookup": "^2.0.2",
@@ -7725,7 +7781,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-07T08:07:10+00:00"
+            "time": "2020-09-15T06:14:11+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -9049,7 +9105,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "aerni/snipcart-api": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

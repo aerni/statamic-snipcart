@@ -57,7 +57,7 @@ class ServiceProvider extends AddonServiceProvider
         parent::boot();
 
         Statamic::booted(function () {
-            // $this->setSnipcartApiConfig();
+            $this->setSnipcartApiConfig();
             $this->setSnipcartWebhooksConfig();
         });
 
@@ -81,17 +81,17 @@ class ServiceProvider extends AddonServiceProvider
      *
      * @return void
      */
-    // protected function setSnipcartApiConfig(): void
-    // {
-    //     $snipcartApiConfig = Config::get('snipcart-api');
-    //     $snipcartConfig = Config::get('snipcart');
+    protected function setSnipcartApiConfig(): void
+    {
+        $snipcartApiConfig = config('snipcart-api');
+        $snipcartConfig = config('snipcart');
 
-    //     $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
+        $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
 
-    //     foreach ($mergedConfigs as $key => $value) {
-    //         Config::set("snipcart-api.{$key}", $value);
-    //     }
-    // }
+        foreach ($mergedConfigs as $key => $value) {
+            config()->set("snipcart-api.{$key}", $value);
+        }
+    }
 
     /**
      * Set the config of the Snipcart Webhooks package.
