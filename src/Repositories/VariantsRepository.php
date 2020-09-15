@@ -53,10 +53,7 @@ class VariantsRepository
 
         $options = $this->filterOptions();
 
-        return [
-            'options' => $options,
-            'total' => $this->price($options),
-        ];
+        return $this->variantArray($options);
     }
 
     /**
@@ -68,12 +65,27 @@ class VariantsRepository
     {
         $cartesian = Cartesian::build($this->options()->all());
 
-        return collect($cartesian)->map(function ($item) {
-            return [
-                'options' => $item,
-                'total' => $this->price($item),
-            ];
+        return collect($cartesian)->map(function ($options) {
+            return $this->variantArray($options);
         })->all();
+    }
+
+    /**
+     * Sort and output the variant array.
+     *
+     * @param array $options
+     * @return array
+     */
+    protected function variantArray(array $options): array
+    {
+        $sortedOptions = collect($options)->sortBy(function ($option) {
+            return $option['type']->value();
+        })->values()->all();
+
+        return [
+            'options' => $sortedOptions,
+            'total' => $this->price($sortedOptions),
+        ];
     }
 
     /**
