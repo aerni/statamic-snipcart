@@ -68,9 +68,61 @@ class ProductRepository implements ProductRepositoryContract
     public function data(): Collection
     {
         $localizedData = $this->product->data()->only('price');
+        $variants = $this->mergeRootWithLocalizedVariants();
 
         return $this->root()->data()
-            ->merge($localizedData);
+            ->merge($localizedData)
+            ->merge($variants);
+    }
+
+    /**
+     * Get the root product variants.
+     *
+     * @return Collection
+     */
+    protected function rootVariants(): Collection
+    {
+        return collect($this->product->root()->get('variants'));
+    }
+
+    /**
+     * Get the localized product variants.
+     *
+     * @return Collection
+     */
+    protected function localizedVariants(): Collection
+    {
+        return collect($this->product->get('variants'));
+    }
+
+    /**
+     * Merge the root variants with the localized variants.
+     *
+     * @return array
+     */
+    protected function mergeRootWithLocalizedVariants(): array
+    {
+        $variants = $this->rootVariants()
+            ->replaceRecursive($this->localizedVariantPriceModifiers())
+            ->all();
+
+        return ['variants' => $variants];
+    }
+
+    /**
+     * Get an array with the localized variant price modifiers.
+     *
+     * @return Collection
+     */
+    protected function localizedVariantPriceModifiers(): Collection
+    {
+        return $this->localizedVariants()->map(function ($variant) {
+            $options = collect($variant['options'])->map(function ($option) {
+                return collect($option)->only('price_modifier')->all();
+            })->all();
+
+            return ['options' => $options];
+        });
     }
 
     /**
