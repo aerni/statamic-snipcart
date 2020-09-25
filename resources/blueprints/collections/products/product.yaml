@@ -210,7 +210,7 @@ sections:
           add_row: 'Add Checkbox'
           reorderable: true
           type: grid
-          instructions: 'Let your customers label a product with a predefined option.'
+          instructions: 'Let your customers select an option.'
           listable: false
           display: Checkboxes
           localizable: true
@@ -219,27 +219,29 @@ sections:
         field:
           fields:
             -
-              handle: field_type
-              field:
-                options:
-                  text: Text
-                  textarea: Textarea
-                type: button_group
-                listable: false
-                display: Type
-                instructions: 'Choose the type of field. A textarea is great for longer messages.'
-                validate: required
-                default: text
-            -
               handle: name
               field:
                 input_type: text
                 type: text
-                instructions: 'The name of this text field, eg. Gift Note.'
+                instructions: 'The name of the field, eg. Gift Note.'
                 listable: false
                 display: Name
                 validate: required
                 localizable: true
+                width: 50
+            -
+              handle: size
+              field:
+                options:
+                  small: Small
+                  large: Large
+                type: button_group
+                listable: false
+                display: Size
+                instructions: 'Choose the size of the field.'
+                validate: required
+                default: text
+                width: 50
             -
               handle: placeholder
               field:
@@ -249,6 +251,7 @@ sections:
                 listable: false
                 display: Placeholder
                 localizable: true
+                width: 50
             -
               handle: default
               field:
@@ -258,6 +261,7 @@ sections:
                 listable: false
                 display: Default
                 localizable: true
+                width: 50
             -
               handle: required
               field:
@@ -271,8 +275,8 @@ sections:
           type: grid
           listable: false
           display: 'Text Fields'
-          instructions: 'Let your customers provide a note or message.'
           localizable: true
+          instructions: 'Let your customers provide a short note or longer message.'
       -
         handle: shipping_section
         field:
