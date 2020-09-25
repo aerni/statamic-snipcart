@@ -8,6 +8,7 @@ sections:
         field:
           type: text
           required: true
+          localizable: true
       -
         handle: hide_from_snipcart
         field:
@@ -24,3 +25,4 @@ sections:
         field:
           type: slug
           required: true
+          localizable: true
