@@ -116,19 +116,23 @@ class ProductRepository implements ProductRepositoryContract
             }
 
             if ($key === 'weight' && ! empty($basicField)) {
-                return [$key => Converter::toGrams($basicField, $this->weightUnit())];
+                $roundedWeight = (int) round(Converter::toGrams($basicField, $this->weightUnit()));
+                return [$key => $roundedWeight];
             }
 
             if ($key === 'length' && ! empty($basicField)) {
-                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
+                $roundedLength = (int) round(Converter::toCentimeters($basicField, $this->lengthUnit()));
+                return [$key => $roundedLength];
             }
 
             if ($key === 'width' && ! empty($basicField)) {
-                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
+                $roundedWidth = (int) round(Converter::toCentimeters($basicField, $this->lengthUnit()));
+                return [$key => $roundedWidth];
             }
 
             if ($key === 'height' && ! empty($basicField)) {
-                return [$key => Converter::toCentimeters($basicField, $this->lengthUnit())];
+                $roundedHeight = (int) round(Converter::toCentimeters($basicField, $this->lengthUnit()));
+                return [$key => $roundedHeight];
             }
 
             if ($key === 'price' && ! empty($basicField)) {
