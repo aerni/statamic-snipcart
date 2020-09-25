@@ -297,7 +297,7 @@ class ProductRepository implements ProductRepositoryContract
         $textFields = collect($textFields)->map(function ($textField) {
             return [
                 "custom{key}-name" => $textField['name'],
-                "custom{key}-type" => $textField['size'] === 'large' ? 'textarea' : 'text',
+                "custom{key}-type" => $textField['size'] === 'large' ? 'textarea' : '',
                 "custom{key}-value" => $textField['default'],
                 "custom{key}-placeholder" => $textField['placeholder'],
                 "custom{key}-required" => json_encode($textField['required']),
