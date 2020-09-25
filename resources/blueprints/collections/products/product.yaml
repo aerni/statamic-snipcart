@@ -39,7 +39,6 @@ sections:
           restrict: false
           allow_uploads: true
           listable: hidden
-          localizable: true
           display: Images
           instructions: 'One or more product images. The first image will show in the cart.'
       -
@@ -168,7 +167,6 @@ sections:
           instructions: 'The file GUID of the digital good.'
           listable: false
           display: 'File GUID'
-          localizable: true
       -
         handle: additional_information_section
         field:
@@ -183,7 +181,6 @@ sections:
           listable: false
           display: Metadata
           instructions: 'The data must be provided as valid YAML. It will be converted to JSON on runtime.'
-          localizable: true
   settings:
     display: Settings
     fields:
