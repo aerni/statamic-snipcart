@@ -67,8 +67,20 @@ class ProductRepository implements ProductRepositoryContract
      */
     public function data(): Collection
     {
-        return $this->product->root()->data()
-            ->merge($this->product->data());
+        $localizedData = $this->product->data()->only('price');
+
+        return $this->root()->data()
+            ->merge($localizedData);
+    }
+
+    /**
+     * Get the root entry of the product.
+     *
+     * @return \Statamic\Entries\Entry
+     */
+    protected function root(): \Statamic\Entries\Entry
+    {
+        return $this->product->root();
     }
 
     /**
@@ -319,7 +331,7 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function mapCategories(): string
     {
-        return $this->product->augmentedValue(config('snipcart.taxonomies.categories'))->value()
+        return $this->root()->augmentedValue(config('snipcart.taxonomies.categories'))->value()
             ->filter(function ($category) {
                 return ! $category->get('hide_from_snipcart');
             })->map(function ($category) {
@@ -334,7 +346,7 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function mapTaxes(): string
     {
-        $taxes = $this->product->augmentedValue('taxes')->value();
+        $taxes = $this->root()->augmentedValue('taxes')->value();
 
         return implode('|', $taxes);
     }
@@ -346,7 +358,7 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function imageUrl(): string
     {
-        $imageUrl = $this->product->augmentedValue('images')->value()[0]->url();
+        $imageUrl = $this->root()->augmentedValue('images')->value()[0]->url();
 
         if (config('snipcart.image.manipulation')) {
             return Image::manipulate($imageUrl, config('snipcart.image.preset'));
@@ -362,7 +374,7 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function lengthUnit(): string
     {
-        $lengthUnit = $this->product->value('length_unit');
+        $lengthUnit = $this->root()->value('length_unit');
 
         if (is_null($lengthUnit)) {
             return Dimension::from(Site::default())
@@ -380,7 +392,7 @@ class ProductRepository implements ProductRepositoryContract
      */
     protected function weightUnit(): string
     {
-        $weightUnit = $this->product->value('weight_unit');
+        $weightUnit = $this->root()->value('weight_unit');
 
         if (is_null($weightUnit)) {
             return Dimension::from(Site::default())
