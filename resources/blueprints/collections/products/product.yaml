@@ -121,14 +121,6 @@ sections:
           listable: false
           display: Dimensions
       -
-        handle: weight
-        field:
-          type: dimension
-          options: weight
-          listable: false
-          display: Weight
-          width: 25
-      -
         handle: length
         field:
           type: dimension
@@ -151,6 +143,14 @@ sections:
           options: length
           listable: false
           display: Height
+          width: 25
+      -
+        handle: weight
+        field:
+          type: dimension
+          options: weight
+          listable: false
+          display: Weight
           width: 25
       -
         handle: digital_good_section
@@ -203,7 +203,6 @@ sections:
                 instructions: 'The name of this checkbox, eg. Gift'
                 listable: false
                 display: Name
-                localizable: true
                 validate:
                   - required
           mode: table
@@ -213,7 +212,6 @@ sections:
           instructions: 'Let your customers select an option.'
           listable: false
           display: Checkboxes
-          localizable: true
       -
         handle: text_fields
         field:
@@ -227,7 +225,6 @@ sections:
                 listable: false
                 display: Name
                 validate: required
-                localizable: true
                 width: 50
             -
               handle: size
@@ -250,7 +247,6 @@ sections:
                 instructions: 'An optional placeholder.'
                 listable: false
                 display: Placeholder
-                localizable: true
                 width: 50
             -
               handle: default
@@ -260,7 +256,6 @@ sections:
                 instructions: 'An optional default value.'
                 listable: false
                 display: Default
-                localizable: true
                 width: 50
             -
               handle: required
@@ -275,7 +270,6 @@ sections:
           type: grid
           listable: false
           display: 'Text Fields'
-          localizable: true
           instructions: 'Let your customers provide a short note or longer message.'
       -
         handle: shipping_section
