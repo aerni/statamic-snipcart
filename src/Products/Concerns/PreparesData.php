@@ -38,22 +38,22 @@ trait PreparesData
         return $this->data->get('file_guid');
     }
 
-    protected function quantity(): int
+    protected function quantity(): string
     {
         return $this->data->get('quantity');
     }
 
-    protected function quantityStep(): int
+    protected function quantityStep(): string
     {
         return $this->data->get('quantity_step');
     }
 
-    protected function minQuantity(): int
+    protected function minQuantity(): string
     {
         return $this->data->get('min_quantity');
     }
 
-    protected function maxQuantity(): int
+    protected function maxQuantity(): string
     {
         return $this->data->get('max_quantity');
     }
@@ -232,22 +232,22 @@ trait PreparesData
     //     return $value;
     // }
 
-    protected function length(): int
+    protected function length(): string
     {
         return $this->lengthInCentimeters('length');
     }
 
-    protected function width(): int
+    protected function width(): string
     {
         return $this->lengthInCentimeters('width');
     }
 
-    protected function height(): int
+    protected function height(): string
     {
         return $this->lengthInCentimeters('height');
     }
 
-    protected function weight(): int
+    protected function weight(): string
     {
         $weight = $this->data->get('weight');
         $weightInGrams = Converter::toGrams($weight, $this->weightUnit());
@@ -255,7 +255,7 @@ trait PreparesData
         return round($weightInGrams);
     }
 
-    protected function lengthInCentimeters(string $key): int
+    protected function lengthInCentimeters(string $key): string
     {
         $length = $this->data->get($key);
         $lengthInCentimeters = Converter::toCentimeters($length, $this->lengthUnit());
