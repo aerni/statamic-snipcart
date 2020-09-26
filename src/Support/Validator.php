@@ -23,7 +23,7 @@ class Validator
     protected static $optionalAttributes = [
         'description', 'image', 'categories', 'metadata', 'weight', 'length', 'height', 'width', 'quantity', 'max-quantity', 'min-quantity', 'stackable', 'quantity-step', 'shippable', 'taxable', 'taxes', 'has-taxes-included', 'file-guid',
     ];
-    
+
     /**
      * Validate the attributes.
      *
@@ -47,20 +47,20 @@ class Validator
      */
     public static function onlyValidAttributes(Collection $attributes): Collection
     {
-        return $attributes->map(function ($item, $key) {
-            if (Self::isValidAttribute($key) && Self::isValidItem($item)) {
-                return htmlentities(trim($item), ENT_QUOTES);
+        return $attributes->map(function ($value, $key) {
+            if (Self::isValidAttributeKey($key) && Self::isValidAttributeValue($value)) {
+                return htmlentities(trim($value), ENT_QUOTES);
             }
         })->filter();
     }
 
     /**
-     * Check if the key is a valid Snipcart attribute.
+     * Check if the key is a valid Snipcart attribute key.
      *
      * @param string $key
      * @return bool
      */
-    protected static function isValidAttribute(string $key): bool
+    protected static function isValidAttributeKey(string $key): bool
     {
         if (in_array($key, Self::$requiredAttributes)) {
             return true;
@@ -78,18 +78,18 @@ class Validator
     }
 
     /**
-     * Check if the item is a valid Snipcart attribute value.
+     * Check if the value is a valid Snipcart attribute value.
      *
-     * @param mixed $item
+     * @param mixed $value
      * @return bool
      */
-    protected static function isValidItem($item): bool
+    protected static function isValidAttributeValue($value): bool
     {
-        if (is_array($item)) {
+        if (is_array($value)) {
             return false;
         }
 
-        if (empty($item)) {
+        if (empty($value)) {
             return false;
         }
 
@@ -97,7 +97,7 @@ class Validator
     }
 
     /**
-     * Check if the attributes include Snipcart's mandatory product attributes.
+     * Check if the attributes include all mandatory product attributes.
      *
      * @param Collection $attributes
      * @return bool
