@@ -1,13 +1,13 @@
 <?php
 
-namespace Aerni\Snipcart\Repositories;
+namespace Aerni\Snipcart\Data;
 
 use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Support\Cartesian;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Site;
 
-class VariantsRepository
+class VariantsBuilder
 {
     protected $context;
     protected $params;
@@ -29,28 +29,27 @@ class VariantsRepository
      * Set the params property
      *
      * @param Collection $params
-     * @return Collection
+     * @return self
      */
-    protected function params(Collection $params): Collection
+    public function params(Collection $params): self
     {
-        return $params->map(function ($item, $key) {
+        $this->params = $params->map(function ($item, $key) {
             return [
                 'type' => $key,
                 'name' => $item,
             ];
         })->values();
+
+        return $this;
     }
 
     /**
      * Get product variants based on a parameter filter.
      *
-     * @param Collection $params
      * @return array
      */
-    public function get(Collection $params): array
+    public function get(): array
     {
-        $this->params = $this->params($params);
-
         $options = $this->filterOptions();
 
         return $this->variantArray($options);
@@ -65,9 +64,11 @@ class VariantsRepository
     {
         $cartesian = Cartesian::build($this->options()->all());
 
-        return collect($cartesian)->map(function ($options) {
+        $completeList = collect($cartesian)->map(function ($options) {
             return $this->variantArray($options);
         })->all();
+
+        return $completeList;
     }
 
     /**
@@ -93,7 +94,7 @@ class VariantsRepository
      *
      * @return Collection
      */
-    protected function variants(): Collection
+    public function variants(): Collection
     {
         return collect($this->context->value('variants'));
     }
@@ -142,7 +143,7 @@ class VariantsRepository
     }
 
     /**
-     * Calculates the total price of a product variant option.
+     * Calculates the total price of a product variant.
      *
      * @param array $options
      * @return string
@@ -151,11 +152,11 @@ class VariantsRepository
     {
         $basePrice = $this->context->raw('price');
 
-        $priceModifier = collect($options)->map(function ($option) {
+        $priceModifiers = collect($options)->map(function ($option) {
             return $option['price_modifier']->raw();
         });
 
-        $total = $priceModifier->push($basePrice)->sum();
+        $total = $priceModifiers->push($basePrice)->sum();
 
         return Currency::from(Site::current())->formatCurrency($total);
     }

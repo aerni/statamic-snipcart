@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Aerni\Snipcart\Facades\Variants;
+use Aerni\Snipcart\Facades\VariantsBuilder;
 use Illuminate\Support\Facades\Request;
 use Statamic\Tags\Tags;
 
@@ -37,7 +37,9 @@ class VariantsTags extends Tags
                 ->forget('allow_query');
         }
 
-        return Variants::context($this->context)->get($this->params);
+        return VariantsBuilder::context($this->context)
+            ->params($this->params)
+            ->get();
     }
 
     /**
@@ -47,6 +49,7 @@ class VariantsTags extends Tags
      */
     public function all(): array
     {
-        return Variants::context($this->context)->all();
+        return VariantsBuilder::context($this->context)
+            ->all();
     }
 }

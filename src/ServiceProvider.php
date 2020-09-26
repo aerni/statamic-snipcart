@@ -125,7 +125,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind('Dimension', Repositories\DimensionRepository::class);
         $this->app->bind('Product', Repositories\ProductRepository::class);
         $this->app->bind('ProductApi', Repositories\ProductApiRepository::class);
-        $this->app->bind('Variants', Repositories\VariantsRepository::class);
+        $this->app->bind('VariantsBuilder', Data\VariantsBuilder::class);
     }
 
     /**
