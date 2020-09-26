@@ -25,7 +25,7 @@ trait PreparesData
 
     protected function shippable(): string
     {
-        return json_encode($this->data->get('shippable'));
+        return Str::bool($this->data->get('shippable'));
     }
 
     protected function description(): string
@@ -65,12 +65,12 @@ trait PreparesData
 
     protected function taxable(): string
     {
-        return json_encode($this->data->get('taxable'));
+        return Str::bool($this->data->get('taxable'));
     }
 
     protected function hasTaxesIncluded(): string
     {
-        return json_encode($this->data->get('has_taxes_included'));
+        return Str::bool($this->data->get('has_taxes_included'));
     }
 
     protected function taxes(): string
@@ -163,7 +163,7 @@ trait PreparesData
                 "custom{key}-type" => $textField['size'] === 'large' ? 'textarea' : '',
                 "custom{key}-value" => $textField['default'],
                 "custom{key}-placeholder" => $textField['placeholder'],
-                "custom{key}-required" => json_encode($textField['required']),
+                "custom{key}-required" => Str::bool($textField['required']),
             ];
         });
 
@@ -287,16 +287,5 @@ trait PreparesData
         }
 
         return $weightUnit;
-    }
-
-    /**
-     * Convert a boolean to a string.
-     *
-     * @param bool $value
-     * @return string
-     */
-    protected function boolToString(bool $value): string
-    {
-        return $value ? 'true' : 'false';
     }
 }
