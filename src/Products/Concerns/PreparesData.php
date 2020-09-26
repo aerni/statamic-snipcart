@@ -60,7 +60,7 @@ trait PreparesData
 
     protected function stackable(): string
     {
-        return json_encode($this->data->get('stackable'));
+        return $this->data->get('stackable');
     }
 
     protected function taxable(): string
