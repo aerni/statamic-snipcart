@@ -122,7 +122,7 @@ class SnipcartTags extends Tags
      */
     public function buy(): string
     {
-        $attributes = $this->dataAttributes();
+        $attributes = $this->productAttributes();
         $class = $this->params->get('class');
         $text = $this->params->get('text') ?? __('snipcart::buttons.add_to_cart');
 
@@ -140,7 +140,7 @@ class SnipcartTags extends Tags
      */
     public function attributes(): string
     {
-        return $this->dataAttributes();
+        return $this->productAttributes();
     }
 
     /**

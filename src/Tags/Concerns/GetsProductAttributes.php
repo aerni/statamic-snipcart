@@ -2,69 +2,64 @@
 
 namespace Aerni\Snipcart\Tags\Concerns;
 
-use Aerni\Snipcart\Facades\Product;
-use Aerni\Snipcart\Support\Validator;
-use Illuminate\Support\Collection;
-use Statamic\Facades\Entry;
+use Aerni\Snipcart\Data\Product;
 
 trait GetsProductAttributes
 {
-    use TagGuards;
-
     /**
-     * Get all the Snipcart attributes as an HTML-ready string.
+     * Get all the Snipcart product attributes.
      *
      * @return string
      */
-    protected function dataAttributes(): string
+    protected function productAttributes(): ?string
     {
-        return $this->validAttributes()->map(function ($value, $key) {
-            return "data-item-{$key}='{$value}'";
-        })->implode(' ');
-    }
-
-    /**
-     * Get the merged and valid Snipcart attributes.
-     *
-     * @return Collection
-     */
-    protected function validAttributes(): Collection
-    {
-        $productAttributes = $this->productAttributes();
-        $tagAttributes = $this->tagAttributes();
-        $mergedAttributes = $productAttributes->merge($tagAttributes);
-
-        return Validator::validateAttributes($mergedAttributes);
-    }
-
-    /**
-     * Get the Snipcart attributes from the product entry.
-     *
-     * @return Collection
-     */
-    protected function productAttributes(): Collection
-    {
-        if ($this->isProduct()) {
-            $entry = Entry::find($this->context->get('id'));
-
-            if ($this->isProductVariant()) {
-                return Product::selectedVariantOptions($this->context->get('options'))
-                    ->processAttributes($entry);
-            };
-
-            return Product::processAttributes($entry);
+        if (! $this->isProduct()) {
+            return null;
         }
 
-        return collect();
+        $product = (new Product($this->context->get('id')))
+            ->params($this->params);
+
+        if ($this->isProductVariant()) {
+            $product->selectedVariantOptions($this->context->get('options'));
+        };
+
+        return $product->toHtmlDataString();
     }
 
     /**
-     * Get the Snipcart attributes from the tag.
+     * Check if it's a Snipcart product.
      *
-     * @return Collection
+     * @return bool
      */
-    protected function tagAttributes(): Collection
+    protected function isProduct(): bool
     {
-        return Validator::onlyValidAttributes($this->params);
+        if (! $this->context->has('is_snipcart_product')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if it's a Snipcart product variant.
+     *
+     * @return bool
+     */
+    protected function isProductVariant(): bool
+    {
+        if (! $this->isProduct()) {
+            return false;
+        }
+
+        if (! $this->context->has('options')) {
+            return false;
+        }
+
+        if (! is_array($this->context->get('options'))) {
+            return false;
+        }
+
+        return true;
     }
 }

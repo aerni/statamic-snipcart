@@ -123,7 +123,6 @@ class ServiceProvider extends AddonServiceProvider
         $this->app->bind('Converter', Support\Converter::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
         $this->app->bind('Dimension', Repositories\DimensionRepository::class);
-        $this->app->bind('Product', Repositories\ProductRepository::class);
         $this->app->bind('ProductApi', Repositories\ProductApiRepository::class);
         $this->app->bind('VariantsBuilder', Data\VariantsBuilder::class);
     }

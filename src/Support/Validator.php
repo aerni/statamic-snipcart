@@ -4,7 +4,7 @@ namespace Aerni\Snipcart\Support;
 
 use Aerni\Snipcart\Exceptions\UnsupportedAttributeException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
+use Statamic\Support\Str;
 
 class Validator
 {
@@ -49,7 +49,11 @@ class Validator
     {
         return $attributes->map(function ($value, $key) {
             if (Self::isValidAttributeKey($key) && Self::isValidAttributeValue($value)) {
-                return htmlentities(trim($value), ENT_QUOTES);
+                if (is_bool($value)) {
+                    return Str::bool($value);
+                }
+
+                return $value;
             }
         })->filter();
     }
@@ -70,7 +74,7 @@ class Validator
             return true;
         }
 
-        if (Str::startsWith($key, 'custom')) {
+        if (Str::startsWith($key, 'custom') && is_numeric(Str::between($key, 'custom', '-'))) {
             return true;
         }
 
@@ -89,7 +93,7 @@ class Validator
             return false;
         }
 
-        if (empty($value)) {
+        if (is_null($value)) {
             return false;
         }
 

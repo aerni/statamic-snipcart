@@ -2,12 +2,13 @@
 
 namespace Aerni\Snipcart\Data;
 
+use Aerni\Snipcart\Contracts\VariantsBuilder as VariantsBuilderContract;
 use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Support\Cartesian;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Site;
 
-class VariantsBuilder
+class VariantsBuilder implements VariantsBuilderContract
 {
     protected $context;
     protected $params;
@@ -94,7 +95,7 @@ class VariantsBuilder
      *
      * @return Collection
      */
-    public function variants(): Collection
+    protected function variants(): Collection
     {
         return collect($this->context->value('variants'));
     }
