@@ -42,6 +42,10 @@ trait PreparesProductData
 
     protected function image(): ?string
     {
+        if (! $this->entry()->root()->has('images')) {
+            return null;
+        }
+
         $imageUrl = $this->entry()->root()->augmentedValue('images')->value()[0]->url();
 
         if (config('snipcart.image.manipulation')) {
@@ -113,6 +117,10 @@ trait PreparesProductData
 
     protected function taxes(): ?string
     {
+        if (! $this->data()->has('taxes')) {
+            return null;
+        }
+
         return implode('|', $this->data()->get('taxes'));
     }
 
