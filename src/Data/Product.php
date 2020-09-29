@@ -15,7 +15,7 @@ class Product implements ProductContract
     protected $entry;
     protected $data;
     protected $params;
-    protected $selectedVariantOptions;
+    protected $selectedVariants;
 
     public function __construct(string $id)
     {
@@ -44,13 +44,13 @@ class Product implements ProductContract
         return $this;
     }
 
-    public function selectedVariantOptions(array $options = null)
+    public function selectedVariants(array $options = null)
     {
         if (func_num_args() === 0) {
-            return $this->selectedVariantOptions;
+            return $this->selectedVariants;
         }
 
-        $this->selectedVariantOptions = collect($options);
+        $this->selectedVariants = collect($options);
 
         return $this;
     }

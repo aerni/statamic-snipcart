@@ -8,7 +8,7 @@ interface Product
 {
     public function params(Collection $params = null);
 
-    public function selectedVariantOptions(array $options = null);
+    public function selectedVariants(array $options = null);
 
     public function toHtmlDataString(): string;
 }

@@ -120,8 +120,8 @@ class ProductApiRepository
     {
         return collect($this->context->get('options'))->map(function ($option) {
             return [
-                'name' => $option['type']->value(),
-                'option' => $option['name']->value(),
+                'name' => $option['type'],
+                'option' => $option['name'],
             ];
         })
         ->sortBy('name')

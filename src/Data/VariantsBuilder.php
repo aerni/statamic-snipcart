@@ -63,13 +63,13 @@ class VariantsBuilder implements VariantsBuilderContract
      */
     public function all(): array
     {
-        $cartesian = Cartesian::build($this->options()->all());
+        $localizedCartesian = Cartesian::build($this->localizedVariantOptions()->all());
 
-        $completeList = collect($cartesian)->map(function ($options) {
+        $completeLocalizedList = collect($localizedCartesian)->map(function ($options) {
             return $this->variantArray($options);
         })->all();
 
-        return $completeList;
+        return $completeLocalizedList;
     }
 
     /**
@@ -80,24 +80,30 @@ class VariantsBuilder implements VariantsBuilderContract
      */
     protected function variantArray(array $options): array
     {
-        $sortedOptions = collect($options)->sortBy(function ($option) {
-            return $option['type']->value();
-        })->values()->all();
-
         return [
-            'options' => $sortedOptions,
-            'total' => $this->price($sortedOptions),
+            'options' => $options,
+            'total' => $this->price($options),
         ];
     }
 
-    /**
-     * Returns all product variants.
-     *
-     * @return Collection
-     */
-    protected function variants(): Collection
+    protected function rootVariants(): Collection
     {
-        return collect($this->context->value('variants'));
+        return collect($this->context->get('variants')->augmentable()->root()->get('variants'));
+    }
+
+    protected function localizedVariants(): Collection
+    {
+        return collect($this->context->get('variants')->augmentable()->get('variants'));
+    }
+
+    protected function rootVariantOptions(): Collection
+    {
+        return $this->options($this->rootVariants());
+    }
+
+    protected function localizedVariantOptions(): Collection
+    {
+        return $this->options($this->localizedVariants());
     }
 
     /**
@@ -105,13 +111,21 @@ class VariantsBuilder implements VariantsBuilderContract
      *
      * @return Collection
      */
-    protected function options(): Collection
+    protected function options(Collection $variants): Collection
     {
-        return $this->variants()->map(function ($variant, $key) {
-            return collect($variant['options'])->map(function ($option) use ($key) {
-                return [ 'type' => $this->types()[$key] ] + $option;
+        $options = $variants->map(function ($variant, $variantKey) {
+            return collect($variant['options'])->map(function ($option, $optionKey) use ($variant, $variantKey) {
+                return [
+                    'type' => $variant['type'],
+                    'name' => $option['name'],
+                    'price_modifier' => $option['price_modifier'],
+                    'variant_key' => $variantKey,
+                    'option_key' => $optionKey,
+                ];
             })->all();
         });
+
+        return $options;
     }
 
     /**
@@ -134,16 +148,6 @@ class VariantsBuilder implements VariantsBuilderContract
     }
 
     /**
-     * Returns the variant types.
-     *
-     * @return Collection
-     */
-    protected function types(): Collection
-    {
-        return $this->variants()->pluck('type');
-    }
-
-    /**
      * Calculates the total price of a product variant.
      *
      * @param array $options
@@ -154,7 +158,7 @@ class VariantsBuilder implements VariantsBuilderContract
         $basePrice = $this->context->raw('price');
 
         $priceModifiers = collect($options)->map(function ($option) {
-            return $option['price_modifier']->raw();
+            return $option['price_modifier'];
         });
 
         $total = $priceModifiers->push($basePrice)->sum();

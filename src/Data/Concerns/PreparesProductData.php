@@ -23,7 +23,7 @@ trait PreparesProductData
         return $this->data()->get('sku');
     }
 
-    public function price(): ?string
+    protected function price(): ?string
     {
         $price = $this->data()->get('price');
 
@@ -194,11 +194,11 @@ trait PreparesProductData
     {
         $variants = $this->data()->get('variants');
 
-        return collect($variants)->map(function ($variant) {
+        return collect($variants)->map(function ($variant, $key) {
             return [
                 "custom{key}-name" => $variant['type'],
                 "custom{key}-options" => $this->variantOptions($variant['options']),
-                "custom{key}-value" => $this->variantValue($variant['options']),
+                "custom{key}-value" => $this->variantValue($variant['options'], $key),
             ];
         });
     }
@@ -215,21 +215,20 @@ trait PreparesProductData
         })->implode('|');
     }
 
-    protected function variantValue(array $options)
+    protected function variantValue(array $options, int $variantKey): ?string
     {
-        if (empty($this->selectedVariantOptions())) {
+        if ($this->selectedVariants()->isEmpty()) {
             return null;
         }
 
-        $value = collect($options)->flatMap(function ($option) {
-            return $this->selectedVariantOptions()->filter(function ($selectedOption) use ($option) {
-                return $option['name'] === $selectedOption['name']->value();
-            })->pluck('name');
-        })->first();
+        $value = collect($options)->filter(function ($option, $optionKey) use ($variantKey) {
+            $selectedOptionKey = $this->selectedVariants()->filter(function ($selectedOptions) use ($variantKey, $optionKey) {
+                return $selectedOptions['variant_key'] === $variantKey
+                    && $selectedOptions['option_key'] === $optionKey ;
+            })->pluck('option_key')->first();
 
-        if (! is_null($value)) {
-            $value = $value->value();
-        }
+            return $selectedOptionKey === $optionKey;
+        })->pluck('name')->first();
 
         return $value;
     }
