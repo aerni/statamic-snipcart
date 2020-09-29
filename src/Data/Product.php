@@ -2,12 +2,12 @@
 
 namespace Aerni\Snipcart\Data;
 
-use Statamic\Facades\Site;
-use Statamic\Facades\Entry;
-use Illuminate\Support\Collection;
-use Aerni\Snipcart\Support\Validator;
-use Aerni\Snipcart\Data\Concerns\PreparesProductData;
 use Aerni\Snipcart\Contracts\Product as ProductContract;
+use Aerni\Snipcart\Data\Concerns\PreparesProductData;
+use Aerni\Snipcart\Support\Validator;
+use Illuminate\Support\Collection;
+use Statamic\Facades\Entry;
+use Statamic\Facades\Site;
 
 class Product implements ProductContract
 {
@@ -60,6 +60,7 @@ class Product implements ProductContract
     {
         return $this->toDataCollection()->map(function ($value, $key) {
             $value = htmlspecialchars(trim($value), ENT_QUOTES);
+
             return "data-item-{$key}='{$value}'";
         })->implode(' ');
     }
