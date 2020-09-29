@@ -3,7 +3,7 @@
 namespace Aerni\Snipcart\Tests;
 
 use Aerni\Snipcart\ServiceProvider as SnipcartServiceProvider;
-use Aerni\SnipcartApi\Providers\SnipcartApiServiceProvider;
+use Aerni\SnipcartApi\SnipcartApiServiceProvider;
 use Aerni\SnipcartWebhooks\SnipcartWebhooksServiceProvider;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
@@ -88,6 +88,7 @@ abstract class TestCase extends OrchestraTestCase
         $app['config']->set('statamic.editions.pro', true);
 
         $app['config']->set('snipcart', require(__DIR__.'/../config/snipcart.php'));
+        $app['config']->set('snipcart-api', require(__DIR__.'/../vendor/aerni/snipcart-api/config/snipcart-api.php'));
         $app['config']->set('snipcart-webhooks', require(__DIR__.'/../vendor/aerni/snipcart-webhooks/config/snipcart-webhooks.php'));
     }
 }
