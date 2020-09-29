@@ -2,11 +2,11 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Statamic\Facades\Site;
-use Statamic\Facades\Entry;
 use Aerni\Snipcart\Data\Product;
-use Illuminate\Support\Facades\Cache;
 use Aerni\SnipcartApi\Facades\SnipcartApi;
+use Illuminate\Support\Facades\Cache;
+use Statamic\Facades\Entry;
+use Statamic\Facades\Site;
 
 class ProductApiRepository
 {

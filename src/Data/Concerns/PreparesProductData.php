@@ -2,15 +2,14 @@
 
 namespace Aerni\Snipcart\Data\Concerns;
 
-use Statamic\Support\Str;
-use Statamic\Facades\Site;
-use Statamic\Facades\Image;
-use Illuminate\Support\Collection;
-use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Facades\Converter;
+use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Facades\Dimension;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
-use Statamic\Facades\Entry;
+use Statamic\Facades\Image;
+use Statamic\Facades\Site;
+use Statamic\Support\Str;
 
 trait PreparesProductData
 {
@@ -208,7 +207,7 @@ trait PreparesProductData
 
             return collect($customField)->mapWithKeys(function ($value, $key) use ($id) {
                 return [
-                    Str::replaceFirst('{key}', $id, $key) => $value
+                    Str::replaceFirst('{key}', $id, $key) => $value,
                 ];
             });
         });
