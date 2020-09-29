@@ -10,6 +10,7 @@ use Aerni\Snipcart\Facades\Currency;
 use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Facades\Dimension;
 use Illuminate\Support\Facades\Request;
+use Statamic\Facades\Entry;
 
 trait PreparesProductData
 {
@@ -25,9 +26,51 @@ trait PreparesProductData
 
     protected function price(): ?string
     {
+        if (count($this->currencies()->unique()) === 1) {
+            return $this->simpleCurrencyPrice();
+        };
+
+        return $this->multiCurrencyPrices();
+    }
+
+    protected function simpleCurrencyPrice(): string
+    {
         $price = $this->data()->get('price');
 
         return Currency::from(Site::current())->formatDecimal($price);
+    }
+
+    protected function multiCurrencyPrices(): string
+    {
+        $prices = $this->entries()->map(function ($entry) {
+            $currency = $this->currencies()->get($entry->locale());
+            $price = Currency::from(Site::current())->formatDecimal($entry->get('price'));
+
+            return [
+                'currency' => Str::lower($currency),
+                'price' => $price,
+            ];
+        })
+        ->sortBy('price')
+        ->mapWithKeys(function ($price) {
+            return [$price['currency'] => $price['price']];
+        });
+
+        $localizedCurrency = $this->currencies()->get(Site::current()->handle());
+        $localizedPrice = $this->simpleCurrencyPrice();
+
+        $localizedPrice = [Str::lower($localizedCurrency) => $localizedPrice];
+
+        $prices = $prices->merge($localizedPrice);
+
+        return json_encode($prices);
+    }
+
+    protected function currencies(): Collection
+    {
+        return collect(Currency::all())->map(function ($currency) {
+            return $currency['code'];
+        });
     }
 
     protected function url(): ?string
