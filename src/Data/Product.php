@@ -2,11 +2,12 @@
 
 namespace Aerni\Snipcart\Data;
 
-use Aerni\Snipcart\Contracts\Product as ProductContract;
-use Aerni\Snipcart\Data\Concerns\PreparesProductData;
-use Aerni\Snipcart\Support\Validator;
-use Illuminate\Support\Collection;
+use Statamic\Facades\Site;
 use Statamic\Facades\Entry;
+use Illuminate\Support\Collection;
+use Aerni\Snipcart\Support\Validator;
+use Aerni\Snipcart\Data\Concerns\PreparesProductData;
+use Aerni\Snipcart\Contracts\Product as ProductContract;
 
 class Product implements ProductContract
 {
@@ -110,7 +111,17 @@ class Product implements ProductContract
 
     protected function localizedEntryData(): Collection
     {
-        return $this->entry()->data()->only('price');
+        $locale = Site::current()->handle();
+
+        return $this->entry()->in($locale)->data()
+            ->only('price');
+    }
+
+    protected function entries(): Collection
+    {
+        return Site::all()->map(function ($locale) {
+            return $this->entry()->in($locale->handle());
+        })->filter();
     }
 
     protected function entryVariants(): array
@@ -129,7 +140,9 @@ class Product implements ProductContract
 
     protected function localizedEntryVariants(): Collection
     {
-        return collect($this->entry()->get('variants'));
+        $locale = Site::current()->handle();
+
+        return collect($this->entry()->in($locale)->get('variants'));
     }
 
     protected function localizedEntryVariantPriceModifiers(): Collection
