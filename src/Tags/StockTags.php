@@ -7,22 +7,12 @@ use Statamic\Tags\Tags;
 
 class StockTags extends Tags
 {
-    /**
-     * The handle of the tag.
-     *
-     * @var string
-     */
     protected static $handle = 'stock';
 
-    /**
-     * Returns the stock of a product.
-     *
-     * @return string
-     */
-    public function index(): string
+    public function index(): ?string
     {
-        return ProductApi::context($this->context)
-            ->find($this->context->get('sku'))
+        return ProductApi::find($this->context->get('sku'))
+            ->variant($this->context->get('options'))
             ->stock();
     }
 }

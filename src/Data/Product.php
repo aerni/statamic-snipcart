@@ -122,7 +122,7 @@ class Product implements ProductContract
         return ['variants' => $variants];
     }
 
-    protected function rootEntryVariants(): Collection
+    public function rootEntryVariants(): Collection
     {
         return collect($this->entry()->root()->get('variants'));
     }

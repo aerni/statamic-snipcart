@@ -2,44 +2,20 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\SnipcartApi\Facades\SnipcartApi;
-use Illuminate\Support\Collection;
+use Statamic\Facades\Site;
+use Statamic\Facades\Entry;
+use Aerni\Snipcart\Data\Product;
 use Illuminate\Support\Facades\Cache;
+use Aerni\SnipcartApi\Facades\SnipcartApi;
 
 class ProductApiRepository
 {
-    /**
-     * The context.
-     *
-     * @var \Statamic\Tags\Context
-     */
-    protected $context;
-
-    /**
-     * The product.
-     *
-     * @var Collection
-     */
     protected $product;
-
-    /**
-     * Set the context property.
-     *
-     * @param Collection $context
-     * @return self
-     */
-    public function context(Collection $context): self
-    {
-        $this->context = $context;
-
-        return $this;
-    }
+    protected $entry;
+    protected $variant;
 
     /**
      * Get the product from Snipcart and set the property.
-     *
-     * @param string $sku
-     * @return self
      */
     public function find(string $sku): self
     {
@@ -49,15 +25,41 @@ class ProductApiRepository
                 ->send();
         });
 
+        $this->entry = $this->entry();
+
         return $this;
     }
 
     /**
-     * Get the stock of a single product or product variant.
-     *
-     * @return string
+     * Set the variant.
      */
-    public function stock(): string
+    public function variant($variations): self
+    {
+        $this->variant = $variations;
+
+        return $this;
+    }
+
+    /**
+     * Get the matching product entry.
+     */
+    protected function entry()
+    {
+        $entryId = Entry::query()
+            ->where('collection', config('snipcart.collections.products'))
+            ->where('locale', Site::default()->locale())
+            ->where('sku', $this->product->get('userDefinedId'))
+            ->get()
+            ->first()
+            ->id();
+
+        return new Product($entryId);
+    }
+
+    /**
+     * Get the stock of a single product or product variant.
+     */
+    public function stock(): ?string
     {
         if ($this->inventoryManagementMethod() === 'Single') {
             return $this->singleStock();
@@ -67,13 +69,11 @@ class ProductApiRepository
             return $this->variantStock();
         }
 
-        return '';
+        return null;
     }
 
     /**
      * Get the inventory management method.
-     *
-     * @return string
      */
     public function inventoryManagementMethod(): string
     {
@@ -82,50 +82,49 @@ class ProductApiRepository
 
     /**
      * Get the stock of a single product.
-     *
-     * @return string
      */
-    protected function singleStock(): string
+    protected function singleStock(): ?string
     {
-        return $this->product->get('stock') ?? '';
+        return $this->product->get('stock');
     }
 
     /**
      * Get the stock of a product variant.
-     *
-     * @return string
      */
-    protected function variantStock(): string
+    protected function variantStock(): ?string
     {
         $stock = collect($this->product->get('variants'))->map(function ($variant) {
-            $sorted = collect($variant['variation'])->sortBy('name')->values()->toArray();
+            $variations = collect($variant['variation'])->pluck('option')->sort()->toArray();
 
-            if ($this->prepareVariantOptions() === $sorted) {
+            if ($this->rootEntryVariations() === $variations) {
                 return $variant['stock'];
             }
         })
         ->filter()
         ->first();
 
-        return $stock ?? '';
+        return $stock;
     }
 
     /**
-     * Prepare the variant options from the context
-     * to match the variants array that Snipcart's API returns.
-     *
-     * @return array
+     * Get the root entry variations that match the localized variant.
+     * This makes sure that the stock also works on localized products.
      */
-    protected function prepareVariantOptions(): array
+    protected function rootEntryVariations(): array
     {
-        return collect($this->context->get('options'))->map(function ($option) {
-            return [
-                'name' => $option['type'],
-                'option' => $option['name'],
-            ];
-        })
-        ->sortBy('name')
-        ->values()
-        ->toArray();
+        $variations = $this->entry->rootEntryVariants()->map(function ($variant, $variantKey) {
+            $variationName = collect($variant['options'])->filter(function ($option, $optionKey) use ($variantKey) {
+                $selectedOptionKey = collect($this->variant)->filter(function ($selectedOptions) use ($variantKey, $optionKey) {
+                    return $selectedOptions['variant_key'] === $variantKey
+                        && $selectedOptions['option_key'] === $optionKey ;
+                })->pluck('option_key')->first();
+
+                return $selectedOptionKey === $optionKey;
+            })->pluck('name')->first();
+
+            return $variationName;
+        })->sort()->toArray();
+
+        return $variations;
     }
 }

@@ -11,4 +11,6 @@ interface Product
     public function selectedVariants(array $options = null);
 
     public function toHtmlDataString(): string;
+
+    public function rootEntryVariants(): Collection;
 }
