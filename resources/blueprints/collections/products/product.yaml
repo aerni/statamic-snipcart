@@ -4,6 +4,13 @@ sections:
     display: Product
     fields:
       -
+        handle: basic_information_section
+        field:
+          type: section
+          instructions: 'Provide the basic product information.'
+          listable: false
+          display: 'Basic Information'
+      -
         handle: title
         field:
           type: text
