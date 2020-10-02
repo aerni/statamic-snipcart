@@ -43,7 +43,7 @@ trait PreparesProductData
     {
         $prices = $this->entries()->map(function ($entry) {
             $currency = $this->currencies()->get($entry->locale());
-            $price = Currency::from(Site::current())->formatDecimal($entry->get('price'));
+            $price = Currency::from($entry->site())->formatDecimal($entry->get('price'));
 
             return [
                 'currency' => Str::lower($currency),
