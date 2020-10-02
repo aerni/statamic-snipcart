@@ -2,11 +2,13 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\Snipcart\Data\Product;
-use Aerni\SnipcartApi\Facades\SnipcartApi;
-use Illuminate\Support\Facades\Cache;
-use Statamic\Facades\Entry;
+use Throwable;
 use Statamic\Facades\Site;
+use Statamic\Facades\Entry;
+use Aerni\Snipcart\Data\Product;
+use Illuminate\Support\Facades\Cache;
+use Aerni\SnipcartApi\Facades\SnipcartApi;
+use Illuminate\Support\Collection;
 
 class ProductApiRepository
 {
@@ -17,17 +19,30 @@ class ProductApiRepository
     /**
      * Get the product from Snipcart and set the property.
      */
-    public function find(string $sku): self
+    public function find(string $sku): ?self
     {
         $this->product = Cache::remember($sku, config('snipcart.api_cache_lifetime'), function () use ($sku) {
-            return SnipcartApi::get()
-                ->product($sku)
-                ->send();
+            return $this->response($sku);
         });
+
+        if ($this->product->isEmpty()) {
+            return null;
+        }
 
         $this->entry = $this->entry();
 
         return $this;
+    }
+
+    protected function response(string $sku): Collection
+    {
+        try {
+            return SnipcartApi::get()
+                ->product($sku)
+                ->send();
+        } catch (Throwable $throwable) {
+            return collect();
+        }
     }
 
     /**
