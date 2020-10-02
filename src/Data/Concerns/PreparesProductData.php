@@ -219,7 +219,7 @@ trait PreparesProductData
 
         return collect($checkboxes)->map(function ($checkbox) {
             return [
-                "custom{key}-name" => $checkbox['name'],
+                "custom{key}-name" => $checkbox['label'],
                 "custom{key}-type" => 'checkbox',
             ];
         });
@@ -231,7 +231,7 @@ trait PreparesProductData
 
         return collect($textFields)->map(function ($textField) {
             return [
-                "custom{key}-name" => $textField['name'],
+                "custom{key}-name" => $textField['label'],
                 "custom{key}-type" => $textField['size'] === 'large' ? 'textarea' : '',
                 "custom{key}-value" => $textField['default'],
                 "custom{key}-placeholder" => $textField['placeholder'],

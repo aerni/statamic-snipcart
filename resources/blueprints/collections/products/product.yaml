@@ -195,7 +195,7 @@ sections:
         handle: customer_input_section
         field:
           type: section
-          instructions: 'Let your customers provide additional information in the cart.'
+          instructions: 'Let your customers provide additional product information in the cart.'
           listable: false
           display: 'Customer Input'
       -
@@ -203,20 +203,20 @@ sections:
         field:
           fields:
             -
-              handle: name
+              handle: label
               field:
                 input_type: text
                 type: text
-                instructions: 'The name of this checkbox, eg. Gift'
+                instructions: 'The label of this checkbox, eg. Gift'
                 listable: false
-                display: Name
+                display: Label
                 validate:
                   - required
-          mode: table
+          mode: stacked
           add_row: 'Add Checkbox'
           reorderable: true
           type: grid
-          instructions: 'Let your customers select an option.'
+          instructions: 'Perfect for simple options like making a product a Gift.'
           listable: false
           display: Checkboxes
       -
@@ -224,13 +224,13 @@ sections:
         field:
           fields:
             -
-              handle: name
+              handle: label
               field:
                 input_type: text
                 type: text
-                instructions: 'The name of the field, eg. Gift Note.'
+                instructions: 'The label of this field, eg. Gift Note.'
                 listable: false
-                display: Name
+                display: Label
                 validate: required
                 width: 50
             -
@@ -242,9 +242,9 @@ sections:
                 type: button_group
                 listable: false
                 display: Size
-                instructions: 'Choose the size of the field.'
+                instructions: 'Choose the size of this field.'
                 validate: required
-                default: text
+                default: small
                 width: 50
             -
               handle: placeholder
@@ -277,7 +277,7 @@ sections:
           type: grid
           listable: false
           display: 'Text Fields'
-          instructions: 'Let your customers provide a short note or longer message.'
+          instructions: 'Perfect for short notes or longer messages.'
       -
         handle: shipping_section
         field:
