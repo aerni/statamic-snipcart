@@ -182,6 +182,36 @@ sections:
           display: 'Additional Information'
           instructions: 'Provide additional product information.'
       -
+        handle: readonly_fields
+        field:
+          fields:
+            -
+              handle: label
+              field:
+                display: Label
+                instructions: 'The label of this field.'
+                type: text
+                listable: false
+                validate:
+                  - required
+            -
+              handle: text
+              field:
+                display: Text
+                instructions: 'The text of this field.'
+                type: textarea
+                icon: textarea
+                listable: false
+                validate:
+                  - required
+          mode: stacked
+          add_row: 'Add Readonly Field'
+          reorderable: true
+          type: grid
+          instructions: 'Add additional product information to the overview in the cart.'
+          listable: false
+          display: 'Readonly Fields'
+      -
         handle: metadata
         field:
           type: yaml

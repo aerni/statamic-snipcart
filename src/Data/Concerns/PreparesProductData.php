@@ -195,7 +195,8 @@ trait PreparesProductData
     {
         $customFields = $this->variants()
             ->merge($this->checkboxes())
-            ->merge($this->textFields());
+            ->merge($this->textFields())
+            ->merge($this->readonlyFields());
 
         return $this->addCustomFieldIds($customFields);
     }
@@ -236,6 +237,19 @@ trait PreparesProductData
                 "custom{key}-value" => $textField['default'],
                 "custom{key}-placeholder" => $textField['placeholder'],
                 "custom{key}-required" => Str::bool($textField['required']),
+            ];
+        });
+    }
+
+    protected function readonlyFields(): Collection
+    {
+        $readonlyFields = $this->data()->get('readonly_fields');
+
+        return collect($readonlyFields)->map(function ($readonlyField) {
+            return [
+                "custom{key}-name" => $readonlyField['label'],
+                "custom{key}-type" => 'readonly',
+                "custom{key}-value" => $readonlyField['text'],
             ];
         });
     }
