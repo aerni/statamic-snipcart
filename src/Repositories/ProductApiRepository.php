@@ -41,7 +41,11 @@ class ProductApiRepository
                 ->product($sku)
                 ->send();
         } catch (Throwable $throwable) {
-            return collect();
+            if ($throwable->getCode() === 404) {
+                return collect();
+            }
+
+            throw $throwable;
         }
     }
 
