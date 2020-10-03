@@ -63,7 +63,7 @@ class VariantsBuilder implements VariantsBuilderContract
      */
     public function all(): array
     {
-        $localizedCartesian = Cartesian::build($this->localizedVariantOptions()->all());
+        $localizedCartesian = Cartesian::build($this->variantOptions()->all());
 
         $completeLocalizedList = collect($localizedCartesian)->map(function ($options) {
             return $this->variantArray($options);
@@ -86,6 +86,12 @@ class VariantsBuilder implements VariantsBuilderContract
         ];
     }
 
+    protected function variants(): Collection
+    {
+        return $this->rootVariants()
+            ->replace($this->localizedVariants());
+    }
+
     protected function rootVariants(): Collection
     {
         return collect($this->context->get('variants')->augmentable()->root()->get('variants'));
@@ -96,14 +102,9 @@ class VariantsBuilder implements VariantsBuilderContract
         return collect($this->context->get('variants')->augmentable()->get('variants'));
     }
 
-    protected function rootVariantOptions(): Collection
+    protected function variantOptions(): Collection
     {
-        return $this->options($this->rootVariants());
-    }
-
-    protected function localizedVariantOptions(): Collection
-    {
-        return $this->options($this->localizedVariants());
+        return $this->options($this->variants());
     }
 
     /**
