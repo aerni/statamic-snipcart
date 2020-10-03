@@ -11,7 +11,6 @@ use Statamic\Facades\Site;
 class VariantsBuilder implements VariantsBuilderContract
 {
     protected $context;
-    protected $params;
 
     /**
      * Set the context property.
@@ -27,49 +26,19 @@ class VariantsBuilder implements VariantsBuilderContract
     }
 
     /**
-     * Set the params property
-     *
-     * @param Collection $params
-     * @return self
-     */
-    public function params(Collection $params): self
-    {
-        $this->params = $params->map(function ($item, $key) {
-            return [
-                'type' => $key,
-                'name' => $item,
-            ];
-        })->values();
-
-        return $this;
-    }
-
-    /**
-     * Get product variants based on a parameter filter.
-     *
-     * @return array
-     */
-    public function get(): array
-    {
-        $options = $this->filterOptions();
-
-        return $this->variantArray($options);
-    }
-
-    /**
      * Returns a complete list of all possible product variants.
      *
      * @return array
      */
     public function all(): array
     {
-        $localizedCartesian = Cartesian::build($this->variantOptions()->all());
+        $allPossibleVariants = Cartesian::build($this->variantOptions()->all());
 
-        $completeLocalizedList = collect($localizedCartesian)->map(function ($options) {
+        $variants = collect($allPossibleVariants)->map(function ($options) {
             return $this->variantArray($options);
         })->all();
 
-        return $completeLocalizedList;
+        return $variants;
     }
 
     /**
@@ -127,25 +96,6 @@ class VariantsBuilder implements VariantsBuilderContract
         });
 
         return $options;
-    }
-
-    /**
-     * Filter the variant options based on parameters.
-     *
-     * @return array
-     */
-    protected function filterOptions(): array
-    {
-        return $this->params->flatMap(function ($param) {
-            return $this->options()->flatMap(function ($options) use ($param) {
-                return collect($options)->filter(function ($option) use ($param) {
-                    $sameType = ! strcasecmp($option['type']->value(), $param['type']);
-                    $sameName = ! strcasecmp($option['name']->value(), $param['name']);
-
-                    return $sameType && $sameName;
-                })->all();
-            })->all();
-        })->all();
     }
 
     /**

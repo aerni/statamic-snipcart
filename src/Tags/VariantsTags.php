@@ -21,28 +21,6 @@ class VariantsTags extends Tags
     }
 
     /**
-     * Returns a specific product variant.
-     *
-     * @return array
-     */
-    public function get(): array
-    {
-        if ($this->params->isEmpty()) {
-            return $this->context->value('variants');
-        }
-
-        if ($this->params->bool('allow_query')) {
-            $this->params = $this->params
-                ->merge(Request::all())
-                ->forget('allow_query');
-        }
-
-        return VariantsBuilder::context($this->context)
-            ->params($this->params)
-            ->get();
-    }
-
-    /**
      * Returns a complete list of all possible product variants.
      *
      * @return array
