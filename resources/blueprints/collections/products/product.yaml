@@ -18,7 +18,7 @@ sections:
           localizable: true
           listable: true
           display: Name
-          instructions: 'The name of the product.'
+          instructions: 'The name of this product.'
           validate:
             - required
             - string
@@ -31,7 +31,7 @@ sections:
           localizable: true
           listable: true
           display: Price
-          instructions: 'The price of the product.'
+          instructions: 'The price of this product.'
           validate:
             - required
             - numeric
@@ -298,7 +298,7 @@ sections:
           add_row: 'Add Readonly Field'
           reorderable: true
           type: grid
-          instructions: 'Add additional information to the product in the cart.'
+          instructions: 'Show additional product information in the cart.'
           listable: false
           display: 'Readonly Fields'
       -
@@ -432,7 +432,7 @@ sections:
           required: true
           localizable: true
           generate: true
-          instructions: 'The slug of the product.'
+          instructions: 'The slug of this product.'
           listable: hidden
           display: Slug
           validate:

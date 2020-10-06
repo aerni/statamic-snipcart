@@ -9,12 +9,14 @@ sections:
           type: text
           required: true
           localizable: true
+          instructions: 'The name of this product category.'
+          validate:
+            - required
       -
         handle: hide_from_snipcart
         field:
           type: toggle
           instructions: 'Activate to hide this category from Snipcart.'
-          localizable: false
           listable: hidden
           display: 'Hide from Snipcart'
   sidebar:
@@ -26,3 +28,6 @@ sections:
           type: slug
           required: true
           localizable: true
+          instructions: 'The slug of this product category.'
+          validate:
+            - required
