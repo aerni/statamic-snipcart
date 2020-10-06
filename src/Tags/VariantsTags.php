@@ -3,7 +3,6 @@
 namespace Aerni\Snipcart\Tags;
 
 use Aerni\Snipcart\Facades\VariantsBuilder;
-use Illuminate\Support\Facades\Request;
 use Statamic\Tags\Tags;
 
 class VariantsTags extends Tags
