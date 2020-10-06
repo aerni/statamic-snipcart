@@ -174,50 +174,6 @@ sections:
           instructions: 'The file GUID of the digital good.'
           listable: false
           display: 'File GUID'
-      -
-        handle: additional_information_section
-        field:
-          type: section
-          listable: false
-          display: 'Additional Information'
-          instructions: 'Provide additional product information.'
-      -
-        handle: readonly_fields
-        field:
-          fields:
-            -
-              handle: label
-              field:
-                display: Label
-                instructions: 'The label of this field.'
-                type: text
-                listable: false
-                validate:
-                  - required
-            -
-              handle: text
-              field:
-                display: Text
-                instructions: 'The text of this field.'
-                type: textarea
-                icon: textarea
-                listable: false
-                validate:
-                  - required
-          mode: stacked
-          add_row: 'Add Readonly Field'
-          reorderable: true
-          type: grid
-          instructions: 'Add additional product information to the overview in the cart.'
-          listable: false
-          display: 'Readonly Fields'
-      -
-        handle: metadata
-        field:
-          type: yaml
-          listable: false
-          display: Metadata
-          instructions: 'The data must be provided as valid YAML. It will be converted to JSON on runtime.'
   settings:
     display: Settings
     fields:
@@ -246,7 +202,7 @@ sections:
           add_row: 'Add Checkbox'
           reorderable: true
           type: grid
-          instructions: 'Perfect for simple options like making a product a Gift.'
+          instructions: 'Perfect for simple options like making a product a gift.'
           listable: false
           display: Checkboxes
       -
@@ -309,6 +265,50 @@ sections:
           display: 'Text Fields'
           instructions: 'Perfect for short notes or longer messages.'
       -
+        handle: additional_information_section
+        field:
+          type: section
+          listable: false
+          display: 'Additional Information'
+          instructions: 'Provide additional product information.'
+      -
+        handle: readonly_fields
+        field:
+          fields:
+            -
+              handle: label
+              field:
+                display: Label
+                instructions: 'The label of this field.'
+                type: text
+                listable: false
+                validate:
+                  - required
+            -
+              handle: text
+              field:
+                display: Text
+                instructions: 'The text of this field.'
+                type: textarea
+                icon: textarea
+                listable: false
+                validate:
+                  - required
+          mode: stacked
+          add_row: 'Add Readonly Field'
+          reorderable: true
+          type: grid
+          instructions: 'Add additional information to the product in the cart.'
+          listable: false
+          display: 'Readonly Fields'
+      -
+        handle: metadata
+        field:
+          type: yaml
+          listable: false
+          display: Metadata
+          instructions: 'Send along additional metadata. The data must be provided as valid YAML.'
+      -
         handle: shipping_section
         field:
           type: section
@@ -352,7 +352,7 @@ sections:
         field:
           type: taggable
           listable: false
-          display: Taxes
+          display: 'Taxes to Apply'
           instructions: 'Only apply specific taxes.'
           width: 33
       -
