@@ -17,7 +17,7 @@ trait GetsProductAttributes
 
         return (new Product($this->context->get('id')))
             ->params($this->params)
-            ->selectedVariants($this->context->get('options'))
+            ->selectedVariant($this->context->get('options'))
             ->toHtmlDataString();
     }
 

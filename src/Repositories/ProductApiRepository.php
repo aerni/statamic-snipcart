@@ -131,10 +131,10 @@ class ProductApiRepository
      */
     protected function rootEntryVariations(): array
     {
-        $variations = $this->entry->rootEntryVariants()->map(function ($variant, $variantKey) {
-            $variationName = collect($variant['options'])->filter(function ($option, $optionKey) use ($variantKey) {
-                $selectedOptionKey = collect($this->variant)->filter(function ($selectedOptions) use ($variantKey, $optionKey) {
-                    return $selectedOptions['variant_key'] === $variantKey
+        $variations = $this->entry->rootEntryVariations()->map(function ($variation, $variationKey) {
+            $variationName = collect($variation['options'])->filter(function ($option, $optionKey) use ($variationKey) {
+                $selectedOptionKey = collect($this->variant)->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
+                    return $selectedOptions['variation_key'] === $variationKey
                         && $selectedOptions['option_key'] === $optionKey ;
                 })->pluck('option_key')->first();
 

@@ -193,7 +193,7 @@ trait PreparesProductData
 
     protected function customFields(): Collection
     {
-        $customFields = $this->variants()
+        $customFields = $this->variations()
             ->merge($this->checkboxes())
             ->merge($this->textFields())
             ->merge($this->readonlyFields());
@@ -254,20 +254,20 @@ trait PreparesProductData
         });
     }
 
-    protected function variants(): Collection
+    protected function variations(): Collection
     {
-        $variants = $this->data()->get('variants');
+        $variations = $this->data()->get('variations');
 
-        return collect($variants)->map(function ($variant, $key) {
+        return collect($variations)->map(function ($variation, $key) {
             return [
-                "custom{key}-name" => $variant['type'],
-                "custom{key}-options" => $this->variantOptions($variant['options']),
-                "custom{key}-value" => $this->variantValue($variant['options'], $key),
+                "custom{key}-name" => $variation['name'],
+                "custom{key}-options" => $this->variationOptions($variation['options']),
+                "custom{key}-value" => $this->variationValue($variation['options'], $key),
             ];
         });
     }
 
-    protected function variantOptions(array $options): string
+    protected function variationOptions(array $options): string
     {
         return collect($options)->map(function ($option) {
             $name = $option['name'];
@@ -279,15 +279,15 @@ trait PreparesProductData
         })->implode('|');
     }
 
-    protected function variantValue(array $options, int $variantKey): ?string
+    protected function variationValue(array $options, int $variationKey): ?string
     {
-        if ($this->selectedVariants()->isEmpty()) {
+        if ($this->selectedVariant()->isEmpty()) {
             return null;
         }
 
-        $value = collect($options)->filter(function ($option, $optionKey) use ($variantKey) {
-            $selectedOptionKey = $this->selectedVariants()->filter(function ($selectedOptions) use ($variantKey, $optionKey) {
-                return $selectedOptions['variant_key'] === $variantKey
+        $value = collect($options)->filter(function ($option, $optionKey) use ($variationKey) {
+            $selectedOptionKey = $this->selectedVariant()->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
+                return $selectedOptions['variation_key'] === $variationKey
                     && $selectedOptions['option_key'] === $optionKey ;
             })->pluck('option_key')->first();
 

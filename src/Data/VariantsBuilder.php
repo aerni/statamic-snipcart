@@ -30,7 +30,7 @@ class VariantsBuilder implements VariantsBuilderContract
      *
      * @return array
      */
-    public function all(): array
+    public function build(): array
     {
         $allPossibleVariants = Cartesian::build($this->variantOptions()->all());
 
@@ -55,25 +55,25 @@ class VariantsBuilder implements VariantsBuilderContract
         ];
     }
 
-    protected function variants(): Collection
+    protected function variations(): Collection
     {
-        return $this->rootVariants()
-            ->replace($this->localizedVariants());
+        return $this->rootVariations()
+            ->replace($this->localizedVariations());
     }
 
-    protected function rootVariants(): Collection
+    protected function rootVariations(): Collection
     {
-        return collect($this->context->get('variants')->augmentable()->root()->get('variants'));
+        return collect($this->context->get('variations')->augmentable()->root()->get('variations'));
     }
 
-    protected function localizedVariants(): Collection
+    protected function localizedVariations(): Collection
     {
-        return collect($this->context->get('variants')->augmentable()->get('variants'));
+        return collect($this->context->get('variations')->augmentable()->get('variations'));
     }
 
     protected function variantOptions(): Collection
     {
-        return $this->options($this->variants());
+        return $this->options($this->variations());
     }
 
     /**
@@ -81,15 +81,15 @@ class VariantsBuilder implements VariantsBuilderContract
      *
      * @return Collection
      */
-    protected function options(Collection $variants): Collection
+    protected function options(Collection $variations): Collection
     {
-        $options = $variants->map(function ($variant, $variantKey) {
-            return collect($variant['options'])->map(function ($option, $optionKey) use ($variant, $variantKey) {
+        $options = $variations->map(function ($variation, $variationKey) {
+            return collect($variation['options'])->map(function ($option, $optionKey) use ($variation, $variationKey) {
                 return [
-                    'type' => $variant['type'],
+                    'type' => $variation['name'],
                     'name' => $option['name'],
                     'price_modifier' => $option['price_modifier'],
-                    'variant_key' => $variantKey,
+                    'variation_key' => $variationKey,
                     'option_key' => $optionKey,
                 ];
             })->all();

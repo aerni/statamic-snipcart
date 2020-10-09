@@ -61,21 +61,21 @@ sections:
         handle: variants_section
         field:
           type: section
-          instructions: 'Create product variants for attributes like size and color.'
+          instructions: 'A product variant is a combination of multiple variations.'
           listable: false
           display: Variants
       -
-        handle: variants
+        handle: variations
         field:
           fields:
             -
-              handle: type
+              handle: name
               field:
                 input_type: text
                 type: text
                 listable: false
-                display: Type
-                instructions: 'The type of this variant, eg. Size.'
+                display: Name
+                instructions: 'The name of this variation, eg. Size.'
                 localizable: true
                 validate: required
             -
@@ -108,7 +108,7 @@ sections:
                 type: grid
                 listable: false
                 display: Options
-                instructions: 'Add variant options, eg. Small, Medium, Large.'
+                instructions: 'Add variation options, eg. Small, Medium, Large.'
                 add_row: 'Add Option'
                 localizable: true
                 validate: required
@@ -116,9 +116,9 @@ sections:
           reorderable: true
           type: grid
           listable: false
-          display: Variants
-          instructions: 'Each variant type will create a dropdown in the cart.'
-          add_row: 'Add Variant'
+          display: Variations
+          instructions: 'Add variations for attributes like size or color.'
+          add_row: 'Add Variation'
           localizable: true
       -
         handle: dimensions_section

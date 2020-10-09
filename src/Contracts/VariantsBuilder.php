@@ -8,5 +8,5 @@ interface VariantsBuilder
 {
     public function context(Collection $context): self;
 
-    public function all(): array;
+    public function build(): array;
 }

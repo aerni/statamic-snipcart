@@ -8,9 +8,9 @@ interface Product
 {
     public function params(Collection $params = null);
 
-    public function selectedVariants(array $options = null);
+    public function selectedVariant(array $options = null);
 
     public function toHtmlDataString(): string;
 
-    public function rootEntryVariants(): Collection;
+    public function rootEntryVariations(): Collection;
 }

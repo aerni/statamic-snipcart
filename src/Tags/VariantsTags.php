@@ -14,19 +14,14 @@ class VariantsTags extends Tags
      */
     protected static $handle = 'variants';
 
-    public function index(): array
-    {
-        return $this->context->value('variants');
-    }
-
     /**
      * Returns a complete list of all possible product variants.
      *
      * @return array
      */
-    public function all(): array
+    public function index(): array
     {
         return VariantsBuilder::context($this->context)
-            ->all();
+            ->build();
     }
 }
