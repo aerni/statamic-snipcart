@@ -26,7 +26,6 @@ class ServiceProvider extends AddonServiceProvider
             // 'Aerni\Snipcart\Listeners\UpdateStock',
         ],
         'Statamic\Events\EntryBlueprintFound' => [
-            'Aerni\Snipcart\Listeners\ConvertDimensions',
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
         ],
     ];
