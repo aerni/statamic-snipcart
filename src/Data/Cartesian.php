@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerni\Snipcart\Support;
+namespace Aerni\Snipcart\Data;
 
 class Cartesian
 {
@@ -14,6 +14,7 @@ class Cartesian
         $cartesianSubset = self::build($set);
 
         $result = [];
+
         foreach ($subset as $value) {
             foreach ($cartesianSubset as $p) {
                 array_unshift($p, $value);

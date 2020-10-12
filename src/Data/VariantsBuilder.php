@@ -4,7 +4,7 @@ namespace Aerni\Snipcart\Data;
 
 use Aerni\Snipcart\Contracts\VariantsBuilder as VariantsBuilderContract;
 use Aerni\Snipcart\Facades\Currency;
-use Aerni\Snipcart\Support\Cartesian;
+use Aerni\Snipcart\Data\Cartesian;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Site;
 
