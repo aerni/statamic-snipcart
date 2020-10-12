@@ -30,7 +30,7 @@ trait GetsProductAttributes
     /**
      * Check if it's a Snipcart product.
      *
-     * @return boolean
+     * @return bool
      */
     protected function isProduct(): bool
     {
@@ -44,7 +44,7 @@ trait GetsProductAttributes
     /**
      * Check if it's a product variant.
      *
-     * @return boolean
+     * @return bool
      */
     protected function isVariant(): bool
     {

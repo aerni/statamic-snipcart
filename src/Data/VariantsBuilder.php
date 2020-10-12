@@ -2,10 +2,9 @@
 
 namespace Aerni\Snipcart\Data;
 
-use Statamic\Entries\Entry;
-use Aerni\Snipcart\Data\Cartesian;
-use Illuminate\Support\Collection;
 use Aerni\Snipcart\Contracts\VariantsBuilder as VariantsBuilderContract;
+use Illuminate\Support\Collection;
+use Statamic\Entries\Entry;
 
 class VariantsBuilder implements VariantsBuilderContract
 {
@@ -89,7 +88,7 @@ class VariantsBuilder implements VariantsBuilderContract
      * Calculates the total price of a product variant.
      *
      * @param Collection $variations
-     * @return integer
+     * @return int
      */
     protected function price(Collection $variations): int
     {
@@ -105,7 +104,7 @@ class VariantsBuilder implements VariantsBuilderContract
     /**
      * Checks if it should build the variants.
      *
-     * @return boolean
+     * @return bool
      */
     protected function shouldBuildVariants(): bool
     {

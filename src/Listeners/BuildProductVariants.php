@@ -2,9 +2,9 @@
 
 namespace Aerni\Snipcart\Listeners;
 
-use Statamic\Events\EntrySaving;
 use Aerni\Snipcart\Facades\VariantsBuilder;
 use Aerni\Snipcart\Listeners\Concerns\ListenerGuards;
+use Statamic\Events\EntrySaving;
 
 class BuildProductVariants
 {

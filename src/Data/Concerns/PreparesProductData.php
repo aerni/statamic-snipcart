@@ -324,7 +324,7 @@ trait PreparesProductData
 
             return [
                 'variation_key' => $variationKey,
-                'option_key' => $optionKey
+                'option_key' => $optionKey,
             ];
         });
 
