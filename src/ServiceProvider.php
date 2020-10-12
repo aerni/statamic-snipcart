@@ -33,6 +33,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $modifiers = [
         Modifiers\AddOperator::class,
+        Modifiers\FormatPrice::class,
         Modifiers\StripUnit::class,
     ];
 
