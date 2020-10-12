@@ -34,7 +34,6 @@ class ServiceProvider extends AddonServiceProvider
     protected $modifiers = [
         Modifiers\AddOperator::class,
         Modifiers\StripUnit::class,
-        Modifiers\Total::class,
     ];
 
     protected $routes = [
