@@ -10,7 +10,7 @@ class StripUnit extends Modifier
      * Remove units and operators from a value.
      *
      * @param string $value
-     * @return mixed
+     * @return string
      */
     public function index(string $value): string
     {
