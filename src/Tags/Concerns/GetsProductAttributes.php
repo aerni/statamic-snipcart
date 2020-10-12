@@ -8,6 +8,8 @@ trait GetsProductAttributes
 {
     /**
      * Get the Snipcart product attributes as HTML data-attribute string.
+     *
+     * @return string|null
      */
     protected function productAttributes(): ?string
     {
@@ -15,18 +17,38 @@ trait GetsProductAttributes
             return null;
         }
 
-        return (new Product($this->context->get('id')))
-            ->params($this->params)
-            ->selectedVariant($this->context->get('options'))
-            ->toHtmlDataString();
+        $product = (new Product($this->context->get('id')))
+            ->params($this->params);
+
+        if ($this->isVariant()) {
+            $product->variant($this->context->get('variations'));
+        }
+
+        return $product->toHtmlDataString();
     }
 
     /**
      * Check if it's a Snipcart product.
+     *
+     * @return boolean
      */
     protected function isProduct(): bool
     {
         if (! $this->context->has('is_snipcart_product')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if it's a product variant.
+     *
+     * @return boolean
+     */
+    protected function isVariant(): bool
+    {
+        if (! is_array($this->context->get('variations'))) {
             return false;
         }
 

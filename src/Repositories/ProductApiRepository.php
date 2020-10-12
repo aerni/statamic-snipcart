@@ -113,9 +113,9 @@ class ProductApiRepository
     protected function variantStock(): ?string
     {
         $stock = collect($this->product->get('variants'))->map(function ($variant) {
-            $variations = collect($variant['variation'])->pluck('option')->sort()->toArray();
+            $variationOptions = collect($variant['variation'])->pluck('option')->sort()->toArray();
 
-            if ($this->rootEntryVariations() === $variations) {
+            if ($this->rootEntryVariations() === $variationOptions) {
                 return $variant['stock'];
             }
         })
@@ -123,6 +123,11 @@ class ProductApiRepository
         ->first();
 
         return $stock;
+    }
+
+    protected function variantWithKeys()
+    {
+        return $this->entry->variant($this->variant)->variantWithKeys();
     }
 
     /**
@@ -133,7 +138,7 @@ class ProductApiRepository
     {
         $variations = $this->entry->rootEntryVariations()->map(function ($variation, $variationKey) {
             $variationName = collect($variation['options'])->filter(function ($option, $optionKey) use ($variationKey) {
-                $selectedOptionKey = collect($this->variant)->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
+                $selectedOptionKey = $this->variantWithKeys()->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
                     return $selectedOptions['variation_key'] === $variationKey
                         && $selectedOptions['option_key'] === $optionKey ;
                 })->pluck('option_key')->first();

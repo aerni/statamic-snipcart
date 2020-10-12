@@ -7,16 +7,10 @@ use Statamic\Events\EntrySaving;
 
 trait ListenerGuards
 {
-    /**
-     * Check if you're editing an existing Snipcart product.
-     *
-     * @param EntryBlueprintFound $event
-     * @return bool
-     */
     protected function isEditingExistingProduct(EntryBlueprintFound $event): bool
     {
         $collection = config('snipcart.collections.products');
-        
+
         $isRightNamespace = $event->blueprint->namespace() === "collections.{$collection}";
         $isRightHandle = $event->blueprint->handle() === 'product';
         $isEditing = $event->entry;
@@ -29,13 +23,7 @@ trait ListenerGuards
 
         return true;
     }
-    
-    /**
-     * Check if you're saving a product.
-     *
-     * @param EntrySaving $event
-     * @return bool
-     */
+
     protected function isSavingProduct(EntrySaving $event): bool
     {
         $collection = config('snipcart.collections.products');
@@ -43,7 +31,7 @@ trait ListenerGuards
         if ($event->entry->collection()->handle() !== $collection) {
             return false;
         }
-        
+
         return true;
     }
 }

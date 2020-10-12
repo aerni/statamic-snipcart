@@ -2,12 +2,12 @@
 
 namespace Aerni\Snipcart\Data;
 
-use Aerni\Snipcart\Contracts\Product as ProductContract;
-use Aerni\Snipcart\Data\Concerns\PreparesProductData;
-use Aerni\Snipcart\Support\Validator;
-use Illuminate\Support\Collection;
-use Statamic\Facades\Entry;
 use Statamic\Facades\Site;
+use Statamic\Facades\Entry;
+use Illuminate\Support\Collection;
+use Aerni\Snipcart\Support\Validator;
+use Aerni\Snipcart\Data\Concerns\PreparesProductData;
+use Aerni\Snipcart\Contracts\Product as ProductContract;
 
 class Product implements ProductContract
 {
@@ -16,7 +16,7 @@ class Product implements ProductContract
     protected $entry;
     protected $data;
     protected $params;
-    protected $selectedVariant;
+    protected $variant;
 
     public function __construct(string $id)
     {
@@ -45,13 +45,13 @@ class Product implements ProductContract
         return $this;
     }
 
-    public function selectedVariant(array $options = null)
+    public function variant(array $variations = null)
     {
         if (func_num_args() === 0) {
-            return $this->selectedVariant;
+            return $this->variant ?? collect();
         }
 
-        $this->selectedVariant = collect($options);
+        $this->variant = collect($variations);
 
         return $this;
     }
@@ -102,7 +102,7 @@ class Product implements ProductContract
     {
         return $this->rootEntryData()
             ->merge($this->localizedEntryData())
-            ->merge($this->entryVariations());
+            ->merge(['variations' => $this->entryVariationsWithLocalizedPriceModifiers()]);
     }
 
     protected function rootEntryData(): Collection
@@ -125,13 +125,16 @@ class Product implements ProductContract
         })->filter();
     }
 
-    protected function entryVariations(): array
+    protected function entryVariationsWithLocalizedPriceModifiers(): Collection
     {
-        $variations = $this->rootEntryVariations()
-            ->replaceRecursive($this->localizedEntryVariationPriceModifiers())
-            ->all();
+        return $this->rootEntryVariations()
+            ->replaceRecursive($this->localizedEntryVariationPriceModifiers());
+    }
 
-        return ['variations' => $variations];
+    protected function entryVariations(): Collection
+    {
+        return $this->rootEntryVariations()
+            ->replaceRecursive($this->localizedEntryVariations());
     }
 
     public function rootEntryVariations(): Collection

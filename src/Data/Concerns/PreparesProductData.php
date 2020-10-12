@@ -281,20 +281,54 @@ trait PreparesProductData
 
     protected function variationValue(array $options, int $variationKey): ?string
     {
-        if ($this->selectedVariant()->isEmpty()) {
+        if ($this->variant()->isEmpty()) {
             return null;
         }
 
         $value = collect($options)->filter(function ($option, $optionKey) use ($variationKey) {
-            $selectedOptionKey = $this->selectedVariant()->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
-                return $selectedOptions['variation_key'] === $variationKey
-                    && $selectedOptions['option_key'] === $optionKey ;
-            })->pluck('option_key')->first();
+            $selectedOptionKey = $this->variant()
+                ->replaceRecursive($this->variantKeys())
+                ->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
+                    return $selectedOptions['variation_key'] === $variationKey
+                        && $selectedOptions['option_key'] === $optionKey ;
+                })->pluck('option_key')->first();
 
             return $selectedOptionKey === $optionKey;
         })->pluck('name')->first();
 
         return $value;
+    }
+
+    public function variantWithKeys(): Collection
+    {
+        return $this->variant()
+            ->replaceRecursive($this->variantKeys());
+    }
+
+    protected function variantKeys()
+    {
+        $variations = $this->entryVariations();
+
+        $keys = $variations->map(function ($variation) {
+            $variationKey = $this->variant()->search(function ($item) use ($variation) {
+                return $item['name'] === $variation['name'];
+            });
+
+            $optionKey = collect($variation['options'])->map(function ($option) {
+                return $this->variant()->search(function ($item) use ($option) {
+                    return $item['option'] === $option['name'];
+                });
+            })->filter(function ($item) {
+                return $item !== false;
+            })->keys()->first();
+
+            return [
+                'variation_key' => $variationKey,
+                'option_key' => $optionKey
+            ];
+        });
+
+        return $keys;
     }
 
     protected function formatPriceModifier(?int $price): ?string

@@ -2,11 +2,9 @@
 
 namespace Aerni\Snipcart\Contracts;
 
-use Illuminate\Support\Collection;
+use Statamic\Entries\Entry;
 
 interface VariantsBuilder
 {
-    public function context(Collection $context): self;
-
-    public function build(): array;
+    public function process(Entry $entry): ?array;
 }

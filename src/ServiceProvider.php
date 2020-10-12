@@ -23,10 +23,12 @@ class ServiceProvider extends AddonServiceProvider
     protected $listen = [
         'Aerni\SnipcartWebhooks\Events\OrderCompleted' => [
             'Aerni\Snipcart\Listeners\ClearProductApiCache',
-            // 'Aerni\Snipcart\Listeners\UpdateStock',
         ],
         'Statamic\Events\EntryBlueprintFound' => [
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
+        ],
+        'Statamic\Events\EntrySaving' => [
+            'Aerni\Snipcart\Listeners\BuildProductVariants',
         ],
     ];
 
@@ -49,7 +51,6 @@ class ServiceProvider extends AddonServiceProvider
         Tags\LengthTags::class,
         Tags\SnipcartTags::class,
         Tags\StockTags::class,
-        Tags\VariantsTags::class,
         Tags\WeightTags::class,
     ];
 

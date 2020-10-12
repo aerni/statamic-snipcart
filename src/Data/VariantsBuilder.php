@@ -2,27 +2,30 @@
 
 namespace Aerni\Snipcart\Data;
 
-use Aerni\Snipcart\Contracts\VariantsBuilder as VariantsBuilderContract;
-use Aerni\Snipcart\Facades\Currency;
+use Statamic\Entries\Entry;
 use Aerni\Snipcart\Data\Cartesian;
 use Illuminate\Support\Collection;
-use Statamic\Facades\Site;
+use Aerni\Snipcart\Contracts\VariantsBuilder as VariantsBuilderContract;
 
 class VariantsBuilder implements VariantsBuilderContract
 {
-    protected $context;
+    protected $entry;
 
     /**
-     * Set the context property.
+     * Process the variants build.
      *
-     * @param Collection $context
-     * @return self
+     * @param Entry $entry
+     * @return array|null
      */
-    public function context(Collection $context): self
+    public function process(Entry $entry): ?array
     {
-        $this->context = $context;
+        $this->entry = $entry;
 
-        return $this;
+        if (! $this->shouldBuildVariants()) {
+            return null;
+        }
+
+        return $this->build();
     }
 
     /**
@@ -30,90 +33,90 @@ class VariantsBuilder implements VariantsBuilderContract
      *
      * @return array
      */
-    public function build(): array
+    protected function build(): array
     {
-        $allPossibleVariants = Cartesian::build($this->variantOptions()->all());
+        $cartesian = Cartesian::build($this->variations());
 
-        $variants = collect($allPossibleVariants)->map(function ($options) {
-            return $this->variantArray($options);
+        return collect($cartesian)->map(function ($variations) {
+            return $this->variant(collect($variations));
         })->all();
-
-        return $variants;
     }
 
     /**
      * Sort and output the variant array.
      *
-     * @param array $options
+     * @param Collection $variations
      * @return array
      */
-    protected function variantArray(array $options): array
+    protected function variant(Collection $variations): array
     {
+        $price = $this->price($variations);
+
+        $variations = $variations->map(function ($variation) {
+            return [
+                'name' => $variation['name'],
+                'option' => $variation['option'],
+            ];
+        })->all();
+
         return [
-            'options' => $options,
-            'total' => $this->price($options),
+            'price' => $price,
+            'variations' => $variations,
         ];
     }
 
-    protected function variations(): Collection
-    {
-        return $this->rootVariations()
-            ->replace($this->localizedVariations());
-    }
-
-    protected function rootVariations(): Collection
-    {
-        return collect($this->context->get('variations')->augmentable()->root()->get('variations'));
-    }
-
-    protected function localizedVariations(): Collection
-    {
-        return collect($this->context->get('variations')->augmentable()->get('variations'));
-    }
-
-    protected function variantOptions(): Collection
-    {
-        return $this->options($this->variations());
-    }
-
     /**
-     * Returns all variant options.
+     * Returns the variations to create a cartesian product from.
      *
-     * @return Collection
+     * @return array
      */
-    protected function options(Collection $variations): Collection
+    protected function variations(): array
     {
-        $options = $variations->map(function ($variation, $variationKey) {
-            return collect($variation['options'])->map(function ($option, $optionKey) use ($variation, $variationKey) {
-                return [
-                    'type' => $variation['name'],
-                    'name' => $option['name'],
-                    'price_modifier' => $option['price_modifier'],
-                    'variation_key' => $variationKey,
-                    'option_key' => $optionKey,
-                ];
-            })->all();
-        });
+        $variations = $this->entry->get('variations') ?? $this->entry->root()->get('variations');
 
-        return $options;
+        return collect($variations)->map(function ($variation) {
+            return collect($variation['options'])->map(function ($option) use ($variation) {
+                return [
+                    'name' => $variation['name'],
+                    'option' => $option['name'],
+                    'price_modifier' => $option['price_modifier'],
+                ];
+            });
+        })->all();
     }
 
     /**
      * Calculates the total price of a product variant.
      *
-     * @param array $options
-     * @return string
+     * @param Collection $variations
+     * @return integer
      */
-    protected function price(array $options): string
+    protected function price(Collection $variations): int
     {
-        $basePrice = $this->context->raw('price');
+        $basePrice = $this->entry->get('price') ?? $this->entry->root()->get('price');
 
-        $priceModifiers = collect($options)->map(function ($option) {
-            return $option['price_modifier'];
+        $priceModifiers = $variations->map(function ($variation) {
+            return $variation['price_modifier'];
         });
 
-        $total = $priceModifiers->push($basePrice)->sum();
+        return $priceModifiers->push($basePrice)->sum();
+    }
 
-        return Currency::from(Site::current())->formatCurrency($total);
+    /**
+     * Checks if it should build the variants.
+     *
+     * @return boolean
+     */
+    protected function shouldBuildVariants(): bool
+    {
+        if ($this->entry->get('price')) {
+            return true;
+        }
+
+        if ($this->entry->get('variations')) {
+            return true;
+        }
+
+        return false;
     }
 }

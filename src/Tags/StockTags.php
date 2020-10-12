@@ -18,7 +18,7 @@ class StockTags extends Tags
         }
 
         return $product
-            ->variant($this->context->get('options'))
+            ->variant($this->context->get('variations'))
             ->stock();
     }
 }
