@@ -16,9 +16,9 @@
         }
     ],
     "require": {
-        "php": "^7.4",
-        "aerni/snipcart-api": "dev-master",
-        "aerni/snipcart-webhooks": "^1.0",
+        "php": "^7.4|8.0",
+        "aerni/snipcart-api": "^1.0",
+        "aerni/snipcart-webhooks": "^1.1",
         "jordanbrauer/unit-converter": "^0.8.4",
         "moneyphp/money": "^3.3",
         "statamic/cms": "^3.0.0"
