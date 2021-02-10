@@ -85,8 +85,8 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function setSnipcartApiConfig(): void
     {
-        $snipcartApiConfig = config('snipcart-api');
-        $snipcartConfig = config('snipcart');
+        $snipcartApiConfig = config('snipcart-api', []);
+        $snipcartConfig = config('snipcart', []);
 
         $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartApiConfig);
 
@@ -102,8 +102,8 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function setSnipcartWebhooksConfig(): void
     {
-        $snipcartWebhooksConfig = config('snipcart-webhooks');
-        $snipcartConfig = config('snipcart');
+        $snipcartWebhooksConfig = config('snipcart-webhooks', []);
+        $snipcartConfig = config('snipcart', []);
 
         $mergedConfigs = array_intersect_key($snipcartConfig, $snipcartWebhooksConfig);
 
