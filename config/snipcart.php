@@ -129,7 +129,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Webhook Route
+    | Snipcart Webhook Route
     |--------------------------------------------------------------------------
     |
     | Define the route where the Snipcart webhook requests will be sent to.
