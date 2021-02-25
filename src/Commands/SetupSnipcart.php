@@ -2,14 +2,17 @@
 
 namespace Aerni\Snipcart\Commands;
 
-use Aerni\Snipcart\Blueprints\Blueprint;
-use Illuminate\Console\Command;
-use Statamic\Console\RunsInPlease;
-use Statamic\Facades\Blueprint as StatamicBlueprint;
-use Statamic\Facades\Collection;
-use Statamic\Facades\Site;
-use Statamic\Facades\Taxonomy;
 use Statamic\Support\Str;
+use Statamic\Facades\Site;
+use Statamic\Facades\Entry;
+use Statamic\Facades\Taxonomy;
+use Illuminate\Console\Command;
+use Statamic\Facades\Collection;
+use Statamic\Console\RunsInPlease;
+use Aerni\Snipcart\Facades\Converter;
+use Aerni\Snipcart\Facades\Dimension;
+use Aerni\Snipcart\Blueprints\Blueprint;
+use Statamic\Facades\Blueprint as StatamicBlueprint;
 
 class SetupSnipcart extends Command
 {
@@ -135,8 +138,9 @@ class SetupSnipcart extends Command
      */
     protected function update(): void
     {
-        $this->updateProductsTaxonomies();
+        $this->updateProductsCollection();
         $this->updateProductBlueprint();
+        $this->convertUnits();
     }
 
     /**
@@ -144,7 +148,7 @@ class SetupSnipcart extends Command
      *
      * @return void
      */
-    protected function updateProductsTaxonomies(): void
+    protected function updateProductsCollection(): void
     {
         $productsCollection = Collection::find($this->products);
 
@@ -156,10 +160,13 @@ class SetupSnipcart extends Command
             ->unique()
             ->toArray();
 
-        $productsCollection->taxonomies($taxonomies)
+        $productsCollection
+            ->taxonomies($taxonomies)
+            ->sites($this->sites())
             ->save();
 
-        $this->line("<info>[✓]</info> Updated <comment>{$this->categories}</comment> taxonomies in <comment>content/collections/{$this->products}.yaml</comment>");
+        $this->line("<info>[✓]</info> Updated sites in <comment>content/collections/{$this->products}.yaml</comment>");
+        $this->line("<info>[✓]</info> Updated taxonomies in <comment>content/collections/{$this->products}.yaml</comment>");
     }
 
     /**
@@ -179,6 +186,24 @@ class SetupSnipcart extends Command
         $productBlueprint->setContents($content)->save();
 
         $this->line("<info>[✓]</info> Updated taxonomies in <comment>resources/blueprints/collections/{$this->products}/product.yaml</comment>");
+    }
+
+    /**
+     * Convert the length/weight units in the product's root entry.
+     *
+     * @return void
+     */
+    protected function convertUnits(): void
+    {
+        $lengthUnit = Dimension::from(Site::default())->type('length')->short();
+        $weightUnit = Dimension::from(Site::default())->type('weight')->short();
+
+        Entry::whereCollection($this->products)->each(function ($entry) {
+            Converter::convertEntryDimensions($entry);
+        });
+
+        $this->line("<info>[✓]</info> Converted length to <comment>{$lengthUnit}</comment>");
+        $this->line("<info>[✓]</info> Converted weight to <comment>{$weightUnit}</comment>");
     }
 
     /**
