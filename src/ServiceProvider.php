@@ -12,6 +12,7 @@ class ServiceProvider extends AddonServiceProvider
     protected $commands = [
         Commands\MigrateSnipcart::class,
         Commands\SetupSnipcart::class,
+        Commands\SyncSites::class,
     ];
 
     protected $fieldtypes = [
