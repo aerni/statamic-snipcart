@@ -65,10 +65,10 @@ class ServiceProvider extends AddonServiceProvider
         });
 
         Statamic::afterInstalled(function ($command) {
-            $command->call('snipcart:sync-sites');
             $command->call('vendor:publish', [
                 '--tag' => 'snipcart-config',
             ]);
+            $command->call('snipcart:sync-sites');
         });
     }
 
