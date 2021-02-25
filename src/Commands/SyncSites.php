@@ -71,7 +71,7 @@ class SyncSites extends Command
                     'currency' => 'USD',
                     'length' => 'in',
                     'weight' => 'oz',
-                ]
+                ],
             ];
         });
     }
