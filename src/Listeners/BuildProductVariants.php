@@ -19,7 +19,11 @@ class BuildProductVariants
     public function handle(EntrySaving $event): void
     {
         if ($this->isSavingProduct($event)) {
-            $event->entry->set('variants', VariantsBuilder::process($event->entry));
+            if (empty($event->entry->get('variations'))) {
+                $event->entry->remove('variants');
+            } else {
+                $event->entry->set('variants', VariantsBuilder::process($event->entry));
+            }
         }
     }
 }
