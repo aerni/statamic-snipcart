@@ -7,17 +7,19 @@ return [
     | Sites
     |--------------------------------------------------------------------------
     |
-    | The sites need to be in sync with your Statamic config. Make sure to
-    | add a new key for each site set in `config/statamic/sites.php`.
+    | Set the currency, length and weight units for each Statamic site.
+    | The units set for Statamic's default site act as default Snipcart units.
+    | The units of your other sites will be converted from it.
     |
-    | Snipcart's default currency, length and weight unit will be the ones
-    | defined within the key of Statamic's default site.
+    | Make sure to keep the sites in sync with your Statamic sites.
+    | You can do so by running 'php please snipcart:sync-sites'.
     |
-    | If you add or remove a site or change a value, you need to run
-    | 'php please snipcart:migrate' to update the products collection and entries.
+    | Whenever you update a site, you need to run 'php please snipcart:setup'
+    | to update your products collection and entries.
     |
-    | Accepted length units: cm, m, in, ft
-    | Accepted weight units: g, kg, oz, lb
+    | Currencies: ISO 4217 letter codes supported by Snipcart, eg. USD or EUR
+    | Length units: cm, m, in, ft
+    | Weight units: g, kg, oz, lb
     |
     */
 
@@ -36,10 +38,10 @@ return [
     | Collections & Taxonomies
     |--------------------------------------------------------------------------
     |
-    | Define the handles of the products collection and taxonomies.
+    | Define the handles of the products collection and categories taxonomy.
     |
-    | If you change a value, you need to run 'php please snipcart:setup'
-    | to re-generate the collection, taxonomies, and blueprints.
+    | Whenever you change a handle, you need to run 'php please snipcart:setup'
+    | to setup the new products collection and categories taxonomy.
     |
     */
 
@@ -122,6 +124,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define the cache lifetime of Snipcart API responses in seconds.
+    | The API is used for things like fetching the stock of a product.
     |
     */
 
