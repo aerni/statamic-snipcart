@@ -2,17 +2,17 @@
 
 namespace Aerni\Snipcart\Commands;
 
-use Statamic\Support\Str;
-use Statamic\Facades\Site;
-use Statamic\Facades\Entry;
-use Statamic\Facades\Taxonomy;
-use Illuminate\Console\Command;
-use Statamic\Facades\Collection;
-use Statamic\Console\RunsInPlease;
+use Aerni\Snipcart\Blueprints\Blueprint;
 use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Facades\Dimension;
-use Aerni\Snipcart\Blueprints\Blueprint;
+use Illuminate\Console\Command;
+use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
+use Statamic\Facades\Collection;
+use Statamic\Facades\Entry;
+use Statamic\Facades\Site;
+use Statamic\Facades\Taxonomy;
+use Statamic\Support\Str;
 
 class SetupSnipcart extends Command
 {
