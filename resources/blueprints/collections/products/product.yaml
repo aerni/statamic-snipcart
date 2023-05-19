@@ -432,6 +432,7 @@ tabs:
               validate:
                 - required
                 - 'unique_entry_value:{collection},{id},{site}'
+              from: slug
           -
             handle: slug
             field:
@@ -444,6 +445,7 @@ tabs:
               validate:
                 - required
                 - 'unique_entry_value:{collection},{id},{site}'
+              from: title
           -
             handle: categories
             field:
