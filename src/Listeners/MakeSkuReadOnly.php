@@ -19,7 +19,7 @@ class MakeSkuReadOnly
     {
         if ($this->isEditingExistingProduct($event)) {
             $content = $event->blueprint->contents();
-            $content['sections']['sidebar']['fields'][0]['field']['read_only'] = true;
+            $content['tabs']['sidebar']['sections'][0]['fields'][0]['field']['visibility'] = 'read_only';
             $event->blueprint->setContents($content);
         }
     }
