@@ -448,11 +448,16 @@ tabs:
             handle: categories
             field:
               type: terms
-              taxonomies: categories
+              taxonomies:
+                - categories
               display: Categories
               mode: select
               instructions: 'The categories of this product.'
               listable: hidden
+              instructions_position: above
+              visibility: visible
+              create: true
+              hide_display: false
           -
             handle: is_snipcart_product
             field:
