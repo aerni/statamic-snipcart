@@ -68,7 +68,7 @@ class SetupSnipcart extends Command
         $this->setupTaxonomies();
         $this->update();
 
-        $this->info("Snipcart is configured and ready to go!");
+        $this->info('Snipcart is configured and ready to go!');
     }
 
     /**
@@ -82,12 +82,12 @@ class SetupSnipcart extends Command
             Collection::make($this->products)
                 ->title(Str::studlyToTitle($this->products))
                 ->sites($this->sites())
-                ->template($this->products . '/show')
+                ->template($this->products.'/show')
                 ->layout('layout')
                 ->sortDirection('asc')
                 ->pastDateBehavior('public')
                 ->futureDateBehavior('private')
-                ->routes('/' . Str::slug(Str::studlyToTitle($this->products)) . '/{slug}')
+                ->routes('/'.Str::slug(Str::studlyToTitle($this->products)).'/{slug}')
                 ->taxonomies([$this->categories])
                 ->save();
 
@@ -96,7 +96,7 @@ class SetupSnipcart extends Command
 
         if (! StatamicBlueprint::find("collections/{$this->products}/product") || $this->force) {
             (new Blueprint())
-                ->parse("collections/products/product.yaml")
+                ->parse('collections/products/product.yaml')
                 ->make('product')
                 ->namespace("collections.{$this->products}")
                 ->save();
@@ -122,7 +122,7 @@ class SetupSnipcart extends Command
 
         if (! StatamicBlueprint::find("taxonomies/{$this->categories}/category") || $this->force) {
             (new Blueprint())
-                ->parse("taxonomies/categories/category.yaml")
+                ->parse('taxonomies/categories/category.yaml')
                 ->make('category')
                 ->namespace("taxonomies.{$this->categories}")
                 ->save();
@@ -180,8 +180,8 @@ class SetupSnipcart extends Command
 
         $content = $productBlueprint->contents();
 
-        $content['sections']['sidebar']['fields'][2]['handle'] = $this->categories;
-        $content['sections']['sidebar']['fields'][2]['field']['taxonomies'] = $this->categories;
+        $content['tabs']['sidebar']['sections'][0]['fields'][2]['handle'] = $this->categories;
+        $content['tabs']['sidebar']['sections'][0]['fields'][2]['field']['taxonomies'] = $this->categories;
 
         $productBlueprint->setContents($content)->save();
 
