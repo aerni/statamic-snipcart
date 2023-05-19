@@ -195,6 +195,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
         $moneyParser = new DecimalMoneyParser(new ISOCurrencies());
 
-        return $moneyParser->parse($value, $this->code())->getAmount();
+        return $moneyParser->parse($value, new Currency($this->code()))->getAmount();
     }
 }
