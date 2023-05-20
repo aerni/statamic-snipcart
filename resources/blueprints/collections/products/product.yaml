@@ -4,14 +4,9 @@ tabs:
     display: Product
     sections:
       -
+        display: 'Basic Information'
+        instructions: 'Provide the basic product information.'
         fields:
-          -
-            handle: basic_information_section
-            field:
-              type: section
-              instructions: 'Provide the basic product information.'
-              listable: false
-              display: 'Basic Information'
           -
             handle: title
             field:
@@ -59,13 +54,10 @@ tabs:
               instructions: 'A short product description. This will show in the cart.'
               display: Description
               character_limit: '150'
-          -
-            handle: variants_section
-            field:
-              type: section
-              instructions: 'A product variant is a combination of multiple variations.'
-              listable: false
-              display: Variants
+      -
+        display: Variants
+        instructions: 'A product variant is a combination of multiple variations.'
+        fields:
           -
             handle: variations
             field:
@@ -122,13 +114,10 @@ tabs:
               instructions: 'Add variations for attributes like size or color.'
               add_row: 'Add Variation'
               localizable: true
-          -
-            handle: dimensions_section
-            field:
-              type: section
-              instructions: 'The weight is mandatory when using any <a href="https://docs.snipcart.com/v3/setup/shipping#integrated-shipping-providers">integrated shipping provider.</a>'
-              listable: false
-              display: Dimensions
+      -
+        display: Dimensions
+        instructions: 'The weight is mandatory when using any <a href="https://docs.snipcart.com/v3/setup/shipping#integrated-shipping-providers">integrated shipping provider.</a>'
+        fields:
           -
             handle: length
             field:
@@ -136,14 +125,6 @@ tabs:
               options: length
               listable: false
               display: Length
-              width: 25
-          -
-            handle: width
-            field:
-              type: dimension
-              options: length
-              listable: false
-              display: Width
               width: 25
           -
             handle: height
@@ -162,12 +143,17 @@ tabs:
               display: Weight
               width: 25
           -
-            handle: digital_good_section
+            handle: width
             field:
-              type: section
+              type: dimension
+              options: length
               listable: false
-              display: 'Digital Good'
-              instructions: 'Sell a digital good. Make sure to <a href="https://app.snipcart.com/dashboard/digital">upload the file</a> in your dashboard.'
+              display: Width
+              width: 25
+      -
+        display: 'Digital Good'
+        instructions: 'Sell a digital good. Make sure to <a href="https://app.snipcart.com/dashboard/digital">upload the file</a> in your dashboard.'
+        fields:
           -
             handle: file_guid
             field:
@@ -180,14 +166,9 @@ tabs:
     display: Settings
     sections:
       -
+        display: 'Customer Input'
+        instructions: 'Let your customers provide additional product information in the cart.'
         fields:
-          -
-            handle: customer_input_section
-            field:
-              type: section
-              instructions: 'Let your customers provide additional product information in the cart.'
-              listable: false
-              display: 'Customer Input'
           -
             handle: checkboxes
             field:
@@ -268,13 +249,10 @@ tabs:
               listable: false
               display: 'Text Fields'
               instructions: 'Perfect for short notes or longer messages.'
-          -
-            handle: additional_information_section
-            field:
-              type: section
-              listable: false
-              display: 'Additional Information'
-              instructions: 'Provide additional product information.'
+      -
+        display: 'Additional Information'
+        instructions: 'Provide additional product information.'
+        fields:
           -
             handle: readonly_fields
             field:
@@ -312,13 +290,10 @@ tabs:
               listable: false
               display: Metadata
               instructions: 'Send along additional metadata. The data must be provided as valid YAML.'
-          -
-            handle: shipping_section
-            field:
-              type: section
-              instructions: 'Customize the shipping options for this product.'
-              listable: false
-              display: Shipping
+      -
+        display: Shipping
+        instructions: 'Customize the shipping options for this product.'
+        fields:
           -
             handle: shippable
             field:
@@ -327,13 +302,10 @@ tabs:
               listable: false
               display: Shippable
               default: true
-          -
-            handle: taxes_section
-            field:
-              type: section
-              listable: false
-              display: Taxes
-              instructions: 'Customize the tax options for this product.'
+      -
+        display: Taxes
+        instructions: 'Customize the tax options for this product.'
+        fields:
           -
             handle: taxable
             field:
@@ -359,13 +331,10 @@ tabs:
               display: 'Taxes to Apply'
               instructions: 'Only apply specific taxes.'
               width: 33
-          -
-            handle: quantity_section
-            field:
-              type: section
-              instructions: 'Customize how the <a href="https://docs.snipcart.com/v3/setup/products#product-quantity">product quantity</a> can be updated.'
-              listable: false
-              display: Quantity
+      -
+        display: Quantity
+        instructions: 'Customize how the <a href="https://docs.snipcart.com/v3/setup/products#product-quantity">product quantity</a> can be updated.'
+        fields:
           -
             handle: stackable
             field:
