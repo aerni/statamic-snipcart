@@ -40,11 +40,15 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $routes = [
-        'web' => __DIR__ . '/../routes/web.php',
+        'web' => __DIR__.'/../routes/web.php',
     ];
 
-    protected $scripts = [
-        __DIR__.'/../resources/dist/js/cp.js',
+    protected $vite = [
+        'input' => [
+            'resources/js/cp.js',
+        ],
+        'publicDirectory' => 'resources/dist',
+        'hotFile' => __DIR__.'/../resources/dist/hot',
     ];
 
     protected $tags = [

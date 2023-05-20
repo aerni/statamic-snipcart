@@ -1,3 +1,5 @@
+.antlers.json
+.composer.lock
 .DS_Store
 .idea
 .env
@@ -7,7 +9,6 @@
 .php-cs-fixer.cache
 coverage
 node_modules
-package-lock.json
 tests/__fixtures__/content/*.yaml
 tests/__fixtures__/users/*.yaml
 vendor
