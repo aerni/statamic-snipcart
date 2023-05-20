@@ -118,6 +118,10 @@ trait PreparesProductData
 
     protected function metadata(): ?string
     {
+        if (! $this->data()->has('metadata')) {
+            return null;
+        }
+
         return json_encode($this->data()->get('metadata'));
     }
 
