@@ -35,3 +35,5 @@ jobs:
 
       - name: Run tests
         run: vendor/bin/phpunit
+        env:
+          SNIPCART_TEST_KEY: ${{ secrets.SNIPCART_TEST_KEY }}
