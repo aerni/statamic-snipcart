@@ -27,7 +27,7 @@ trait PreparesProductData
     {
         if (count($this->currencies()->unique()) === 1) {
             return $this->simpleCurrencyPrice();
-        };
+        }
 
         return $this->multiCurrencyPrices();
     }
@@ -226,8 +226,8 @@ trait PreparesProductData
 
         return collect($checkboxes)->map(function ($checkbox) {
             return [
-                "custom{key}-name" => $checkbox['label'],
-                "custom{key}-type" => 'checkbox',
+                'custom{key}-name' => $checkbox['label'],
+                'custom{key}-type' => 'checkbox',
             ];
         });
     }
@@ -238,11 +238,11 @@ trait PreparesProductData
 
         return collect($textFields)->map(function ($textField) {
             return [
-                "custom{key}-name" => $textField['label'],
-                "custom{key}-type" => $textField['size'] === 'large' ? 'textarea' : '',
-                "custom{key}-value" => $textField['default'],
-                "custom{key}-placeholder" => $textField['placeholder'],
-                "custom{key}-required" => Str::bool($textField['required']),
+                'custom{key}-name' => $textField['label'],
+                'custom{key}-type' => $textField['size'] === 'large' ? 'textarea' : '',
+                'custom{key}-value' => $textField['default'],
+                'custom{key}-placeholder' => $textField['placeholder'],
+                'custom{key}-required' => Str::bool($textField['required']),
             ];
         });
     }
@@ -253,9 +253,9 @@ trait PreparesProductData
 
         return collect($readonlyFields)->map(function ($readonlyField) {
             return [
-                "custom{key}-name" => $readonlyField['label'],
-                "custom{key}-type" => 'readonly',
-                "custom{key}-value" => $readonlyField['text'],
+                'custom{key}-name' => $readonlyField['label'],
+                'custom{key}-type' => 'readonly',
+                'custom{key}-value' => $readonlyField['text'],
             ];
         });
     }
@@ -266,9 +266,9 @@ trait PreparesProductData
 
         return collect($variations)->map(function ($variation, $key) {
             return [
-                "custom{key}-name" => $variation['name'],
-                "custom{key}-options" => $this->variationOptions($variation['options']),
-                "custom{key}-value" => $this->variationValue($variation['options'], $key),
+                'custom{key}-name' => $variation['name'],
+                'custom{key}-options' => $this->variationOptions($variation['options']),
+                'custom{key}-value' => $this->variationValue($variation['options'], $key),
             ];
         });
     }
@@ -296,7 +296,7 @@ trait PreparesProductData
                 ->replaceRecursive($this->variantKeys())
                 ->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
                     return $selectedOptions['variation_key'] === $variationKey
-                        && $selectedOptions['option_key'] === $optionKey ;
+                        && $selectedOptions['option_key'] === $optionKey;
                 })->pluck('option_key')->first();
 
             return $selectedOptionKey === $optionKey;
