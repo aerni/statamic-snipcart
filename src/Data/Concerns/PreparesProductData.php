@@ -88,7 +88,7 @@ trait PreparesProductData
             return null;
         }
 
-        $imageUrl = $this->entry()->root()->augmentedValue('images')->value()[0]->url();
+        $imageUrl = $this->entry()->root()->images[0]->url();
 
         if (config('snipcart.image.manipulation')) {
             return Image::manipulate($imageUrl, config('snipcart.image.preset'));
@@ -101,12 +101,14 @@ trait PreparesProductData
     {
         $categoryHandle = config('snipcart.taxonomies.categories');
 
-        return $this->entry()->root()->augmentedValue($categoryHandle)->value()
-            ->filter(function ($category) {
-                return ! $category->get('hide_from_snipcart');
-            })->map(function ($category) {
-                return $category->title();
-            })->implode('|');
+        if (! $this->entry()->root()->has($categoryHandle)) {
+            return null;
+        }
+
+        return $this->entry()->root()->$categoryHandle
+            ->filter(fn ($category) => ! $category->get('hide_from_snipcart'))
+            ->map(fn ($category) => $category->title())
+            ->implode('|');
     }
 
     protected function fileGuid(): ?string
