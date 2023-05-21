@@ -59,14 +59,12 @@ class ServiceProvider extends AddonServiceProvider
         'hotFile' => __DIR__.'/../resources/dist/hot',
     ];
 
-    public function boot(): void
+    public function bootAddon(): void
     {
-        parent::boot();
-
-        Statamic::booted(function () {
-            $this->setSnipcartApiConfig();
-            $this->setSnipcartWebhooksConfig();
-        });
+        $this->registerSnipcartApiConfig();
+        $this->registerSnipcartWebhooksConfig();
+        $this->registerRepositories();
+        $this->registerTags();
 
         Statamic::afterInstalled(function ($command) {
             $command->call('vendor:publish', [
@@ -76,22 +74,10 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
-    public function register(): void
-    {
-        parent::register();
-
-        Statamic::booted(function () {
-            $this->registerRepositories();
-            $this->registerTags();
-        });
-    }
-
     /**
-     * Set the config of the Snipcart API package.
-     *
-     * @return void
+     * Register the config of the Snipcart API package.
      */
-    protected function setSnipcartApiConfig(): void
+    protected function registerSnipcartApiConfig(): void
     {
         $snipcartApiConfig = config('snipcart-api', []);
         $snipcartConfig = config('snipcart', []);
@@ -104,11 +90,9 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
-     * Set the config of the Snipcart Webhooks package.
-     *
-     * @return void
+     * Register the config of the Snipcart Webhooks package.
      */
-    protected function setSnipcartWebhooksConfig(): void
+    protected function registerSnipcartWebhooksConfig(): void
     {
         $snipcartWebhooksConfig = config('snipcart-webhooks', []);
         $snipcartConfig = config('snipcart', []);
@@ -122,8 +106,6 @@ class ServiceProvider extends AddonServiceProvider
 
     /**
      * Bind the repositories.
-     *
-     * @return void
      */
     protected function registerRepositories(): void
     {
@@ -138,8 +120,6 @@ class ServiceProvider extends AddonServiceProvider
 
     /**
      * Bind the tags.
-     *
-     * @return void
      */
     protected function registerTags(): void
     {
