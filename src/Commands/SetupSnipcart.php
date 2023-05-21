@@ -213,8 +213,9 @@ class SetupSnipcart extends Command
      */
     protected function sites(): array
     {
-        return Site::all()->map(function ($item) {
-            return $item->handle();
-        })->flatten()->toArray();
+        return Site::all()
+            ->map(fn ($site) => $site->handle())
+            ->flatten()
+            ->toArray();
     }
 }
