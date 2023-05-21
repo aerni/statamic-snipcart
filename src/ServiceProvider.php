@@ -43,20 +43,20 @@ class ServiceProvider extends AddonServiceProvider
         'web' => __DIR__.'/../routes/web.php',
     ];
 
-    protected $vite = [
-        'input' => [
-            'resources/js/cp.js',
-        ],
-        'publicDirectory' => 'resources/dist',
-        'hotFile' => __DIR__.'/../resources/dist/hot',
-    ];
-
     protected $tags = [
         Tags\CurrencyTags::class,
         Tags\LengthTags::class,
         Tags\SnipcartTags::class,
         Tags\StockTags::class,
         Tags\WeightTags::class,
+    ];
+
+    protected $vite = [
+        'input' => [
+            'resources/js/cp.js',
+        ],
+        'publicDirectory' => 'resources/dist',
+        'hotFile' => __DIR__.'/../resources/dist/hot',
     ];
 
     public function boot(): void
