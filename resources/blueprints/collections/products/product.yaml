@@ -122,15 +122,23 @@ tabs:
             handle: length
             field:
               type: dimension
-              options: length
+              dimension: length
               listable: false
               display: Length
+              width: 25
+          -
+            handle: width
+            field:
+              type: dimension
+              dimension: length
+              listable: false
+              display: Width
               width: 25
           -
             handle: height
             field:
               type: dimension
-              options: length
+              dimension: length
               listable: false
               display: Height
               width: 25
@@ -138,17 +146,9 @@ tabs:
             handle: weight
             field:
               type: dimension
-              options: weight
+              dimension: weight
               listable: false
               display: Weight
-              width: 25
-          -
-            handle: width
-            field:
-              type: dimension
-              options: length
-              listable: false
-              display: Width
               width: 25
       -
         display: 'Digital Good'

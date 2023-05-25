@@ -14,7 +14,7 @@ class DimensionFieldtype extends Fieldtype
     protected function configFieldItems(): array
     {
         return [
-            'options' => [
+            'dimension' => [
                 'display' => __('snipcart::fieldtypes.dimension.display'),
                 'instructions' => __('snipcart::fieldtypes.dimension.instructions'),
                 'type' => 'select',
