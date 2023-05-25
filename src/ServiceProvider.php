@@ -28,7 +28,6 @@ class ServiceProvider extends AddonServiceProvider
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
         ],
         'Statamic\Events\EntrySaving' => [
-            'Aerni\Snipcart\Listeners\AddDefaultUnits',
             'Aerni\Snipcart\Listeners\BuildProductVariants',
         ],
     ];
