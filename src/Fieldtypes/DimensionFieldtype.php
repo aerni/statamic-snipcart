@@ -14,16 +14,21 @@ class DimensionFieldtype extends Fieldtype
     protected function configFieldItems(): array
     {
         return [
-            'dimension' => [
-                'display' => __('snipcart::fieldtypes.dimension.display'),
-                'instructions' => __('snipcart::fieldtypes.dimension.instructions'),
-                'type' => 'select',
-                'options' => [
-                    'length' => __('snipcart::fieldtypes.dimension.options.length'),
-                    'weight' => __('snipcart::fieldtypes.dimension.options.weight'),
+            [
+                'display' => __('Settings'),
+                'fields' => [
+                    'dimension' => [
+                        'display' => __('snipcart::fieldtypes.dimension.display'),
+                        'instructions' => __('snipcart::fieldtypes.dimension.instructions'),
+                        'type' => 'select',
+                        'options' => [
+                            'length' => __('snipcart::fieldtypes.dimension.options.length'),
+                            'weight' => __('snipcart::fieldtypes.dimension.options.weight'),
+                        ],
+                        'default' => 'length',
+                        'width' => 50,
+                    ],
                 ],
-                'default' => 'length',
-                'width' => 50,
             ],
         ];
     }
