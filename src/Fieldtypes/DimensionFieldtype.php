@@ -41,7 +41,7 @@ class DimensionFieldtype extends Fieldtype
     public function preload(): array
     {
         return Dimension::from(Site::default())
-            ->type($this->config('options'))
+            ->type($this->config('dimension'))
             ->all();
     }
 
@@ -54,7 +54,7 @@ class DimensionFieldtype extends Fieldtype
     public function preProcess($data)
     {
         return Dimension::from(Site::default())
-            ->type($this->config('options'))
+            ->type($this->config('dimension'))
             ->parse($data);
     }
 
@@ -67,7 +67,7 @@ class DimensionFieldtype extends Fieldtype
     public function process($data)
     {
         return Dimension::from(Site::default())
-            ->type($this->config('options'))
+            ->type($this->config('dimension'))
             ->parse($data);
     }
 
@@ -79,7 +79,7 @@ class DimensionFieldtype extends Fieldtype
      */
     public function augment($data)
     {
-        return $this->convertUnit($this->config('options'), $data);
+        return $this->convertUnit($this->config('dimension'), $data);
     }
 
     /**
