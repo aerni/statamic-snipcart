@@ -122,7 +122,7 @@ class SetupSnipcart extends Command
     {
         $this->updateProductsCollection();
         $this->updateProductBlueprint();
-        $this->convertUnits();
+        // $this->convertUnits();
     }
 
     /**
@@ -171,6 +171,8 @@ class SetupSnipcart extends Command
      */
     protected function convertUnits(): void
     {
+        // TODO: Should we still use this? Can we even make it work again? We don't save the root entry's unit to file anymore. So how would we know what unit to convert from?
+        // We could move the unit converter into a different command that takes in the unit you want to convert from.
         $lengthUnit = Dimension::from(Site::default())->type('length')->short();
         $weightUnit = Dimension::from(Site::default())->type('weight')->short();
 
