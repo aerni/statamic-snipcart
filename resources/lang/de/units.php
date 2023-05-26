@@ -12,7 +12,7 @@ return [
     'foot' => 'Fuß',
     'feet' => 'Fuß',
 
-    /** Weight Units */
+    // Weight Units
     'gram' => 'Gramm',
     'grams' => 'Gramm',
     'kilogram' => 'Kilogramm',

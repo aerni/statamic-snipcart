@@ -38,7 +38,6 @@ class WeightTags extends Tags
      */
     public function plural(): string
     {
-        // TODO: Use the pluralizer?
         return Dimension::from(Site::current())
             ->type('weight')
             ->plural();
@@ -52,6 +51,6 @@ class WeightTags extends Tags
     {
         return Dimension::from(Site::current())
             ->type('weight')
-            ->name($this->context->value('weight'));
+            ->name($this->context->raw('weight'));
     }
 }

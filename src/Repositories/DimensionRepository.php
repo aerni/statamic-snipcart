@@ -2,13 +2,19 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\Snipcart\Contracts\DimensionRepository as Contract;
+use Locale;
+use Statamic\Sites\Site;
+use Illuminate\Support\Str;
+use Illuminate\Support\Pluralizer;
+use Aerni\Snipcart\Models\Dimension;
+use Statamic\Facades\Site as SiteApi;
+use Illuminate\Support\Facades\Config;
 use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
+use Aerni\Snipcart\Contracts\DimensionRepository as Contract;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionTypeException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionUnitException;
-use Aerni\Snipcart\Models\Dimension;
-use Illuminate\Support\Facades\Config;
-use Statamic\Sites\Site;
+use Doctrine\Inflector\Language;
+use ReflectionClass;
 
 class DimensionRepository implements Contract
 {
@@ -96,11 +102,16 @@ class DimensionRepository implements Contract
 
     /**
      * Get the unit's plural name.
-     * TODO: Can we just use the pluralizer?
      */
     public function plural(): string
     {
-        return $this->get('plural');
+        if (! $this->canPluralizeLanguage()) {
+            return $this->get('plural');
+        }
+
+        Pluralizer::useLanguage(Str::of($this->displayLanguage())->slug('-')->lower());
+
+        return Str::plural($this->get('singular'));
     }
 
     /**
@@ -119,5 +130,23 @@ class DimensionRepository implements Contract
     public function parse(?string $value): ?string
     {
         return $value;
+    }
+
+    /**
+     * Determine if the language is supported by Laravel's pluralizer.
+     */
+    protected function canPluralizeLanguage(): bool
+    {
+        $language = Str::of($this->displayLanguage())->slug('_')->upper();
+
+        return (new ReflectionClass(Language::class))->hasConstant($language);
+    }
+
+    /**
+     * Get the display language of the current site.
+     */
+    protected function displayLanguage(): string
+    {
+        return Locale::getDisplayLanguage(SiteApi::current()->shortLocale());
     }
 }

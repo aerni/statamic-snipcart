@@ -51,7 +51,7 @@ class LengthTags extends Tags
     {
         return Dimension::from(Site::current())
             ->type('length')
-            ->name($this->context->value('length'));
+            ->name($this->context->raw('length'));
     }
 
     /**
@@ -62,7 +62,7 @@ class LengthTags extends Tags
     {
         return Dimension::from(Site::current())
             ->type('length')
-            ->name($this->context->value('width'));
+            ->name($this->context->raw('width'));
     }
 
     /**
@@ -73,6 +73,6 @@ class LengthTags extends Tags
     {
         return Dimension::from(Site::current())
             ->type('length')
-            ->name($this->context->value('height'));
+            ->name($this->context->raw('height'));
     }
 }
