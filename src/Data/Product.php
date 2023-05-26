@@ -114,17 +114,17 @@ class Product implements Contract
 
     protected function localizedEntryData(): Collection
     {
-        $locale = Site::current()->handle();
-
-        return $this->entry()->in($locale)->data()
+        return $this->entry()
+            ->in(Site::current()->handle())
+            ->data()
             ->only('price');
     }
 
     protected function entries(): Collection
     {
-        return Site::all()->map(function ($locale) {
-            return $this->entry()->in($locale->handle());
-        })->filter();
+        return Site::all()
+            ->map(fn ($locale) => $this->entry()->in($locale->handle()))
+            ->filter();
     }
 
     protected function entryVariationsWithLocalizedPriceModifiers(): Collection
@@ -141,14 +141,18 @@ class Product implements Contract
 
     public function rootEntryVariations(): Collection
     {
-        return collect($this->entry()->root()->get('variations'));
+        $variations = $this->entry()->root()->get('variations');
+
+        return collect($variations);
     }
 
     protected function localizedEntryVariations(): Collection
     {
-        $locale = Site::current()->handle();
+        $variations = $this->entry()
+            ->in(Site::current()->handle())
+            ->get('variations');
 
-        return collect($this->entry()->in($locale)->get('variations'));
+        return collect($variations);
     }
 
     protected function localizedEntryVariationPriceModifiers(): Collection

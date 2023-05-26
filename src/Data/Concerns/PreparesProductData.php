@@ -34,16 +34,17 @@ trait PreparesProductData
 
     protected function simpleCurrencyPrice(): string
     {
-        $price = $this->data()->get('price');
-
-        return Currency::from(Site::current())->formatDecimal($price);
+        return Currency::from(Site::current())
+            ->formatDecimal($this->data()->get('price'));
     }
 
     protected function multiCurrencyPrices(): string
     {
         $prices = $this->entries()->map(function ($entry) {
             $currency = $this->currencies()->get($entry->locale());
-            $price = Currency::from($entry->site())->formatDecimal($entry->get('price'));
+
+            $price = Currency::from($entry->site())
+                ->formatDecimal($entry->get('price'));
 
             return [
                 'currency' => Str::lower($currency),
@@ -67,9 +68,8 @@ trait PreparesProductData
 
     protected function currencies(): Collection
     {
-        return collect(Currency::all())->map(function ($currency) {
-            return $currency['code'];
-        });
+        return collect(Currency::all())
+            ->map(fn ($currency) => $currency['code']);
     }
 
     protected function url(): ?string
@@ -142,10 +142,11 @@ trait PreparesProductData
 
     protected function weight(): ?string
     {
-        $weight = $this->data()->get('weight');
-        $weightInGrams = Converter::toGrams($weight, $this->weightUnit());
+        if (! $weight = $this->data()->get('weight')) {
+            return null;
+        }
 
-        return round($weightInGrams);
+        return round(Converter::toGrams($weight, $this->weightUnit()));
     }
 
     protected function shippable(): ?string
@@ -350,12 +351,13 @@ trait PreparesProductData
             : "+$decimalPrice";
     }
 
-    protected function lengthInCentimeters(string $key): string
+    protected function lengthInCentimeters(string $key): ?string
     {
-        $length = $this->data()->get($key);
-        $lengthInCentimeters = Converter::toCentimeters($length, $this->lengthUnit());
+        if (! $length = $this->data()->get($key)) {
+            return null;
+        }
 
-        return round($lengthInCentimeters);
+        return round(Converter::toCentimeters($length, $this->lengthUnit()));
     }
 
     protected function lengthUnit(): string
