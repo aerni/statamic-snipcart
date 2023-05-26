@@ -9,8 +9,7 @@ class ClearProductApiCache
 {
     public function handle(OrderCompleted $event): void
     {
-        collect($event->payload->get('content')['items'])->each(function ($item) {
-            Cache::forget($item['id']);
-        });
+        collect($event->payload->get('content')['items'])
+            ->each(fn ($item) => Cache::forget($item['id']));
     }
 }

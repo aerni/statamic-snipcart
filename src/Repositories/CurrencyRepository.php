@@ -72,11 +72,9 @@ class CurrencyRepository implements Contract
             return $sites->get($key)['currency'];
         });
 
-        $currencies = $currencySettings->map(function ($item) {
-            return CurrencyModel::firstWhere('code', $item);
-        })->toArray();
-
-        return $currencies;
+        return $currencySettings
+            ->map(fn ($currency) => CurrencyModel::firstWhere('code', $currency))
+            ->toArray();
     }
 
     /**

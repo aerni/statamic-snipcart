@@ -23,9 +23,7 @@ class ProductApiRepository
      */
     public function find(string $sku): ?self
     {
-        $this->product = Cache::remember($sku, config('snipcart.api_cache_lifetime'), function () use ($sku) {
-            return $this->response($sku);
-        });
+        $this->product = Cache::remember($sku, config('snipcart.api_cache_lifetime'), fn () => $this->response($sku));
 
         if ($this->product->isEmpty()) {
             return null;
@@ -83,15 +81,11 @@ class ProductApiRepository
      */
     public function stock(): ?string
     {
-        if ($this->inventoryManagementMethod() === 'Single') {
-            return $this->singleStock();
-        }
-
-        if ($this->inventoryManagementMethod() === 'Variant') {
-            return $this->variantStock();
-        }
-
-        return null;
+        return match ($this->inventoryManagementMethod()) {
+            ('Single') => $this->singleStock(),
+            ('Variant') => $this->variantStock(),
+            default => null
+        };
     }
 
     /**
@@ -115,17 +109,19 @@ class ProductApiRepository
      */
     protected function variantStock(): ?string
     {
-        $stock = collect($this->product->get('variants'))->map(function ($variant) {
-            $variationOptions = collect($variant['variation'])->pluck('option')->sort()->toArray();
+        return collect($this->product->get('variants'))
+            ->map(function ($variant) {
+                $variationOptions = collect($variant['variation'])
+                    ->pluck('option')
+                    ->sort()
+                    ->toArray();
 
-            if ($this->rootEntryVariations() === $variationOptions) {
-                return $variant['stock'];
-            }
-        })
-        ->filter()
-        ->first();
-
-        return $stock;
+                if ($this->rootEntryVariations() === $variationOptions) {
+                    return $variant['stock'];
+                }
+            })
+            ->filter()
+            ->first();
     }
 
     // TODO: Add return type

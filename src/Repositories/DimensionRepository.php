@@ -59,7 +59,9 @@ class DimensionRepository implements Contract
 
         $unitSetting = $sites->get($this->site->handle())[$this->dimension];
 
-        $unit = Dimension::where('dimension', $this->dimension)->where('short', $unitSetting)->first();
+        $unit = Dimension::where('dimension', $this->dimension)
+            ->where('short', $unitSetting)
+            ->first();
 
         if (is_null($unit)) {
             throw new UnsupportedDimensionUnitException($this->site->handle(), $this->dimension, $unitSetting);
@@ -106,11 +108,9 @@ class DimensionRepository implements Contract
      */
     public function name(?string $value): string
     {
-        if ($value > 1) {
-            return $this->plural();
-        }
-
-        return $this->singular();
+        return $value > 1
+            ? $this->plural()
+            : $this->singular();
     }
 
     /**

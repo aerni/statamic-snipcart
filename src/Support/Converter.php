@@ -122,11 +122,7 @@ class Converter
      */
     protected function hasValue(mixed $value): bool
     {
-        if (empty($value)) {
-            return false;
-        }
-
-        return true;
+        return empty($value) ? false : true;
     }
 
     /**

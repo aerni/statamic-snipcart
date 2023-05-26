@@ -32,4 +32,21 @@ class UpdateStock
                 ->save();
         });
     }
+
+    // TODO: Test simplified method
+    // public function handle(OrderCompleted $event): void
+    // {
+    //     collect($event->order->get('content')['items'])
+    //         ->each(function ($item) {
+    //             $entry = Entry::query()
+    //                 ->where('sku', $item['id'])
+    //                 ->where('origin', null)
+    //                 ->get()
+    //                 ->first();
+
+    //             $newStock = $entry->get('stock') - $item['quantity'];
+
+    //             $entry->set('stock', $newStock)->save();
+    //         });
+    // }
 }
