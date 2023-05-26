@@ -108,7 +108,6 @@ class ServiceProvider extends AddonServiceProvider
      */
     protected function registerRepositories(): void
     {
-        $this->app->bind(\Statamic\Contracts\Entries\EntryRepository::class, Repositories\EntryRepository::class);
         $this->app->bind('Config', Repositories\ConfigRepository::class);
         $this->app->bind('Converter', Support\Converter::class);
         $this->app->bind('Currency', Repositories\CurrencyRepository::class);
