@@ -3,13 +3,10 @@
 namespace Aerni\Snipcart\Commands;
 
 use Aerni\Snipcart\Blueprints\Blueprint;
-use Aerni\Snipcart\Facades\Converter;
-use Aerni\Snipcart\Facades\Dimension;
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\Collection;
-use Statamic\Facades\Entry;
 use Statamic\Facades\Site;
 use Statamic\Facades\Taxonomy;
 use Statamic\Support\Str;
@@ -122,7 +119,6 @@ class SetupSnipcart extends Command
     {
         $this->updateProductsCollection();
         $this->updateProductBlueprint();
-        // $this->convertUnits();
     }
 
     /**
@@ -164,24 +160,6 @@ class SetupSnipcart extends Command
         $productBlueprint->setContents($content)->save();
 
         $this->line("<info>[✓]</info> Updated taxonomies in <comment>resources/blueprints/collections/{$this->products}/product.yaml</comment>");
-    }
-
-    /**
-     * Convert the length/weight units in the product's root entry.
-     */
-    protected function convertUnits(): void
-    {
-        // TODO: Should we still use this? Can we even make it work again? We don't save the root entry's unit to file anymore. So how would we know what unit to convert from?
-        // We could move the unit converter into a different command that takes in the unit you want to convert from.
-        $lengthUnit = Dimension::from(Site::default())->type('length')->short();
-        $weightUnit = Dimension::from(Site::default())->type('weight')->short();
-
-        Entry::whereCollection($this->products)->each(function ($entry) {
-            Converter::convertEntryDimensions($entry);
-        });
-
-        $this->line("<info>[✓]</info> Converted length to <comment>{$lengthUnit}</comment>");
-        $this->line("<info>[✓]</info> Converted weight to <comment>{$weightUnit}</comment>");
     }
 
     /**
