@@ -2,13 +2,13 @@
 
 namespace Aerni\Snipcart\Fieldtypes;
 
-use Statamic\Facades\Site;
-use Illuminate\Support\Str;
-use Statamic\Fields\Fieldtype;
 use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Facades\Dimension;
-use Statamic\Sites\Site as StatamicSite;
+use Illuminate\Support\Str;
 use Statamic\Contracts\Entries\Collection;
+use Statamic\Facades\Site;
+use Statamic\Fields\Fieldtype;
+use Statamic\Sites\Site as StatamicSite;
 
 class DimensionFieldtype extends Fieldtype
 {
