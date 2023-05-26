@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart\Repositories;
 
+use Aerni\Snipcart\Contracts\Product as ProductContract;
 use Aerni\Snipcart\Data\Product;
 use Aerni\SnipcartApi\Facades\SnipcartApi;
 use Illuminate\Support\Collection;
@@ -12,6 +13,7 @@ use Throwable;
 
 class ProductApiRepository
 {
+    // TODO: Add types
     protected $product;
     protected $entry;
     protected $variant;
@@ -51,6 +53,7 @@ class ProductApiRepository
 
     /**
      * Set the variant.
+     * TODO: What type is $variant?
      */
     public function variant($variations): self
     {
@@ -62,11 +65,11 @@ class ProductApiRepository
     /**
      * Get the matching product entry.
      */
-    protected function entry()
+    protected function entry(): ProductContract
     {
         $entryId = Entry::query()
             ->where('collection', config('snipcart.collections.products'))
-            ->where('locale', Site::default()->locale())
+            ->where('locale', Site::default()->locale()) // TODO: Should this be the default site? What if the root entry was created in another site?
             ->where('sku', $this->product->get('userDefinedId'))
             ->get()
             ->first()
@@ -125,6 +128,7 @@ class ProductApiRepository
         return $stock;
     }
 
+    // TODO: Add return type
     protected function variantWithKeys()
     {
         return $this->entry->variant($this->variant)->variantWithKeys();

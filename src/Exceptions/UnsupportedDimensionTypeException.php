@@ -16,8 +16,8 @@ class UnsupportedDimensionTypeException extends Exception implements ProvidesSol
 
     public function getSolution(): Solution
     {
-        return BaseSolution::create("Provide a valid option to the dimension fieldtype.")
-            ->setSolutionDescription("Set the value to either `length` or `weight`.")
+        return BaseSolution::create('Provide a valid option to the dimension fieldtype.')
+            ->setSolutionDescription('Set the value to either `length` or `weight`.')
             ->setDocumentationLinks([
                 'Read the config guide' => 'https://snipcart.docs.michaelaerni.ch/setup/configuration',
             ]);

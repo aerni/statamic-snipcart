@@ -10,12 +10,6 @@ class UpdateStock
 {
     use ListenerGuards;
 
-    /**
-     * Handle the event.
-     *
-     * @param OrderCompleted $event
-     * @return void
-     */
     public function handle(OrderCompleted $event): void
     {
         $items = $event->order->get('content')['items'];

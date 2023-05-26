@@ -14,34 +14,26 @@ class SyncSites extends Command
 
     /**
      * The name and signature of the console command.
-     *
-     * @var string
      */
     protected $signature = 'snipcart:sync-sites';
 
     /**
      * The console command description.
-     *
-     * @var string
      */
     protected $description = 'Sync the Snipcart with the Statamic sites';
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle(): void
     {
         $this->update();
 
-        $this->line("<info>[✓]</info> Synced the sites in <comment>config/snipcart.php</comment> with the sites in <comment>config/statamic/sites.php</comment>");
+        $this->line('<info>[✓]</info> Synced the sites in <comment>config/snipcart.php</comment> with the sites in <comment>config/statamic/sites.php</comment>');
     }
 
     /**
      * Update the Snipcart config sites array
-     *
-     * @return void
      */
     protected function update(): void
     {
@@ -60,8 +52,6 @@ class SyncSites extends Command
 
     /**
      * Get a site config for each Statamic site
-     *
-     * @return Collection
      */
     protected function sites(): Collection
     {

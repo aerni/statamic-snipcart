@@ -8,8 +8,6 @@ trait GetsProductAttributes
 {
     /**
      * Get the Snipcart product attributes as HTML data-attribute string.
-     *
-     * @return string|null
      */
     protected function productAttributes(): ?string
     {
@@ -29,8 +27,6 @@ trait GetsProductAttributes
 
     /**
      * Check if it's a Snipcart product.
-     *
-     * @return bool
      */
     protected function isProduct(): bool
     {
@@ -43,8 +39,6 @@ trait GetsProductAttributes
 
     /**
      * Check if it's a product variant.
-     *
-     * @return bool
      */
     protected function isVariant(): bool
     {

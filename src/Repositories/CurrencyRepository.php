@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\Snipcart\Contracts\CurrencyRepository as CurrencyRepositoryContract;
+use Aerni\Snipcart\Contracts\CurrencyRepository as Contract;
 use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedCurrencyException;
 use Aerni\Snipcart\Models\Currency as CurrencyModel;
@@ -18,19 +18,15 @@ use NumberFormatter;
 use Statamic\Facades\Site as SiteFacade;
 use Statamic\Sites\Site;
 
-class CurrencyRepository implements CurrencyRepositoryContract
+class CurrencyRepository implements Contract
 {
     /**
      * The site to get the currency from.
-     *
-     * @var Site
      */
-    protected $site;
+    protected Site $site;
 
     /**
      * Set the site property.
-     *
-     * @param Site $site
      */
     public function from(Site $site): self
     {
@@ -41,8 +37,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
     /**
      * Get an array of the currency's data.
-     *
-     * @return array
      */
     public function data(): array
     {
@@ -65,8 +59,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
     /**
      * Get an array of the currency's data from all the sites.
-     *
-     * @return array
      */
     public function all(): array
     {
@@ -89,8 +81,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
     /**
      * Get a currency value by key.
-     *
-     * @return string
      */
     public function get(string $key): string
     {
@@ -99,8 +89,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
     /**
      * Get the currency's code.
-     *
-     * @return string
      */
     public function code(): string
     {
@@ -109,8 +97,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
     /**
      * Get the currency's symbol.
-     *
-     * @return string
      */
     public function symbol(): string
     {
@@ -119,8 +105,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
 
     /**
      * Get the currency's name.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -131,9 +115,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Format an integer to an international currency string.
      * e.g. 1000 -> $10.00
      * e.g. null -> $0.00
-     *
-     * @param int|null $value
-     * @return string
      */
     public function formatCurrency(?int $value): string
     {
@@ -147,9 +128,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
     /**
      * Parse an international currency string to an integer.
      * e.g. $10.00 -> 1000
-     *
-     * @param string $value
-     * @return int
      */
     public function parseCurrency(string $value): int
     {
@@ -163,11 +141,8 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Format an integer to a decimal string.
      * e.g. 1000 -> 10.00
      * e.g. null -> null
-     *
-     * @param int|null $value
-     * @return string|null
      */
-    public function formatDecimal(?int $value)
+    public function formatDecimal(?int $value): ?string
     {
         if (is_null($value)) {
             return $value;
@@ -183,9 +158,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
      * Parse a decimal string to an integer.
      * e.g. 10.00 -> 1000
      * e.g. null -> 0
-     *
-     * @param string|null $value
-     * @return int
      */
     public function parseDecimal(?string $value): int
     {

@@ -20,43 +20,31 @@ class SetupSnipcart extends Command
 
     /**
      * The name and signature of the console command.
-     *
-     * @var string
      */
     protected $signature = 'snipcart:setup {--force}';
 
     /**
      * The console command description.
-     *
-     * @var string
      */
     protected $description = 'Setup Snipcart';
 
     /**
      * Override existing collections, taxaonomies and blueprints.
-     *
-     * @var bool
      */
-    protected $force = false;
+    protected bool $force = false;
 
     /**
      * The products collection handle
-     *
-     * @var string
      */
-    protected $products;
+    protected string $products;
 
     /**
      * The categories taxonomy handle.
-     *
-     * @var string
      */
-    protected $categories;
+    protected string $categories;
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle(): void
     {
@@ -73,8 +61,6 @@ class SetupSnipcart extends Command
 
     /**
      * Setup the product collection and its blueprint.
-     *
-     * @return void
      */
     protected function setupCollection(): void
     {
@@ -107,8 +93,6 @@ class SetupSnipcart extends Command
 
     /**
      * Setup the product taxonomies and their blueprints.
-     *
-     * @return void
      */
     protected function setupTaxonomies(): void
     {
@@ -133,8 +117,6 @@ class SetupSnipcart extends Command
 
     /**
      * Update the products collection and its blueprint.
-     *
-     * @return void
      */
     protected function update(): void
     {
@@ -145,8 +127,6 @@ class SetupSnipcart extends Command
 
     /**
      * Update the products collection taxonomies.
-     *
-     * @return void
      */
     protected function updateProductsCollection(): void
     {
@@ -171,8 +151,6 @@ class SetupSnipcart extends Command
 
     /**
      * Update the product blueprint with the new categories taxonomies.
-     *
-     * @return void
      */
     protected function updateProductBlueprint(): void
     {
@@ -190,8 +168,6 @@ class SetupSnipcart extends Command
 
     /**
      * Convert the length/weight units in the product's root entry.
-     *
-     * @return void
      */
     protected function convertUnits(): void
     {
@@ -208,8 +184,6 @@ class SetupSnipcart extends Command
 
     /**
      * Get all the site handles from config/statamic/sites.php
-     *
-     * @return array
      */
     protected function sites(): array
     {

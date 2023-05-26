@@ -8,13 +8,10 @@ use Statamic\Entries\Entry;
 
 class VariantsBuilder implements VariantsBuilderContract
 {
-    protected $entry;
+    protected Entry $entry;
 
     /**
      * Process the variants build.
-     *
-     * @param Entry $entry
-     * @return array|null
      */
     public function process(Entry $entry): ?array
     {
@@ -29,8 +26,6 @@ class VariantsBuilder implements VariantsBuilderContract
 
     /**
      * Returns a complete list of all possible product variants.
-     *
-     * @return array
      */
     protected function build(): array
     {
@@ -43,9 +38,6 @@ class VariantsBuilder implements VariantsBuilderContract
 
     /**
      * Sort and output the variant array.
-     *
-     * @param Collection $variations
-     * @return array
      */
     protected function variant(Collection $variations): array
     {
@@ -66,8 +58,6 @@ class VariantsBuilder implements VariantsBuilderContract
 
     /**
      * Returns the variations to create a cartesian product from.
-     *
-     * @return array
      */
     protected function variations(): array
     {
@@ -86,9 +76,6 @@ class VariantsBuilder implements VariantsBuilderContract
 
     /**
      * Calculates the total price of a product variant.
-     *
-     * @param Collection $variations
-     * @return int
      */
     protected function price(Collection $variations): int
     {
@@ -103,8 +90,6 @@ class VariantsBuilder implements VariantsBuilderContract
 
     /**
      * Checks if it should build the variants.
-     *
-     * @return bool
      */
     protected function shouldBuildVariants(): bool
     {

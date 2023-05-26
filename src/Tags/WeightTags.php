@@ -8,18 +8,11 @@ use Statamic\Tags\Tags;
 
 class WeightTags extends Tags
 {
-    /**
-     * The handle of the tag.
-     *
-     * @var string
-     */
     protected static $handle = 'weight';
 
     /**
      * Returns the unit's abbreviation.
      * {{ weight:short }}
-     *
-     * @return string
      */
     public function short(): string
     {
@@ -31,8 +24,6 @@ class WeightTags extends Tags
     /**
      * Returns the unit's singular name.
      * {{ weight:singular }}
-     *
-     * @return string
      */
     public function singular(): string
     {
@@ -44,11 +35,10 @@ class WeightTags extends Tags
     /**
      * Returns the unit's plural name.
      * {{ weight:plural }}
-     *
-     * @return string
      */
     public function plural(): string
     {
+        // TODO: Use the pluralizer?
         return Dimension::from(Site::current())
             ->type('weight')
             ->plural();
@@ -57,8 +47,6 @@ class WeightTags extends Tags
     /**
      * Returns the unit's singular/plural name.
      * {{ weight:name }}
-     *
-     * @return string
      */
     public function name(): string
     {

@@ -10,6 +10,7 @@ class Dimension extends Model
             [
                 'dimension' => 'length',
                 'short' => 'cm',
+                // TODO: Could probably skip the plural translation and use Laravel's pluralizer.
                 'singular' => __('snipcart::units.centimeter'),
                 'plural' => __('snipcart::units.centimeters'),
             ],

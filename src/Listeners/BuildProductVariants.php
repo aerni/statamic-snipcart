@@ -10,12 +10,6 @@ class BuildProductVariants
 {
     use ListenerGuards;
 
-    /**
-     * Handle the event.
-     *
-     * @param EntrySaving $event
-     * @return void
-     */
     public function handle(EntrySaving $event): void
     {
         if ($this->isSavingProduct($event)) {

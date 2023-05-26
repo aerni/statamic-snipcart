@@ -10,11 +10,8 @@ class FormatPrice extends Modifier
 {
     /**
      * Format an integer price to a nice string with currency.
-     *
-     * @param int $value
-     * @return string
      */
-    public function index($value): string
+    public function index(int $value): string
     {
         return Currency::from(Site::current())->formatCurrency($value);
     }

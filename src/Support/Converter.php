@@ -9,19 +9,17 @@ use UnitConverter\UnitConverter;
 
 class Converter
 {
+    // TODO: Can we move away from using 'mixed' as param type for all methods
+
     /**
      * The default site's length unit.
-     *
-     * @var string
      */
-    protected $defaultLengthUnit;
+    protected string $defaultLengthUnit;
 
     /**
      * The default site's weight unit.
-     *
-     * @var string
      */
-    protected $defaultWeightUnit;
+    protected string $defaultWeightUnit;
 
     public function __construct()
     {
@@ -36,13 +34,8 @@ class Converter
 
     /**
      * Convert a value from one unit to another.
-     *
-     * @param string|null $value
-     * @param string|null $from
-     * @param string|null $to
-     * @return string|null
      */
-    public function convert(?string $value, ?string $from, ?string $to)
+    public function convert(?string $value, ?string $from, ?string $to): ?string
     {
         if ($this->hasValue($value) && $this->canConvert($from, $to)) {
             return UnitConverter::binary()
@@ -60,57 +53,39 @@ class Converter
 
     /**
      * Convert a length value to the default site's unit.
-     *
-     * @param mixed $value
-     * @param mixed $from
-     * @return string|null
      */
-    public function convertToDefaultLength($value, $from)
+    public function convertToDefaultLength(mixed $value, mixed $from): ?string
     {
         return $this->convert($value, $from, $this->defaultLengthUnit);
     }
 
     /**
      * Convert a weight value to the default site's unit.
-     *
-     * @param mixed $value
-     * @param mixed $from
-     * @return string|null
      */
-    public function convertToDefaultWeight($value, $from)
+    public function convertToDefaultWeight(mixed $value, mixed $from): ?string
     {
         return $this->convert($value, $from, $this->defaultWeightUnit);
     }
 
     /**
      * Convert a length value to centimeters.
-     *
-     * @param mixed $value
-     * @param mixed $from
-     * @return string|null
      */
-    public function toCentimeters($value, $from)
+    public function toCentimeters(mixed $value, mixed $from): ?string
     {
         return $this->convert($value, $from, 'cm');
     }
 
     /**
      * Convert a weight value to grams.
-     *
-     * @param mixed $value
-     * @param mixed $from
-     * @return string|null
      */
-    public function toGrams($value, $from)
+    public function toGrams(mixed $value, mixed $from): ?string
     {
         return $this->convert($value, $from, 'g');
     }
 
     /**
      * Convert the length/weight of an entry to the default site's unit.
-     *
-     * @param Entry $entry
-     * @return void
+     * TODO: This should be refactored as we don't save the units on the entry anymore.
      */
     public function convertEntryDimensions(Entry $entry): void
     {
@@ -144,11 +119,8 @@ class Converter
 
     /**
      * Check if there is a value.
-     *
-     * @param mixed $key
-     * @return bool
      */
-    protected function hasValue($value): bool
+    protected function hasValue(mixed $value): bool
     {
         if (empty($value)) {
             return false;
@@ -159,12 +131,8 @@ class Converter
 
     /**
      * Check if the dimension can be converted.
-     *
-     * @param mixed $from
-     * @param mixed $to
-     * @return bool
      */
-    protected function canConvert($from, $to): bool
+    protected function canConvert(mixed $from, mixed $to): bool
     {
         if (empty($from)) {
             return false;

@@ -9,35 +9,16 @@ class SnipcartTags extends Tags
 {
     use GetsProductAttributes;
 
-    /**
-     * The handle of the tag.
-     *
-     * @var string
-     */
     protected static $handle = 'snipcart';
 
-    /**
-     * The config of this tag.
-     *
-     * @var array
-     */
-    protected $config = [];
-
-    /**
-     * Construct the class.
-     *
-     * @param array $config
-     */
-    public function __construct(array $config)
+    public function __construct(protected array $config)
     {
-        $this->config = $config;
+        //
     }
 
     /**
      * Returns the Snipcart preconnect hints.
      * {{ snipcart:preconnect }}
-     *
-     * @return string
      */
     public function preconnect(): string
     {
@@ -49,8 +30,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the Snipcart stylesheet.
      * {{ snipcart:stylesheet }}
-     *
-     * @return string
      */
     public function stylesheet(): string
     {
@@ -62,8 +41,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the Snipcart container.
      * {{ snipcart:container }}
-     *
-     * @return string
      */
     public function container(): string
     {
@@ -82,8 +59,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the Snipcart script.
      * {{ snipcart:script }}
-     *
-     * @return string
      */
     public function script(): string
     {
@@ -95,8 +70,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the Snipcart preconnect hints and the stylesheet.
      * {{ snipcart:head }}
-     *
-     * @return string
      */
     public function head(): string
     {
@@ -106,8 +79,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the Snipcart container and the script.
      * {{ snipcart:body }}
-     *
-     * @return string
      */
     public function body(): string
     {
@@ -117,8 +88,6 @@ class SnipcartTags extends Tags
     /**
      * Returns a simple Snipcart product buy button.
      * {{ snipcart:buy }}
-     *
-     * @return string
      */
     public function buy(): string
     {
@@ -135,8 +104,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the Snipcart product attributes.
      * {{ snipcart:attributes }}
-     *
-     * @return string
      */
     public function attributes(): string
     {
@@ -146,8 +113,6 @@ class SnipcartTags extends Tags
     /**
      * Returns a Snipcart cart button.
      * {{ snipcart:cart }}
-     *
-     * @return string
      */
     public function cart(): string
     {
@@ -163,8 +128,6 @@ class SnipcartTags extends Tags
     /**
      * Returns a Snipcart customer signin button.
      * {{ snipcart:signin }}
-     *
-     * @return string
      */
     public function signin(): string
     {
@@ -180,8 +143,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the number of items in the cart.
      * {{ snipcart:items }}
-     *
-     * @return string
      */
     public function items(): string
     {
@@ -193,8 +154,6 @@ class SnipcartTags extends Tags
     /**
      * Returns the total price of all the items in the cart.
      * {{ snipcart:price }}
-     *
-     * @return string
      */
     public function price(): string
     {

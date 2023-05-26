@@ -26,9 +26,6 @@ class Validator
 
     /**
      * Validate the attributes.
-     *
-     * @param Collection $attributes
-     * @return Collection
      */
     public static function validateAttributes(Collection $attributes): Collection
     {
@@ -41,9 +38,6 @@ class Validator
 
     /**
      * Filter invalid attributes.
-     *
-     * @param Collection $attributes
-     * @return Collection
      */
     public static function onlyValidAttributes(Collection $attributes): Collection
     {
@@ -60,9 +54,6 @@ class Validator
 
     /**
      * Check if the key is a valid Snipcart attribute key.
-     *
-     * @param string $key
-     * @return bool
      */
     protected static function isValidAttributeKey(string $key): bool
     {
@@ -83,11 +74,8 @@ class Validator
 
     /**
      * Check if the value is a valid Snipcart attribute value.
-     *
-     * @param mixed $value
-     * @return bool
      */
-    protected static function isValidAttributeValue($value): bool
+    protected static function isValidAttributeValue(mixed $value): bool
     {
         if (is_array($value)) {
             return false;
@@ -102,9 +90,6 @@ class Validator
 
     /**
      * Check if the attributes include all mandatory product attributes.
-     *
-     * @param Collection $attributes
-     * @return bool
      */
     protected static function hasRequiredAttributes(Collection $attributes): bool
     {

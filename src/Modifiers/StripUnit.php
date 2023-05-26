@@ -8,9 +8,6 @@ class StripUnit extends Modifier
 {
     /**
      * Remove units and operators from a value.
-     *
-     * @param string $value
-     * @return string
      */
     public function index(string $value): string
     {

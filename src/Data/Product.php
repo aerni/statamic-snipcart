@@ -2,14 +2,16 @@
 
 namespace Aerni\Snipcart\Data;
 
-use Aerni\Snipcart\Contracts\Product as ProductContract;
+use Aerni\Snipcart\Contracts\Product as Contract;
 use Aerni\Snipcart\Data\Concerns\PreparesProductData;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
+use Statamic\Entries\Entry as StatamicEntry;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Site;
+use Statamic\Tags\Parameters;
 
-class Product implements ProductContract
+class Product implements Contract
 {
     use PreparesProductData;
 
@@ -24,7 +26,7 @@ class Product implements ProductContract
         $this->data = $this->entryData();
     }
 
-    protected function entry(): \Statamic\Entries\Entry
+    protected function entry(): StatamicEntry
     {
         return $this->entry;
     }
@@ -34,7 +36,7 @@ class Product implements ProductContract
         return $this->data;
     }
 
-    public function params(Collection $params = null)
+    public function params(Collection $params = null): Parameters|self
     {
         if (func_num_args() === 0) {
             return $this->params;
@@ -45,7 +47,7 @@ class Product implements ProductContract
         return $this;
     }
 
-    public function variant(array $variations = null)
+    public function variant(array $variations = null): Collection|self
     {
         if (func_num_args() === 0) {
             return $this->variant ?? collect();

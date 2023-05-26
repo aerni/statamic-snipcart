@@ -9,12 +9,6 @@ class MakeSkuReadOnly
 {
     use ListenerGuards;
 
-    /**
-     * Handle the event.
-     *
-     * @param EntryBlueprintFound $event
-     * @return void
-     */
     public function handle(EntryBlueprintFound $event): void
     {
         if ($this->isEditingExistingProduct($event)) {

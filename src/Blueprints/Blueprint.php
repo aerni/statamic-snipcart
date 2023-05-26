@@ -9,27 +9,20 @@ class Blueprint
 {
     /**
      * The parsed blueprint content.
-     *
-     * @var array
      */
-    protected $content;
+    protected array $content;
 
     /**
      * The blueprint instance.
-     *
-     * @var StatamicBlueprint
      */
-    protected $blueprint;
+    protected StatamicBlueprint $blueprint;
 
     /**
      * Get the blueprint Yaml as an array.
-     *
-     * @param string $path
-     * @return array
      */
     public function parse(string $path): self
     {
-        $blueprint = file_get_contents(__DIR__ . "/../../resources/blueprints/{$path}");
+        $blueprint = file_get_contents(__DIR__."/../../resources/blueprints/{$path}");
         $this->content = YAML::parse($blueprint);
 
         return $this;
@@ -37,9 +30,6 @@ class Blueprint
 
     /**
      * Make a blueprint.
-     *
-     * @param string $handle
-     * @return self
      */
     public function make(string $handle): self
     {
@@ -50,9 +40,6 @@ class Blueprint
 
     /**
      * Set the namespace on the blueprint.
-     *
-     * @param string $namespace
-     * @return self
      */
     public function namespace(string $namespace): self
     {
@@ -63,8 +50,6 @@ class Blueprint
 
     /**
      * Set the contents on the blueprint and save it.
-     *
-     * @return void
      */
     public function save(): void
     {

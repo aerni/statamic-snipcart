@@ -8,18 +8,11 @@ use Statamic\Tags\Tags;
 
 class LengthTags extends Tags
 {
-    /**
-     * The handle of the tag.
-     *
-     * @var string
-     */
     protected static $handle = 'length';
 
     /**
      * Returns the unit's abbreviation.
      * {{ length:short }}
-     *
-     * @return string
      */
     public function short(): string
     {
@@ -31,8 +24,6 @@ class LengthTags extends Tags
     /**
      * Returns the unit's singular name.
      * {{ length:singular }}
-     *
-     * @return string
      */
     public function singular(): string
     {
@@ -44,8 +35,6 @@ class LengthTags extends Tags
     /**
      * Returns the unit's plural name.
      * {{ length:plural }}
-     *
-     * @return string
      */
     public function plural(): string
     {
@@ -57,8 +46,6 @@ class LengthTags extends Tags
     /**
      * Returns the unit's length singular/plural name.
      * {{ length:lengthName }}
-     *
-     * @return string
      */
     public function lengthName(): string
     {
@@ -70,8 +57,6 @@ class LengthTags extends Tags
     /**
      * Returns the unit's width singular/plural name.
      * {{ length:widthName }}
-     *
-     * @return string
      */
     public function widthName(): string
     {
@@ -83,8 +68,6 @@ class LengthTags extends Tags
     /**
      * Returns the unit's height singular/plural name.
      * {{ length:heightName }}
-     *
-     * @return string
      */
     public function heightName(): string
     {

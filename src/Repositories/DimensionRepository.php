@@ -2,7 +2,7 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\Snipcart\Contracts\DimensionRepository as DimensionRepositoryContract;
+use Aerni\Snipcart\Contracts\DimensionRepository as Contract;
 use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionTypeException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionUnitException;
@@ -10,26 +10,20 @@ use Aerni\Snipcart\Models\Dimension;
 use Illuminate\Support\Facades\Config;
 use Statamic\Sites\Site;
 
-class DimensionRepository implements DimensionRepositoryContract
+class DimensionRepository implements Contract
 {
     /**
      * The site to get the dimension from.
-     *
-     * @var Site
      */
-    protected $site;
+    protected Site $site;
 
     /**
      * The dimension (length/weight)
-     *
-     * @var string
      */
-    protected $dimension;
+    protected string $dimension;
 
     /**
      * Set the site property.
-     *
-     * @param Site $site
      */
     public function from(Site $site): self
     {
@@ -40,9 +34,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Set the dimension property
-     *
-     * @param string $dimension
-     * @return self
      */
     public function type(string $dimension): self
     {
@@ -57,8 +48,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get an array of the unit's data.
-     *
-     * @return array
      */
     public function all(): array
     {
@@ -81,8 +70,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get a unit value by key.
-     *
-     * @return string
      */
     public function get(string $key): string
     {
@@ -91,8 +78,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get the unit's abbreviation.
-     *
-     * @return string
      */
     public function short(): string
     {
@@ -101,8 +86,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get the unit's singular name.
-     *
-     * @return string
      */
     public function singular(): string
     {
@@ -111,8 +94,7 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get the unit's plural name.
-     *
-     * @return string
+     * TODO: Can we just use the pluralizer?
      */
     public function plural(): string
     {
@@ -121,9 +103,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get the unit's singular/plural name.
-     *
-     * @param string|null $value
-     * @return string
      */
     public function name(?string $value): string
     {
@@ -136,11 +115,8 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Parse the value.
-     *
-     * @param string|null $value
-     * @return string|null
      */
-    public function parse(?string $value)
+    public function parse(?string $value): ?string
     {
         return $value;
     }

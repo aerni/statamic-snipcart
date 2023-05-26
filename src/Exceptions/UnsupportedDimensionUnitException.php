@@ -9,17 +9,9 @@ use Facade\IgnitionContracts\Solution;
 
 class UnsupportedDimensionUnitException extends Exception implements ProvidesSolution
 {
-    protected $siteHandle;
-    protected $dimension;
-    protected $unit;
-
-    public function __construct(string $siteHandle, string $dimension, string $unit)
+    public function __construct(protected string $siteHandle, protected string $dimension, protected string $unit)
     {
         parent::__construct("The unit [{$unit}] is not supported.");
-
-        $this->siteHandle = $siteHandle;
-        $this->dimension = $dimension;
-        $this->unit = $unit;
     }
 
     public function getSolution(): Solution
