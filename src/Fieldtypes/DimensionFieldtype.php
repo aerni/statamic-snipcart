@@ -3,10 +3,12 @@
 namespace Aerni\Snipcart\Fieldtypes;
 
 use Statamic\Facades\Site;
+use Illuminate\Support\Str;
 use Statamic\Fields\Fieldtype;
 use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Facades\Dimension;
 use Statamic\Sites\Site as StatamicSite;
+use Statamic\Contracts\Entries\Collection;
 
 class DimensionFieldtype extends Fieldtype
 {
@@ -94,6 +96,14 @@ class DimensionFieldtype extends Fieldtype
      */
     protected function rootSite(): StatamicSite
     {
-        return $this->field()->parent()->root()->site();
+        $parent = $this->field()->parent();
+
+        // Get the site when creating an entry.
+        if ($parent instanceof Collection && Str::contains(request()->getUri(), 'entries')) {
+            return Site::get(collect(request()->segments())->last());
+        }
+
+        // Get the site of an existing entry.
+        return $parent->root()->site();
     }
 }
