@@ -2,19 +2,19 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Locale;
-use Statamic\Sites\Site;
-use Illuminate\Support\Str;
-use Illuminate\Support\Pluralizer;
-use Aerni\Snipcart\Models\Dimension;
-use Statamic\Facades\Site as SiteApi;
-use Illuminate\Support\Facades\Config;
-use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Contracts\DimensionRepository as Contract;
+use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionTypeException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionUnitException;
+use Aerni\Snipcart\Models\Dimension;
 use Doctrine\Inflector\Language;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Pluralizer;
+use Illuminate\Support\Str;
+use Locale;
 use ReflectionClass;
+use Statamic\Facades\Site as SiteApi;
+use Statamic\Sites\Site;
 
 class DimensionRepository implements Contract
 {
