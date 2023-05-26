@@ -62,8 +62,6 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->registerSnipcartApiConfig();
         $this->registerSnipcartWebhooksConfig();
-        $this->registerRepositories();
-        $this->registerTags();
 
         Statamic::afterInstalled(function ($command) {
             $command->call('vendor:publish', [
@@ -71,6 +69,12 @@ class ServiceProvider extends AddonServiceProvider
             ]);
             $command->call('snipcart:sync-sites');
         });
+    }
+
+    public function register(): void
+    {
+        $this->registerRepositories();
+        $this->registerTags();
     }
 
     /**
