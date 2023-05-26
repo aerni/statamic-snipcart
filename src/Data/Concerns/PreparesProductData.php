@@ -360,27 +360,15 @@ trait PreparesProductData
 
     protected function lengthUnit(): string
     {
-        $lengthUnit = $this->entry()->get('length_unit');
-
-        if ($lengthUnit === null) {
-            return Dimension::from(Site::default())
-                ->type('length')
-                ->short();
-        }
-
-        return $lengthUnit;
+        return Dimension::from($this->entry()->root()->site())
+            ->type('length')
+            ->short();
     }
 
     protected function weightUnit(): string
     {
-        $weightUnit = $this->entry()->get('weight_unit');
-
-        if ($weightUnit === null) {
-            return Dimension::from(Site::default())
-                ->type('weight')
-                ->short();
-        }
-
-        return $weightUnit;
+        return Dimension::from($this->entry()->root()->site())
+            ->type('weight')
+            ->short();
     }
 }
