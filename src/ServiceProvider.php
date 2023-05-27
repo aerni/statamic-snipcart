@@ -2,8 +2,6 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Facades\Config;
-use Aerni\Snipcart\Tags\SnipcartTags;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -73,8 +71,12 @@ class ServiceProvider extends AddonServiceProvider
 
     public function register(): void
     {
-        $this->registerRepositories();
-        $this->registerTags();
+        $this->app->bind('Config', Repositories\ConfigRepository::class);
+        $this->app->bind('Converter', Support\Converter::class);
+        $this->app->bind('Currency', Repositories\CurrencyRepository::class);
+        $this->app->bind('Dimension', Repositories\DimensionRepository::class);
+        $this->app->bind('ProductApi', Repositories\ProductApiRepository::class);
+        $this->app->bind('VariantsBuilder', Data\VariantsBuilder::class);
     }
 
     /**
@@ -105,33 +107,5 @@ class ServiceProvider extends AddonServiceProvider
         foreach ($mergedConfigs as $key => $value) {
             config()->set("snipcart-webhooks.{$key}", $value);
         }
-    }
-
-    /**
-     * Bind the repositories.
-     */
-    protected function registerRepositories(): void
-    {
-        $this->app->bind('Config', Repositories\ConfigRepository::class);
-        $this->app->bind('Converter', Support\Converter::class);
-        $this->app->bind('Currency', Repositories\CurrencyRepository::class);
-        $this->app->bind('Dimension', Repositories\DimensionRepository::class);
-        $this->app->bind('ProductApi', Repositories\ProductApiRepository::class);
-        $this->app->bind('VariantsBuilder', Data\VariantsBuilder::class);
-    }
-
-    /**
-     * Bind the tags.
-     */
-    protected function registerTags(): void
-    {
-        $this->app->bind(SnipcartTags::class, function () {
-            return new SnipcartTags([
-                'key' => Config::apiKey(),
-                'currency' => Config::currency(),
-                'version' => config('snipcart.version'),
-                'behaviour' => config('snipcart.behaviour'),
-            ]);
-        });
     }
 }

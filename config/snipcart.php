@@ -82,26 +82,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Snipcart Version
+    | Snipcart Settings
     |--------------------------------------------------------------------------
     |
-    | The Snipcart version you want to use.
+    | Configure any settings that you want to apply to the Snipcart script.
+    | Make sure to set the keys exactly as documented, e.g. 'LoadCSS'.
+    | Available settings: https://docs.snipcart.com/v3/setup/installation#settings
     |
     */
 
-    'version' => '3.6.1',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cart Behaviour
-    |--------------------------------------------------------------------------
-    |
-    | Set this to 'none' to prevent the cart from opening every time
-    | a product is added. Default is 'null'.
-    |
-    */
-
-    'behaviour' => null,
+    'snipcart_settings' => [],
 
     /*
     |--------------------------------------------------------------------------
