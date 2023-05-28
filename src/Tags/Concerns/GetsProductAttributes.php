@@ -30,11 +30,7 @@ trait GetsProductAttributes
      */
     protected function isProduct(): bool
     {
-        if (! $this->context->has('is_snipcart_product')) {
-            return false;
-        }
-
-        return true;
+        return $this->context->raw('collection')->handle() === config('snipcart.products.collection');
     }
 
     /**
