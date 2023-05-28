@@ -2,8 +2,9 @@
 
 namespace Aerni\Snipcart\Blueprints;
 
-use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\YAML;
+use Statamic\Fields\Blueprint as StatamicBlueprint;
+use Statamic\Facades\Blueprint as BlueprintApi;
 
 class Blueprint
 {
@@ -33,7 +34,7 @@ class Blueprint
      */
     public function make(string $handle): self
     {
-        $this->blueprint = StatamicBlueprint::make($handle);
+        $this->blueprint = BlueprintApi::make($handle);
 
         return $this;
     }
