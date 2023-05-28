@@ -2,9 +2,9 @@
 
 namespace Aerni\Snipcart\Blueprints;
 
+use Statamic\Facades\Blueprint as BlueprintApi;
 use Statamic\Facades\YAML;
 use Statamic\Fields\Blueprint as StatamicBlueprint;
-use Statamic\Facades\Blueprint as BlueprintApi;
 
 class Blueprint
 {

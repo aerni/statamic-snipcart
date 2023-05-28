@@ -2,10 +2,9 @@
 
 namespace Aerni\Snipcart\Tags;
 
-use Statamic\Tags\Tags;
-use Illuminate\Support\Str;
 use Aerni\Snipcart\Facades\Config;
 use Aerni\Snipcart\Tags\Concerns\GetsProductAttributes;
+use Statamic\Tags\Tags;
 
 class SnipcartTags extends Tags
 {
