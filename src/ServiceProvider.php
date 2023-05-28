@@ -2,6 +2,9 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Facades\VariantsBuilder;
+use Illuminate\Support\Facades\Cache;
+use Statamic\Facades\Collection;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -60,6 +63,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         $this->registerSnipcartApiConfig();
         $this->registerSnipcartWebhooksConfig();
+        $this->registerComputedValues();
 
         Statamic::afterInstalled(function ($command) {
             $command->call('vendor:publish', [
@@ -107,5 +111,16 @@ class ServiceProvider extends AddonServiceProvider
         foreach ($mergedConfigs as $key => $value) {
             config()->set("snipcart-webhooks.{$key}", $value);
         }
+    }
+
+    protected function registerComputedValues(): void
+    {
+        $collection = config('snipcart.products.collection');
+
+        Collection::computed($collection, 'variants', function ($entry, $value) {
+            return Cache::rememberForever("variants::{$entry->id()}", function () use ($entry) {
+                return ! empty($entry->get('variations')) ? VariantsBuilder::process($entry) : null;
+            });
+        });
     }
 }
