@@ -66,7 +66,7 @@ class ProductApiRepository
     protected function entry(): ProductContract
     {
         $entryId = Entry::query()
-            ->where('collection', config('snipcart.collections.products'))
+            ->where('collection', config('snipcart.products.collection'))
             ->where('locale', Site::default()->locale()) // TODO: Should this be the default site? What if the root entry was created in another site?
             ->where('sku', $this->product->get('userDefinedId'))
             ->get()

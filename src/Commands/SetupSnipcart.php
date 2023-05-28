@@ -45,8 +45,8 @@ class SetupSnipcart extends Command
      */
     public function handle(): void
     {
-        $this->products = config('snipcart.collections.products');
-        $this->categories = config('snipcart.taxonomies.categories');
+        $this->products = config('snipcart.products.collection');
+        $this->categories = config('snipcart.categories.taxonomy');
         $this->force = $this->option('force');
 
         $this->setupCollection();

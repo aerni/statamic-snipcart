@@ -99,7 +99,7 @@ trait PreparesProductData
 
     protected function categories(): ?string
     {
-        $categoryHandle = config('snipcart.taxonomies.categories');
+        $categoryHandle = config('snipcart.categories.taxonomy');
 
         if (! $this->entry()->root()->has($categoryHandle)) {
             return null;

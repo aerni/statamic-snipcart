@@ -9,7 +9,7 @@ trait ListenerGuards
 {
     protected function isEditingExistingProduct(EntryBlueprintFound $event): bool
     {
-        $collection = config('snipcart.collections.products');
+        $collection = config('snipcart.products.collection');
 
         $isRightNamespace = $event->blueprint->namespace() === "collections.{$collection}";
         $isRightHandle = $event->blueprint->handle() === 'product';
@@ -26,7 +26,7 @@ trait ListenerGuards
 
     protected function isSavingProduct(EntrySaving $event): bool
     {
-        $collection = config('snipcart.collections.products');
+        $collection = config('snipcart.products.collection');
 
         if ($event->entry->collection()->handle() !== $collection) {
             return false;

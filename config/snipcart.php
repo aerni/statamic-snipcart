@@ -35,22 +35,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Collections & Taxonomies
+    | Products & Categories
     |--------------------------------------------------------------------------
     |
     | Define the handles of the products collection and categories taxonomy.
     |
-    | Whenever you change a handle, you need to run 'php please snipcart:setup'
+    | Whenever you change a handle, you should run 'php please snipcart:setup'
     | to setup the new products collection and categories taxonomy.
     |
     */
 
-    'collections' => [
-        'products' => 'products',
+    'products' => [
+        'collection' => 'products',
     ],
 
-    'taxonomies' => [
-        'categories' => 'categories',
+    'categories' => [
+        'taxonomy' => 'categories',
     ],
 
     /*
