@@ -155,7 +155,7 @@ class SetupSnipcart extends Command
         $content = $productBlueprint->contents();
 
         $content['tabs']['sidebar']['sections'][0]['fields'][2]['handle'] = $this->categories;
-        $content['tabs']['sidebar']['sections'][0]['fields'][2]['field']['taxonomies'] = $this->categories;
+        $content['tabs']['sidebar']['sections'][0]['fields'][2]['field']['taxonomies'] = [$this->categories];
 
         $productBlueprint->setContents($content)->save();
 
