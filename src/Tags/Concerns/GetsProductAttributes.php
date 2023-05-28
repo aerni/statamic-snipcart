@@ -38,10 +38,6 @@ trait GetsProductAttributes
      */
     protected function isVariant(): bool
     {
-        if (! is_array($this->context->get('variations'))) {
-            return false;
-        }
-
-        return true;
+        return $this->context->has('variations');
     }
 }

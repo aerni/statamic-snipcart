@@ -26,12 +26,6 @@ trait ListenerGuards
 
     protected function isSavingProduct(EntrySaving $event): bool
     {
-        $collection = config('snipcart.products.collection');
-
-        if ($event->entry->collection()->handle() !== $collection) {
-            return false;
-        }
-
-        return true;
+        return $event->entry->collection()->handle() === config('snipcart.products.collection');
     }
 }
