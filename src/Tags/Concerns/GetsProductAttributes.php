@@ -19,7 +19,7 @@ trait GetsProductAttributes
             ->params($this->params);
 
         if ($this->isVariant()) {
-            $product->variant($this->context->get('variations'));
+            $product->variant($this->context->get('variation'));
         }
 
         return $product->toHtmlDataString();
@@ -38,6 +38,6 @@ trait GetsProductAttributes
      */
     protected function isVariant(): bool
     {
-        return $this->context->has('variations');
+        return $this->context->has('variation');
     }
 }
