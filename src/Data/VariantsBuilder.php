@@ -3,7 +3,9 @@
 namespace Aerni\Snipcart\Data;
 
 use Aerni\Snipcart\Contracts\VariantsBuilder as VariantsBuilderContract;
+use Aerni\Snipcart\Fieldtypes\MoneyFieldtype;
 use Statamic\Entries\Entry;
+use Statamic\Fields\Value;
 
 class VariantsBuilder implements VariantsBuilderContract
 {
@@ -39,6 +41,7 @@ class VariantsBuilder implements VariantsBuilderContract
     protected function variant(array $variation): array
     {
         return [
+            'base_price' => new Value($this->entry->value('price'), 'base_price', new MoneyFieldtype(), $this->entry),
             'price' => $this->price($variation),
             'variation' => $variation,
         ];
@@ -53,7 +56,7 @@ class VariantsBuilder implements VariantsBuilderContract
             return collect($variation['options'])->map(fn ($option) => [
                 'name' => $variation['name'],
                 'option' => $option['name'],
-                'price_modifier' => $option['price_modifier'],
+                'price_modifier' => new Value($option['price_modifier'], 'price_modifier', new MoneyFieldtype(), $this->entry),
             ]);
         })->all();
     }
@@ -61,13 +64,15 @@ class VariantsBuilder implements VariantsBuilderContract
     /**
      * Calculates the total price of a product variant.
      */
-    protected function price(array $variation): int
+    protected function price(array $variation): Value
     {
         $basePrice = $this->entry->value('price');
 
-        $priceModifiers = collect($variation)->map(fn ($option) => $option['price_modifier']);
+        $priceModifiers = collect($variation)->map(fn ($option) => $option['price_modifier']->raw());
 
-        return $priceModifiers->push($basePrice)->sum();
+        $price = $priceModifiers->push($basePrice)->sum();
+
+        return new Value($price, 'price', new MoneyFieldtype(), $this->entry);
     }
 
     /**
