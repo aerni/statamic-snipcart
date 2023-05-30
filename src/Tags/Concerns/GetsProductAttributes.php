@@ -15,11 +15,11 @@ trait GetsProductAttributes
             return null;
         }
 
-        $product = (new Product($this->context->get('id')))
+        $product = (new Product($this->context->get('page')->id()))
             ->params($this->params);
 
         if ($this->isVariant()) {
-            $product->variant($this->context->get('variations'));
+            $product->variant($this->context->raw('variations'));
         }
 
         return $product->toHtmlDataString();
