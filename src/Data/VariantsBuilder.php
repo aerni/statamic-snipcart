@@ -31,19 +31,20 @@ class VariantsBuilder implements VariantsBuilderContract
     protected function variants(): array
     {
         return collect(Cartesian::build($this->variations()))
-            ->map(fn ($variation) => $this->variant($variation))
+            ->map(fn ($variations) => $this->variant($variations))
             ->all();
     }
 
     /**
      * Sort and output the variant array.
      */
-    protected function variant(array $variation): array
+    protected function variant(array $variations): array
     {
         return [
+            'is_variant' => true,
             'base_price' => new Value($this->entry->value('price'), 'base_price', new MoneyFieldtype(), $this->entry),
-            'price' => $this->price($variation),
-            'variation' => $variation,
+            'price' => $this->price($variations),
+            'variations' => $variations,
         ];
     }
 
