@@ -126,6 +126,10 @@ tabs:
               listable: false
               display: Length
               width: 25
+              localizable: false
+              validate:
+                - 'required_with:width'
+                - 'required_with:height'
           -
             handle: width
             field:
@@ -134,6 +138,13 @@ tabs:
               listable: false
               display: Width
               width: 25
+              localizable: false
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - 'required_with:length'
+                - 'required_with:height'
           -
             handle: height
             field:
@@ -142,6 +153,10 @@ tabs:
               listable: false
               display: Height
               width: 25
+              localizable: false
+              validate:
+                - 'required_with:length'
+                - 'required_with:width'
           -
             handle: weight
             field:
@@ -150,6 +165,12 @@ tabs:
               listable: false
               display: Weight
               width: 25
+              localizable: false
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - 'required_with_all:length,width,height'
       -
         display: 'Digital Good'
         instructions: 'Sell a digital good. Make sure to <a href="https://app.snipcart.com/dashboard/digital">upload the file</a> in your dashboard.'
