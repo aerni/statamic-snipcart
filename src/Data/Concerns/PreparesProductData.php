@@ -84,7 +84,7 @@ trait PreparesProductData
 
     protected function image(): ?string
     {
-        if (! $this->entry()->root()->has('images')) {
+        if (empty($this->entry()->root()->get('images'))) {
             return null;
         }
 
@@ -101,7 +101,7 @@ trait PreparesProductData
     {
         $categoryHandle = config('snipcart.categories.taxonomy');
 
-        if (! $this->entry()->root()->has($categoryHandle)) {
+        if (empty($this->entry()->root()->get($categoryHandle))) {
             return null;
         }
 
