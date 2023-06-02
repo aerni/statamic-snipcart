@@ -53,7 +53,6 @@ class Variant
             return null;
         }
 
-        // TODO: Can we make this better?
         return collect($product->variants())->map(function ($variant) {
             $variationOptions = collect($variant['variation'])->sort()->flatten()->toArray();
 
