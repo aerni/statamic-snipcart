@@ -20,22 +20,20 @@ class ProductApiRepository
             return null;
         }
 
-        return Cache::remember(
-            "snipcart-product::{$sku}",
-            config('snipcart.api_cache_lifetime'),
-            fn () => ($data = $this->response($sku))
-                ? new SnipcartProduct($data)
-                : null
-        );
+        $response = Cache::remember("snipcart-product::{$sku}", config('snipcart.api_cache_lifetime'), fn () => $this->response($sku));
+
+        return $response->isNotEmpty()
+            ? new SnipcartProduct($response)
+            : null;
     }
 
-    protected function response(string $sku): ?Collection
+    protected function response(string $sku): Collection
     {
         try {
             return SnipcartApi::get()->product($sku)->send();
         } catch (Throwable $throwable) {
             if ($throwable->getCode() === 404) {
-                return null;
+                return collect();
             }
 
             throw $throwable;
