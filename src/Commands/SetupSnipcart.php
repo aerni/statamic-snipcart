@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 use Statamic\Facades\Collection;
-use Statamic\Facades\Site;
 use Statamic\Facades\Taxonomy;
 use Statamic\Support\Str;
 
