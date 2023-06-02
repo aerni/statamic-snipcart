@@ -276,7 +276,7 @@ trait PreparesProductData
 
     protected function checkboxOptions(array $checkbox): ?string
     {
-        if (! $price = $this->formatPriceModifier($checkbox['price_modifier']))  {
+        if (! $price = $this->formatPriceModifier($checkbox['price_modifier'])) {
             return null;
         }
 
