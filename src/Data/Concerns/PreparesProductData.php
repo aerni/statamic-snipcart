@@ -225,12 +225,12 @@ trait PreparesProductData
     {
         $checkboxes = $this->data()->get('checkboxes');
 
-        return collect($checkboxes)->map(function ($checkbox) {
-            return [
-                'custom{key}-name' => $checkbox['label'],
-                'custom{key}-type' => 'checkbox',
-            ];
-        });
+        return collect($checkboxes)->map(fn ($checkbox) => [
+            'custom{key}-name' => $checkbox['label'],
+            'custom{key}-options' => $this->checkboxOptions($checkbox),
+            'custom{key}-type' => 'checkbox',
+            'custom{key}-value' => Str::bool($checkbox['checked'] ?? false),
+        ]);
     }
 
     protected function textFields(): Collection
@@ -272,6 +272,15 @@ trait PreparesProductData
                 'custom{key}-value' => $this->variationValue($variation['options'], $key),
             ];
         });
+    }
+
+    protected function checkboxOptions(array $checkbox): ?string
+    {
+        if (! $price = $this->formatPriceModifier($checkbox['price_modifier']))  {
+            return null;
+        }
+
+        return "true[{$price}]|false";
     }
 
     protected function variationOptions(array $options): string
