@@ -10,6 +10,6 @@ class ClearProductApiCache
     public function handle(OrderCompleted $event): void
     {
         collect($event->payload->get('content')['items'])
-            ->each(fn ($item) => Cache::forget($item['id']));
+            ->each(fn ($item) => Cache::forget("snipcart-product::{$item['id']}"));
     }
 }

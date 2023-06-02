@@ -2,7 +2,8 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Facades\VariantsBuilder;
+use Aerni\Snipcart\Actions\GetProductStock;
+use Aerni\Snipcart\Actions\GetProductVariants;
 use Illuminate\Support\Facades\Cache;
 use Statamic\Facades\Collection;
 use Statamic\Providers\AddonServiceProvider;
@@ -17,7 +18,6 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $fieldtypes = [
         Fieldtypes\DimensionFieldtype::class,
-        Fieldtypes\StockFieldtype::class,
         Fieldtypes\MoneyFieldtype::class,
     ];
 
@@ -28,14 +28,10 @@ class ServiceProvider extends AddonServiceProvider
         'Statamic\Events\EntryBlueprintFound' => [
             'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
         ],
-        'Statamic\Events\EntrySaving' => [
-            'Aerni\Snipcart\Listeners\BuildProductVariants',
-        ],
     ];
 
     protected $modifiers = [
         Modifiers\AddOperator::class,
-        Modifiers\FormatPrice::class,
         Modifiers\StripUnit::class,
     ];
 
@@ -47,7 +43,6 @@ class ServiceProvider extends AddonServiceProvider
         Tags\CurrencyTags::class,
         Tags\LengthTags::class,
         Tags\SnipcartTags::class,
-        Tags\StockTags::class,
         Tags\WeightTags::class,
     ];
 
@@ -71,16 +66,6 @@ class ServiceProvider extends AddonServiceProvider
             ]);
             $command->call('snipcart:sync-sites');
         });
-    }
-
-    public function register(): void
-    {
-        $this->app->bind('Config', Repositories\ConfigRepository::class);
-        $this->app->bind('Converter', Support\Converter::class);
-        $this->app->bind('Currency', Repositories\CurrencyRepository::class);
-        $this->app->bind('Dimension', Repositories\DimensionRepository::class);
-        $this->app->bind('ProductApi', Repositories\ProductApiRepository::class);
-        $this->app->bind('VariantsBuilder', Data\VariantsBuilder::class);
     }
 
     /**
@@ -117,10 +102,7 @@ class ServiceProvider extends AddonServiceProvider
     {
         $collection = config('snipcart.products.collection');
 
-        Collection::computed($collection, 'variants', function ($entry, $value) {
-            return Cache::rememberForever("variants::{$entry->id()}", function () use ($entry) {
-                return ! empty($entry->get('variations')) ? VariantsBuilder::process($entry) : null;
-            });
-        });
+        Collection::computed($collection, 'variants', fn ($entry) => GetProductVariants::handle($entry));
+        Collection::computed($collection, 'stock', fn ($entry) => GetProductStock::handle($entry));
     }
 }

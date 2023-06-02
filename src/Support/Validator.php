@@ -29,7 +29,7 @@ class Validator
      */
     public static function validateAttributes(Collection $attributes): Collection
     {
-        if (Self::hasRequiredAttributes($attributes)) {
+        if (self::hasRequiredAttributes($attributes)) {
             return $attributes;
         }
 
@@ -42,7 +42,7 @@ class Validator
     public static function onlyValidAttributes(Collection $attributes): Collection
     {
         return $attributes->map(function ($value, $key) {
-            if (Self::isValidAttributeKey($key) && Self::isValidAttributeValue($value)) {
+            if (self::isValidAttributeKey($key) && self::isValidAttributeValue($value)) {
                 if (is_bool($value)) {
                     return Str::bool($value);
                 }
@@ -57,11 +57,11 @@ class Validator
      */
     protected static function isValidAttributeKey(string $key): bool
     {
-        if (in_array($key, Self::$requiredAttributes)) {
+        if (in_array($key, self::$requiredAttributes)) {
             return true;
         }
 
-        if (in_array($key, Self::$optionalAttributes)) {
+        if (in_array($key, self::$optionalAttributes)) {
             return true;
         }
 
@@ -93,9 +93,9 @@ class Validator
      */
     protected static function hasRequiredAttributes(Collection $attributes): bool
     {
-        if ($attributes->has(Self::$requiredAttributes)) {
+        if ($attributes->has(self::$requiredAttributes)) {
             return true;
-        };
+        }
 
         return false;
     }

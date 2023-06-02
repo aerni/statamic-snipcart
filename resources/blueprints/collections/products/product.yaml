@@ -206,31 +206,7 @@ tabs:
             field:
               fields:
                 -
-                  handle: price
-                  field:
-                    type: money
-                    display: 'Total Price'
-                    icon: money
-                    localizable: false
-                    listable: hidden
-                    instructions_position: above
-                    visibility: visible
-                    hide_display: false
-                    width: 50
-                -
-                  handle: base_price
-                  field:
-                    type: money
-                    display: 'Base Price'
-                    icon: money
-                    localizable: false
-                    listable: hidden
-                    instructions_position: above
-                    visibility: visible
-                    hide_display: false
-                    width: 50
-                -
-                  handle: variations
+                  handle: variation
                   field:
                     fields:
                       -
@@ -277,7 +253,7 @@ tabs:
                     reorderable: true
                     fullscreen: true
                     type: grid
-                    display: Variations
+                    display: Variation
                     icon: grid
                     localizable: false
                     listable: hidden
@@ -285,16 +261,40 @@ tabs:
                     visibility: visible
                     hide_display: false
                 -
-                  handle: is_variant
+                  handle: price
                   field:
-                    default: false
-                    type: toggle
-                    display: 'Is Variant'
-                    icon: toggle
+                    type: money
+                    display: 'Total Price'
+                    icon: money
                     localizable: false
                     listable: hidden
                     instructions_position: above
-                    visibility: hidden
+                    visibility: visible
+                    hide_display: false
+                    width: 33
+                -
+                  handle: base_price
+                  field:
+                    type: money
+                    display: 'Base Price'
+                    icon: money
+                    localizable: false
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    width: 33
+                -
+                  handle: stock
+                  field:
+                    type: integer
+                    display: Stock
+                    icon: integer
+                    localizable: false
+                    width: 33
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
                     hide_display: false
               mode: stacked
               reorderable: true
@@ -561,6 +561,18 @@ tabs:
                 - 'unique_entry_value:{collection},{id},{site}'
               from: slug
               localizable: false
+          -
+            handle: stock
+            field:
+              type: integer
+              display: Stock
+              icon: integer
+              localizable: false
+              listable: hidden
+              instructions_position: above
+              visibility: computed
+              hide_display: false
+              instructions: 'The stock on hand.'
           -
             handle: slug
             field:

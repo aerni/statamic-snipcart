@@ -3,6 +3,7 @@
 namespace Aerni\Snipcart\Tags\Concerns;
 
 use Aerni\Snipcart\Data\Product;
+use Statamic\Contracts\Entries\Entry;
 
 trait GetsProductAttributes
 {
@@ -15,29 +16,25 @@ trait GetsProductAttributes
             return null;
         }
 
-        $product = (new Product($this->context->get('page')->id()))
-            ->params($this->params);
-
-        if ($this->isVariant()) {
-            $product->variant($this->context->raw('variations'));
-        }
-
-        return $product->toHtmlDataString();
+        return (new Product($this->entry()))
+            ->params($this->params)
+            ->variant($this->context->raw('variation'))
+            ->toHtmlDataString();
     }
 
     /**
-     * Check if it's a Snipcart product.
+     * Gets the product's entry.
+     */
+    protected function entry(): Entry
+    {
+        return $this->context->get('is_entry')->augmentable();
+    }
+
+    /**
+     * Check if we're dealing with a Snipcart product.
      */
     protected function isProduct(): bool
     {
         return $this->context->raw('collection')->handle() === config('snipcart.products.collection');
-    }
-
-    /**
-     * Check if it's a product variant.
-     */
-    protected function isVariant(): bool
-    {
-        return $this->context->has('is_variant');
     }
 }

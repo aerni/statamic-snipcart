@@ -16,6 +16,7 @@ class MakeSkuReadOnly
         }
 
         $content = $event->blueprint->contents();
+        // TODO: Make this smarter by finding the field by handle. So the user can reorder fields without blowing things up.
         $content['tabs']['sidebar']['sections'][0]['fields'][0]['field']['visibility'] = 'read_only';
         $event->blueprint->setContents($content);
     }

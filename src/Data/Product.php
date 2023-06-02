@@ -6,27 +6,23 @@ use Aerni\Snipcart\Contracts\Product as Contract;
 use Aerni\Snipcart\Data\Concerns\PreparesProductData;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
-use Statamic\Entries\Entry as StatamicEntry;
-use Statamic\Facades\Entry;
+use Statamic\Entries\Entry;
 use Statamic\Facades\Site;
-use Statamic\Tags\Parameters;
 
 class Product implements Contract
 {
     use PreparesProductData;
 
-    protected $entry;
-    protected $data;
-    protected $params;
-    protected $variant;
+    protected Collection $data;
+    protected Collection $params;
+    protected Collection $variant;
 
-    public function __construct(string $id)
+    public function __construct(protected Entry $entry)
     {
-        $this->entry = Entry::find($id);
         $this->data = $this->entryData();
     }
 
-    protected function entry(): StatamicEntry
+    protected function entry(): Entry
     {
         return $this->entry;
     }
@@ -36,7 +32,7 @@ class Product implements Contract
         return $this->data;
     }
 
-    public function params(Collection $params = null): Parameters|self
+    public function params(Collection $params = null): Collection|self
     {
         if (func_num_args() === 0) {
             return $this->params;
@@ -69,7 +65,7 @@ class Product implements Contract
 
     protected function toDataCollection(): Collection
     {
-        $data = collect([
+        return collect([
             'name' => $this->name(),
             'id' => $this->id(),
             'price' => $this->price(),
@@ -95,9 +91,8 @@ class Product implements Contract
         ])
         ->merge($this->customFields())
         ->merge($this->params())
-        ->filter();
-
-        return Validator::validateAttributes($data);
+        ->filter()
+        ->tap(fn ($data) => Validator::validateAttributes($data));
     }
 
     protected function entryData(): Collection
@@ -114,10 +109,7 @@ class Product implements Contract
 
     protected function localizedEntryData(): Collection
     {
-        return $this->entry()
-            ->in(Site::current()->handle())
-            ->data()
-            ->only('price');
+        return $this->entry()->data()->only('price');
     }
 
     protected function entries(): Collection
@@ -148,9 +140,7 @@ class Product implements Contract
 
     protected function localizedEntryVariations(): Collection
     {
-        $variations = $this->entry()
-            ->in(Site::current()->handle())
-            ->get('variations');
+        $variations = $this->entry()->get('variations');
 
         return collect($variations);
     }
@@ -163,6 +153,30 @@ class Product implements Contract
             })->all();
 
             return ['options' => $options];
+        });
+    }
+
+    public function variantWithKeys(): Collection
+    {
+        return $this->variant()
+            ->replaceRecursive($this->variantKeys());
+    }
+
+    protected function variantKeys(): Collection
+    {
+        return $this->entryVariations()->map(function ($variation) {
+            $variationKey = $this->variant()->search(fn ($item) => $item['name'] === $variation['name']);
+
+            $optionKey = collect($variation['options'])
+                ->map(fn ($option) => $this->variant()->search(fn ($item) => $item['option'] === $option['name']))
+                ->filter(fn ($item) => $item !== false)
+                ->keys()
+                ->first();
+
+            return [
+                'variation_key' => $variationKey,
+                'option_key' => $optionKey,
+            ];
         });
     }
 }
