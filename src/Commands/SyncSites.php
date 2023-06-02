@@ -55,14 +55,12 @@ class SyncSites extends Command
      */
     protected function sites(): Collection
     {
-        return Site::all()->mapWithKeys(function ($site) {
-            return [
-                $site->handle() => [
-                    'currency' => 'USD',
-                    'length' => 'in',
-                    'weight' => 'oz',
-                ],
-            ];
-        });
+        return Site::all()->mapWithKeys(fn ($site) => [
+            $site->handle() => [
+                'currency' => 'USD',
+                'length' => 'in',
+                'weight' => 'oz',
+            ],
+        ]);
     }
 }
