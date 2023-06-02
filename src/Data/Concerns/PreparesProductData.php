@@ -18,9 +18,9 @@ trait PreparesProductData
         return $this->data()->get('title');
     }
 
-    protected function id(): ?string
+    protected function id(): string
     {
-        return $this->data()->get('sku');
+        return $this->entry()->sku;
     }
 
     protected function price(): ?string

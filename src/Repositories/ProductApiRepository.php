@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart\Repositories;
 
+use Aerni\Snipcart\Actions\GetProductId;
 use Aerni\Snipcart\Data\SnipcartProduct;
 use Aerni\SnipcartApi\Facades\SnipcartApi;
 use Illuminate\Support\Collection;
@@ -16,21 +17,21 @@ class ProductApiRepository
      */
     public function find(Entry $entry): ?SnipcartProduct
     {
-        if (! $sku = $entry->root()->get('sku')) {
+        if (! $id = GetProductId::handle($entry)) {
             return null;
         }
 
-        $response = Cache::remember("snipcart-product::{$sku}", config('snipcart.api_cache_lifetime'), fn () => $this->response($sku));
+        $response = Cache::remember("snipcart-product::{$id}", config('snipcart.api_cache_lifetime'), fn () => $this->response($id));
 
         return $response->isNotEmpty()
             ? new SnipcartProduct($response)
             : null;
     }
 
-    protected function response(string $sku): Collection
+    protected function response(string $id): Collection
     {
         try {
-            return SnipcartApi::get()->product($sku)->send();
+            return SnipcartApi::get()->product($id)->send();
         } catch (Throwable $throwable) {
             if ($throwable->getCode() === 404) {
                 return collect();

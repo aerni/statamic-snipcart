@@ -571,16 +571,17 @@ tabs:
           -
             handle: sku
             field:
-              type: slug
-              generate: true
-              instructions: 'A unique product identifier.'
-              listable: true
+              input_type: text
+              antlers: false
+              type: text
               display: ID
-              validate:
-                - required
-                - 'unique_entry_value:{collection},{id},{site}'
-              from: slug
+              icon: text
+              instructions: 'The unique product ID.'
               localizable: false
+              listable: hidden
+              instructions_position: above
+              visibility: computed
+              hide_display: false
           -
             handle: stock
             field:

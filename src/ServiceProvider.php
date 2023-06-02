@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Actions\GetProductId;
 use Aerni\Snipcart\Actions\GetProductStock;
 use Aerni\Snipcart\Actions\GetProductVariants;
 use Statamic\Facades\Collection;
@@ -23,9 +24,6 @@ class ServiceProvider extends AddonServiceProvider
     protected $listen = [
         'Aerni\SnipcartWebhooks\Events\OrderCompleted' => [
             'Aerni\Snipcart\Listeners\ClearProductApiCache',
-        ],
-        'Statamic\Events\EntryBlueprintFound' => [
-            'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
         ],
     ];
 
@@ -101,7 +99,8 @@ class ServiceProvider extends AddonServiceProvider
     {
         $collection = config('snipcart.products.collection');
 
-        Collection::computed($collection, 'variants', fn ($entry) => GetProductVariants::handle($entry));
+        Collection::computed($collection, 'sku', fn ($entry) => GetProductId::handle($entry));
         Collection::computed($collection, 'stock', fn ($entry) => GetProductStock::handle($entry));
+        Collection::computed($collection, 'variants', fn ($entry) => GetProductVariants::handle($entry));
     }
 }
