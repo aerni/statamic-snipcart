@@ -69,21 +69,26 @@ class DimensionFieldtype extends Fieldtype
      */
     public function augment(mixed $data): ?string
     {
-        return $this->convertUnit($this->config('dimension'), $data);
+        if (! $data) {
+            return null;
+        }
+
+        return $this->convertUnit($data);
     }
 
     /**
      * Convert the entry unit to the site's unit.
      */
-    protected function convertUnit(string $dimension, ?int $data): string
+    protected function convertUnit(int $data): string
     {
         $rootUnit = Dimension::from($this->rootSite())
-            ->type($dimension)
+            ->type($this->config('dimension'))
             ->short();
 
         $siteUnit = Dimension::from(Site::current())
-            ->type($dimension)
+            ->type($this->config('dimension'))
             ->short();
+
 
         $conversion = Converter::convert($data, $rootUnit, $siteUnit);
         $rounded = round($conversion, 2);
