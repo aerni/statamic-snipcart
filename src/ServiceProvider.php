@@ -4,7 +4,6 @@ namespace Aerni\Snipcart;
 
 use Aerni\Snipcart\Actions\GetProductStock;
 use Aerni\Snipcart\Actions\GetProductVariants;
-use Illuminate\Support\Facades\Cache;
 use Statamic\Facades\Collection;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
