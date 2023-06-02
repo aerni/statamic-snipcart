@@ -19,7 +19,7 @@ tabs:
               validate:
                 - required
                 - string
-              width: 50
+              width: 33
               input_type: text
           -
             handle: price
@@ -33,7 +33,20 @@ tabs:
                 - required
                 - numeric
                 - 'regex:/^\d+(\.\d{1,2})?$/'
-              width: 50
+              width: 33
+          -
+            handle: stock
+            field:
+              type: integer
+              display: Stock
+              icon: integer
+              localizable: false
+              listable: hidden
+              instructions_position: above
+              visibility: computed
+              hide_display: false
+              instructions: 'The stock on hand.'
+              width: 33
           -
             handle: images
             field:
@@ -569,6 +582,19 @@ tabs:
       -
         fields:
           -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              generate: true
+              instructions: 'The slug of this product.'
+              listable: hidden
+              display: Slug
+              validate:
+                - required
+                - 'unique_entry_value:{collection},{id},{site}'
+              from: title
+          -
             handle: sku
             field:
               input_type: text
@@ -582,31 +608,6 @@ tabs:
               instructions_position: above
               visibility: computed
               hide_display: false
-          -
-            handle: stock
-            field:
-              type: integer
-              display: Stock
-              icon: integer
-              localizable: false
-              listable: hidden
-              instructions_position: above
-              visibility: computed
-              hide_display: false
-              instructions: 'The stock on hand.'
-          -
-            handle: slug
-            field:
-              type: slug
-              localizable: true
-              generate: true
-              instructions: 'The slug of this product.'
-              listable: hidden
-              display: Slug
-              validate:
-                - required
-                - 'unique_entry_value:{collection},{id},{site}'
-              from: title
           -
             handle: categories
             field:
