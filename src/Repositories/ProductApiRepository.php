@@ -16,7 +16,9 @@ class ProductApiRepository
      */
     public function find(Entry $entry): ?SnipcartProduct
     {
-        $sku = $entry->root()->get('sku');
+        if (! $sku = $entry->root()->get('sku')) {
+            return null;
+        }
 
         return Cache::remember(
             "snipcart-product::{$sku}",
