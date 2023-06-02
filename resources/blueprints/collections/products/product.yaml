@@ -184,7 +184,7 @@ tabs:
                     validate: required
                     instructions_position: above
                     visibility: visible
-                    fullscreen: true
+                    fullscreen: false
                     hide_display: false
               mode: stacked
               reorderable: true
@@ -328,7 +328,8 @@ tabs:
                     display: Label
                     validate:
                       - required
-              mode: stacked
+                    localizable: false
+              mode: table
               add_row: 'Add Checkbox'
               reorderable: true
               type: grid
@@ -336,6 +337,10 @@ tabs:
               listable: false
               display: Checkboxes
               localizable: false
+              instructions_position: above
+              visibility: visible
+              fullscreen: false
+              hide_display: false
           -
             handle: text_fields
             field:
@@ -350,6 +355,7 @@ tabs:
                     display: Label
                     validate: required
                     width: 50
+                    localizable: false
                 -
                   handle: size
                   field:
@@ -363,6 +369,7 @@ tabs:
                     validate: required
                     default: small
                     width: 50
+                    localizable: false
                 -
                   handle: placeholder
                   field:
@@ -372,6 +379,7 @@ tabs:
                     listable: false
                     display: Placeholder
                     width: 50
+                    localizable: false
                 -
                   handle: default
                   field:
@@ -381,6 +389,7 @@ tabs:
                     listable: false
                     display: Default
                     width: 50
+                    localizable: false
                 -
                   handle: required
                   field:
@@ -388,6 +397,7 @@ tabs:
                     instructions: 'Activate to make this field required.'
                     listable: false
                     display: Required
+                    localizable: false
               mode: stacked
               add_row: 'Add Text Field'
               reorderable: true
@@ -396,6 +406,10 @@ tabs:
               display: 'Text Fields'
               instructions: 'Perfect for short notes or longer messages.'
               localizable: false
+              instructions_position: above
+              visibility: visible
+              fullscreen: false
+              hide_display: false
       -
         display: 'Additional Information'
         instructions: 'Provide additional product information.'
@@ -413,6 +427,7 @@ tabs:
                     listable: false
                     validate:
                       - required
+                    localizable: false
                 -
                   handle: text
                   field:
@@ -423,7 +438,8 @@ tabs:
                     listable: false
                     validate:
                       - required
-              mode: stacked
+                    localizable: false
+              mode: table
               add_row: 'Add Readonly Field'
               reorderable: true
               type: grid
@@ -431,6 +447,10 @@ tabs:
               listable: false
               display: 'Readonly Fields'
               localizable: false
+              instructions_position: above
+              visibility: visible
+              fullscreen: false
+              hide_display: false
           -
             handle: metadata
             field:
