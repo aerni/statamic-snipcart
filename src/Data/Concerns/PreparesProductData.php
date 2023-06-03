@@ -252,13 +252,12 @@ trait PreparesProductData
     {
         $readonlyFields = $this->data()->get('readonly_fields');
 
-        return collect($readonlyFields)->map(function ($readonlyField) {
-            return [
-                'custom{key}-name' => $readonlyField['label'],
-                'custom{key}-type' => 'readonly',
-                'custom{key}-value' => $readonlyField['text'],
-            ];
-        });
+        return collect($readonlyFields)->map(fn ($readonlyField) => [
+            'custom{key}-name' => $readonlyField['label'],
+            'custom{key}-options' => $this->readonlyOptions($readonlyField),
+            'custom{key}-type' => 'readonly',
+            'custom{key}-value' => $readonlyField['text'],
+        ]);
     }
 
     protected function variations(): Collection
@@ -281,6 +280,15 @@ trait PreparesProductData
         }
 
         return "true[{$price}]|false";
+    }
+
+    protected function readonlyOptions(array $readonlyField): ?string
+    {
+        if (! $price = $this->formatPriceModifier($readonlyField['price_modifier'])) {
+            return null;
+        }
+
+        return "{$readonlyField['text']}[{$price}]";
     }
 
     protected function variationOptions(array $options): string
