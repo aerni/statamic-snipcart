@@ -1,5 +1,5 @@
 ![GitHub release](https://flat.badgen.net/github/release/aerni/statamic-snipcart)
-![Statamic](https://flat.badgen.net/badge/Statamic/3.0+/FF269E)
+![Statamic](https://flat.badgen.net/badge/Statamic/4.0+/FF269E)
 
 # Snipcart for Statamic
 Snipcart for Statamic makes the setup of your Snipcart shop on Statamic a breeze. [Read the documentation](https://snipcart.docs.michaelaerni.ch) to learn how to install, setup and use this addon. If you're not familiar with Snipcart, make sure to read the official [Snipcart documentation](https://docs.snipcart.com/v3/) to learn how to setup your Snipcart shop.
@@ -14,8 +14,9 @@ Snipcart for Statamic makes the setup of your Snipcart shop on Statamic a breeze
 ## Requirements
 
 * Snipcart Account
-* Statamic 3
-* PHP &gt;= 7.4
+* Statamic 4
+* Laravel 10
+* PHP &gt;= 8.1
 
 ## License
 Snipcart for Statamic is **commercial software** but has an open-source codebase. If you want to use it in production, you'll need to [buy a license from the Statamic Marketplace](https://statamic.com/addons/aerni/snipcart).
