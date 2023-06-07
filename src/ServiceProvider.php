@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart;
 
+use Aerni\Snipcart\Actions\GetInventoryManagementMethod;
 use Aerni\Snipcart\Actions\GetProductId;
 use Aerni\Snipcart\Actions\GetProductStock;
 use Aerni\Snipcart\Actions\GetProductVariants;
@@ -101,6 +102,7 @@ class ServiceProvider extends AddonServiceProvider
 
         Collection::computed($collection, 'sku', fn ($entry) => GetProductId::handle($entry));
         Collection::computed($collection, 'stock', fn ($entry) => GetProductStock::handle($entry));
+        Collection::computed($collection, 'inventory_management_method', fn ($entry) => GetInventoryManagementMethod::handle($entry));
         Collection::computed($collection, 'variants', fn ($entry) => GetProductVariants::handle($entry));
     }
 }

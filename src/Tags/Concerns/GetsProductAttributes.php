@@ -18,7 +18,6 @@ trait GetsProductAttributes
 
         return (new Product($this->entry()))
             ->params($this->params)
-            ->variant($this->context->raw('variation'))
             ->toHtmlDataString();
     }
 

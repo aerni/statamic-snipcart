@@ -13,7 +13,7 @@ use Statamic\Support\Str;
 
 trait PreparesProductData
 {
-    protected function name(): ?string
+    protected function name(): string
     {
         return $this->data()->get('title');
     }
@@ -23,13 +23,11 @@ trait PreparesProductData
         return $this->entry()->sku;
     }
 
-    protected function price(): ?string
+    protected function price(): string
     {
-        if (count($this->currencies()->unique()) === 1) {
-            return $this->simpleCurrencyPrice();
-        }
-
-        return $this->multiCurrencyPrices();
+        return $this->currencies()->unique()->count() === 1
+            ? $this->simpleCurrencyPrice()
+            : $this->multiCurrencyPrices();
     }
 
     protected function simpleCurrencyPrice(): string
@@ -200,141 +198,99 @@ trait PreparesProductData
 
     protected function customFields(): Collection
     {
-        $customFields = $this->variations()
-            ->merge($this->checkboxes())
-            ->merge($this->textFields())
-            ->merge($this->readonlyFields());
-
-        return $this->addCustomFieldIds($customFields);
+        return collect($this->data()->get('custom_fields'))
+            ->filter(fn ($field) => $field['enabled'])
+            ->flatMap(fn ($field, $key) => $this->{$field['type']}($field, $key + 1));
     }
 
-    protected function addCustomFieldIds(Collection $customFields): Collection
+    protected function checkbox(array $field, int $key): array
     {
-        return $customFields->flatMap(function ($customField, $id) {
-            $id++;
-
-            return collect($customField)->mapWithKeys(function ($value, $key) use ($id) {
-                return [
-                    Str::replaceFirst('{key}', $id, $key) => $value,
-                ];
-            });
-        });
+        return [
+            "custom{$key}-name" => $field['name'],
+            "custom{$key}-options" => $this->checkboxOptions($field),
+            "custom{$key}-type" => $field['hidden'] ? 'hidden' : 'checkbox',
+            "custom{$key}-value" => Str::bool($field['checked'] ?? false),
+        ];
     }
 
-    protected function checkboxes(): Collection
+    protected function checkboxOptions(array $field): ?string
     {
-        $checkboxes = $this->data()->get('checkboxes');
-
-        return collect($checkboxes)->map(fn ($checkbox) => [
-            'custom{key}-name' => $checkbox['label'],
-            'custom{key}-options' => $this->checkboxOptions($checkbox),
-            'custom{key}-type' => 'checkbox',
-            'custom{key}-value' => Str::bool($checkbox['checked'] ?? false),
-        ]);
-    }
-
-    protected function textFields(): Collection
-    {
-        $textFields = $this->data()->get('text_fields');
-
-        return collect($textFields)->map(function ($textField) {
-            return [
-                'custom{key}-name' => $textField['label'],
-                'custom{key}-type' => $textField['size'] === 'large' ? 'textarea' : '',
-                'custom{key}-value' => $textField['default'],
-                'custom{key}-placeholder' => $textField['placeholder'],
-                'custom{key}-required' => Str::bool($textField['required']),
-            ];
-        });
-    }
-
-    protected function readonlyFields(): Collection
-    {
-        $readonlyFields = $this->data()->get('readonly_fields');
-
-        return collect($readonlyFields)->map(fn ($readonlyField) => [
-            'custom{key}-name' => $readonlyField['label'],
-            'custom{key}-options' => $this->readonlyOptions($readonlyField),
-            'custom{key}-type' => 'readonly',
-            'custom{key}-value' => $readonlyField['text'],
-        ]);
-    }
-
-    protected function variations(): Collection
-    {
-        $variations = $this->data()->get('variations');
-
-        return collect($variations)->map(function ($variation, $key) {
-            return [
-                'custom{key}-name' => $variation['name'],
-                'custom{key}-options' => $this->variationOptions($variation['options']),
-                'custom{key}-value' => $this->variationValue($variation['options'], $key),
-            ];
-        });
-    }
-
-    protected function checkboxOptions(array $checkbox): ?string
-    {
-        if (! $price = $this->formatPriceModifier($checkbox['price_modifier'])) {
+        if (empty($field['price_modifier'])) {
             return null;
         }
+
+        $price = $this->formatPriceModifier($field['price_modifier']);
 
         return "true[{$price}]|false";
     }
 
-    protected function readonlyOptions(array $readonlyField): ?string
+    protected function dropdown(array $field, int $key): array
     {
-        if (! $price = $this->formatPriceModifier($readonlyField['price_modifier'])) {
-            return null;
-        }
-
-        return "{$readonlyField['text']}[{$price}]";
+        return [
+            "custom{$key}-name" => $field['name'],
+            "custom{$key}-options" => $this->dropdownOptions($field),
+            "custom{$key}-type" => $field['hidden'] ? 'hidden' : null,
+            "custom{$key}-value" => $this->dropdownValue($field),
+        ];
     }
 
-    protected function variationOptions(array $options): string
+    protected function dropdownOptions(array $field): string
     {
-        return collect($options)->map(function ($option) {
-            $name = $option['name'];
+        return collect($field['options'])->map(function ($option) {
+            if (empty($option['price_modifier'])) {
+                return $option['name'];
+            }
+
             $price = $this->formatPriceModifier($option['price_modifier']);
 
-            return (empty($price))
-                ? $name
-                : "{$name}[{$price}]";
+            return "{$option['name']}[{$price}]";
         })->implode('|');
     }
 
-    protected function variationValue(array $options, int $variationKey): ?string
+    protected function dropdownValue(array $field): ?string
     {
-        /**
-         * We only want to pre-select a variation in the Snipcart checkout if we're inside a variant loop.
-         */
-        if ($this->variant()->isEmpty()) {
-            return null;
-        }
+        $option = collect($field['options'])->firstWhere('default', true);
 
-        $value = collect($options)->filter(function ($option, $optionKey) use ($variationKey) {
-            $selectedOptionKey = $this->variant()
-                ->replaceRecursive($this->variantKeys())
-                ->filter(function ($selectedOptions) use ($variationKey, $optionKey) {
-                    return $selectedOptions['variation_key'] === $variationKey
-                        && $selectedOptions['option_key'] === $optionKey;
-                })->pluck('option_key')->first();
-
-            return $selectedOptionKey === $optionKey;
-        })->pluck('name')->first();
-
-        return $value;
+        return $option['name'] ?? null;
     }
 
-    protected function formatPriceModifier(?int $price): ?string
+    protected function readonly(array $field, int $key): array
     {
-        if (empty($price)) {
+        return [
+            "custom{$key}-name" => $field['name'],
+            "custom{$key}-options" => $this->readonlyOptions($field),
+            "custom{$key}-type" => $field['hidden'] ? 'hidden' : 'readonly',
+            "custom{$key}-value" => $field['text'],
+        ];
+    }
+
+    protected function readonlyOptions(array $field): ?string
+    {
+        if (empty($field['price_modifier'])) {
             return null;
         }
 
+        $price = $this->formatPriceModifier($field['price_modifier']);
+
+        return "{$field['text']}[{$price}]";
+    }
+
+    protected function text(array $field, int $key): array
+    {
+        return [
+            "custom{$key}-name" => $field['name'],
+            "custom{$key}-type" => $field['size'] === 'large' ? 'textarea' : null,
+            "custom{$key}-value" => $field['default'] ?? null,
+            "custom{$key}-placeholder" => $field['placeholder'] ?? null,
+            "custom{$key}-required" => Str::bool($field['required']),
+        ];
+    }
+
+    protected function formatPriceModifier(int $price): string
+    {
         $decimalPrice = Currency::from(Site::default())->formatDecimal($price);
 
-        return (Str::startsWith($decimalPrice, '-'))
+        return Str::startsWith($decimalPrice, '-')
             ? $decimalPrice
             : "+$decimalPrice";
     }

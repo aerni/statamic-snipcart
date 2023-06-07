@@ -15,7 +15,6 @@ class Product implements Contract
 
     protected Collection $data;
     protected Collection $params;
-    protected Collection $variant;
 
     public function __construct(protected Entry $entry)
     {
@@ -39,17 +38,6 @@ class Product implements Contract
         }
 
         $this->params = Validator::onlyValidAttributes($params);
-
-        return $this;
-    }
-
-    public function variant(array $variations = null): Collection|self
-    {
-        if (func_num_args() === 0) {
-            return $this->variant ?? collect();
-        }
-
-        $this->variant = collect($variations);
 
         return $this;
     }
@@ -98,8 +86,7 @@ class Product implements Contract
     protected function entryData(): Collection
     {
         return $this->rootEntryData()
-            ->merge($this->localizedEntryData())
-            ->merge(['variations' => $this->entryVariationsWithLocalizedPriceModifiers()]);
+            ->merge($this->localizedEntryData());
     }
 
     protected function rootEntryData(): Collection
@@ -117,66 +104,5 @@ class Product implements Contract
         return Site::all()
             ->map(fn ($locale) => $this->entry()->in($locale->handle()))
             ->filter();
-    }
-
-    protected function entryVariationsWithLocalizedPriceModifiers(): Collection
-    {
-        return $this->rootEntryVariations()
-            ->replaceRecursive($this->localizedEntryVariationPriceModifiers());
-    }
-
-    protected function entryVariations(): Collection
-    {
-        return $this->rootEntryVariations()
-            ->replaceRecursive($this->localizedEntryVariations());
-    }
-
-    public function rootEntryVariations(): Collection
-    {
-        $variations = $this->entry()->root()->get('variations');
-
-        return collect($variations);
-    }
-
-    protected function localizedEntryVariations(): Collection
-    {
-        $variations = $this->entry()->get('variations');
-
-        return collect($variations);
-    }
-
-    protected function localizedEntryVariationPriceModifiers(): Collection
-    {
-        return $this->localizedEntryVariations()->map(function ($variation) {
-            $options = collect($variation['options'])->map(function ($option) {
-                return collect($option)->only('price_modifier')->all();
-            })->all();
-
-            return ['options' => $options];
-        });
-    }
-
-    public function variantWithKeys(): Collection
-    {
-        return $this->variant()
-            ->replaceRecursive($this->variantKeys());
-    }
-
-    protected function variantKeys(): Collection
-    {
-        return $this->entryVariations()->map(function ($variation) {
-            $variationKey = $this->variant()->search(fn ($item) => $item['name'] === $variation['name']);
-
-            $optionKey = collect($variation['options'])
-                ->map(fn ($option) => $this->variant()->search(fn ($item) => $item['option'] === $option['name']))
-                ->filter(fn ($item) => $item !== false)
-                ->keys()
-                ->first();
-
-            return [
-                'variation_key' => $variationKey,
-                'option_key' => $optionKey,
-            ];
-        });
     }
 }

@@ -2,14 +2,13 @@
 
 namespace Aerni\Snipcart\Actions;
 
-use Aerni\Snipcart\Data\Variants;
-use Illuminate\Support\Collection;
+use Aerni\Snipcart\Facades\ProductApi;
 use Statamic\Contracts\Entries\Entry;
 
 class GetProductVariants
 {
-    public static function handle(Entry $entry): ?Collection
+    public static function handle(Entry $entry): ?array
     {
-        return (new Variants($entry))->all();
+        return ProductApi::find($entry)?->variants();
     }
 }
