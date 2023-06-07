@@ -130,7 +130,7 @@ tabs:
     sections:
       -
         display: 'Custom Fields'
-        instructions: 'Use custom fields to create product options. [Learn more](https://docs.snipcart.com/v3/setup/products#custom-fields)'
+        instructions: 'Let your customers choose the color of this product, make it a gift, or leave a note. [Learn more](https://docs.snipcart.com/v3/setup/products#custom-fields)'
         fields:
           -
             handle: custom_fields
