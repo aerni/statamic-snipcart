@@ -17,7 +17,7 @@ Snipcart for Statamic makes the setup of your Snipcart shop on Statamic a breeze
 * Snipcart Account
 * Statamic 4
 * Laravel 10
-* PHP &gt;= 8.1
+* PHP 8.1
 
 ## License
 Snipcart for Statamic is **commercial software** but has an open-source codebase. If you want to use it in production, you'll need to [buy a license from the Statamic Marketplace](https://statamic.com/addons/aerni/snipcart).
