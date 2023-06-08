@@ -25,31 +25,14 @@ class SetupSnipcart extends Command
     protected $description = 'Setup Snipcart';
 
     /**
-     * Override existing collections, taxaonomies and blueprints.
-     */
-    protected bool $force = false;
-
-    /**
-     * The products collection handle
-     */
-    protected string $products;
-
-    /**
-     * The categories taxonomy handle.
-     */
-    protected string $categories;
-
-    /**
      * Execute the console command.
      */
     public function handle(): void
     {
-        $this->products = config('snipcart.products.collection');
-        $this->categories = config('snipcart.categories.taxonomy');
-        $this->force = $this->option('force');
-
-        $this->setupCollection();
-        $this->setupTaxonomies();
+        collect(config('snipcart.products'))->each(function ($config) {
+            $this->setupCollection($config);
+            $this->setupTaxonomies($config);
+        });
 
         $this->info('Snipcart is configured and ready to go!');
     }
@@ -57,49 +40,64 @@ class SetupSnipcart extends Command
     /**
      * Setup the product collection and its blueprint.
      */
-    protected function setupCollection(): void
+    protected function setupCollection(array $config): void
     {
-        if (! Collection::handleExists($this->products) || $this->force) {
-            Collection::make($this->products)
-                ->title(Str::studlyToTitle($this->products))
-                ->taxonomies([$this->categories])
+        $collection = $config['collection'];
+
+        if (! Collection::handleExists($collection) || $this->option('force')) {
+            Collection::make($collection)
+                ->title(Str::studlyToTitle($collection))
+                ->taxonomies($config['taxonomies'])
                 ->save();
 
-            $this->line("<info>[✓]</info> Created collection at <comment>content/collections/{$this->products}.yaml</comment>");
+            $this->line("<info>[✓]</info> Created collection at <comment>content/collections/{$collection}.yaml</comment>");
         }
 
-        if (! StatamicBlueprint::find("collections/{$this->products}/product") || $this->force) {
+        $blueprint = Str::singular($collection);
+
+        if (! StatamicBlueprint::find("collections/{$collection}/{$blueprint}") || $this->option('force')) {
             (new Blueprint())
                 ->parse('collections/products/product.yaml')
-                ->make('product')
-                ->namespace("collections.{$this->products}")
+                ->make($blueprint)
+                ->namespace("collections.{$collection}")
                 ->save();
 
-            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/collections/{$this->products}/product.yaml</comment>");
+            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/collections/{$collection}/{$blueprint}.yaml</comment>");
         }
     }
 
     /**
-     * Setup the product taxonomies and their blueprints.
+     * Setup the product taxonomies.
      */
-    protected function setupTaxonomies(): void
+    protected function setupTaxonomies(array $config): void
     {
-        if (! Taxonomy::handleExists($this->categories) || $this->force) {
-            Taxonomy::make($this->categories)
-                ->title(Str::studlyToTitle($this->categories))
+        collect($config['taxonomies'])
+            ->each(fn ($taxonomy) => $this->setupTaxonomy($taxonomy));
+    }
+
+    /**
+     * Setup the product taxonomy and its blueprint.
+     */
+    protected function setupTaxonomy(string $handle): void
+    {
+        if (! Taxonomy::handleExists($handle) || $this->option('force')) {
+            Taxonomy::make($handle)
+                ->title(Str::studlyToTitle($handle))
                 ->save();
 
-            $this->line("<info>[✓]</info> Created taxonomy at <comment>content/taxonomies/{$this->categories}.yaml</comment>");
+            $this->line("<info>[✓]</info> Created taxonomy at <comment>content/taxonomies/{$handle}.yaml</comment>");
         }
 
-        if (! StatamicBlueprint::find("taxonomies/{$this->categories}/category") || $this->force) {
+        $blueprint = Str::singular($handle);
+
+        if (! StatamicBlueprint::find("taxonomies/{$handle}/{$blueprint}") || $this->option('force')) {
             (new Blueprint())
                 ->parse('taxonomies/categories/category.yaml')
-                ->make('category')
-                ->namespace("taxonomies.{$this->categories}")
+                ->make($blueprint)
+                ->namespace("taxonomies.{$handle}")
                 ->save();
 
-            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/taxonomies/{$this->categories}/category.yaml</comment>");
+            $this->line("<info>[✓]</info> Created blueprint at <comment>resources/blueprints/taxonomies/{$handle}/{$blueprint}.yaml</comment>");
         }
     }
 }

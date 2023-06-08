@@ -34,6 +34,8 @@ trait GetsProductAttributes
      */
     protected function isProduct(): bool
     {
-        return $this->context->raw('collection')->handle() === config('snipcart.products.collection');
+        return collect(config('snipcart.products'))
+            ->where('collection', $this->context->raw('collection')->handle())
+            ->isNotEmpty();
     }
 }

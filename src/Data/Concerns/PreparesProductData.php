@@ -97,16 +97,20 @@ trait PreparesProductData
 
     protected function categories(): ?string
     {
-        $categoryHandle = config('snipcart.categories.taxonomy');
+        $productTaxonomies = collect(config('snipcart.products'))
+            ->where('collection', $this->entry()->collection()->handle())
+            ->flatMap(fn ($product) => $product['taxonomies'])
+            ->filter(fn ($taxonomy) => $this->entry()->collection()->taxonomies()->map->handle()->contains($taxonomy)); // Only keep the taxonomies that are configured for the collection.
 
-        if (empty($this->entry()->root()->get($categoryHandle))) {
+        if ($productTaxonomies->isEmpty()) {
             return null;
         }
 
-        return $this->entry()->root()->$categoryHandle
-            ->filter(fn ($category) => ! $category->get('hide_from_snipcart'))
-            ->map(fn ($category) => $category->title())
-            ->implode('|');
+        return $productTaxonomies->flatMap(function ($taxonomy) {
+            return $this->entry()->root()->$taxonomy
+                ->filter(fn ($term) => ! $term->get('hide_from_snipcart'))
+                ->map(fn ($term) => $term->title());
+        })->implode('|');
     }
 
     protected function fileGuid(): ?string

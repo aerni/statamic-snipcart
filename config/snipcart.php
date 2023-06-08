@@ -26,19 +26,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Products & Categories
+    | Collections & Taxonomies
     |--------------------------------------------------------------------------
     |
-    | Define the handles of the products collection and categories taxonomy.
+    | Configure your product collections and taxonomies.
     |
     */
 
     'products' => [
-        'collection' => 'products',
-    ],
-
-    'categories' => [
-        'taxonomy' => 'categories',
+        [
+            'collection' => 'products',
+            'taxonomies' => ['categories'],
+        ],
     ],
 
     /*

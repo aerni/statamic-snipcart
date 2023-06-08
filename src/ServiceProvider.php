@@ -98,11 +98,12 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerComputedValues(): void
     {
-        $collection = config('snipcart.products.collection');
+        collect(config('snipcart.products'))->each(function ($value) {
+            Collection::computed($value['collection'], 'sku', fn ($entry) => GetProductId::handle($entry));
+            Collection::computed($value['collection'], 'stock', fn ($entry) => GetProductStock::handle($entry));
+            Collection::computed($value['collection'], 'inventory_management_method', fn ($entry) => GetInventoryManagementMethod::handle($entry));
+            Collection::computed($value['collection'], 'variants', fn ($entry) => GetProductVariants::handle($entry));
+        });
 
-        Collection::computed($collection, 'sku', fn ($entry) => GetProductId::handle($entry));
-        Collection::computed($collection, 'stock', fn ($entry) => GetProductStock::handle($entry));
-        Collection::computed($collection, 'inventory_management_method', fn ($entry) => GetInventoryManagementMethod::handle($entry));
-        Collection::computed($collection, 'variants', fn ($entry) => GetProductVariants::handle($entry));
     }
 }
