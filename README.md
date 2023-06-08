@@ -20,8 +20,7 @@ Snipcart for Statamic makes the setup of your Snipcart shop on Statamic a breeze
 * PHP 8.1
 
 ## License
-Snipcart for Statamic is **commercial software** but has an open-source codebase. If you want to use it in production, you'll need to [buy a license from the Statamic Marketplace](https://statamic.com/addons/aerni/snipcart).
->Snipcart for Statamic is **NOT** free software.
+Snipcart for Statamic is paid software with an open-source codebase. If you want to use it in production, you’ll need to [buy a license from the Statamic Marketplace](https://statamic.com/addons/aerni/snipcart).
 
 ## Credits
 Developed by[ Michael Aerni](https://www.michaelaerni.ch)
