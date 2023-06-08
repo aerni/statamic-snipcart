@@ -8,14 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Set the currency, length and weight units for each Statamic site.
-    | The units set for Statamic's default site act as default Snipcart units.
-    | The units of your other sites will be converted from it.
-    |
-    | Make sure to keep the sites in sync with your Statamic sites.
-    | You can do so by running 'php please snipcart:sync-sites'.
-    |
-    | Whenever you update a site, you need to run 'php please snipcart:setup'
-    | to update your products collection and entries.
+    | In a multi-site setup, the units will be converted from a product's root entry.
     |
     | Currencies: ISO 4217 letter codes supported by Snipcart, eg. USD or EUR
     | Length units: cm, m, in, ft
@@ -24,13 +17,11 @@ return [
     */
 
     'sites' => [
-
         'default' => [
             'currency' => 'USD',
             'length' => 'in',
             'weight' => 'oz',
         ],
-
     ],
 
     /*
@@ -38,19 +29,15 @@ return [
     | Collections & Taxonomies
     |--------------------------------------------------------------------------
     |
-    | Define the handles of the products collection and categories taxonomy.
-    |
-    | Whenever you change a handle, you need to run 'php please snipcart:setup'
-    | to setup the new products collection and categories taxonomy.
+    | Configure your product collections and taxonomies.
     |
     */
 
-    'collections' => [
-        'products' => 'products',
-    ],
-
-    'taxonomies' => [
-        'categories' => 'categories',
+    'products' => [
+        [
+            'collection' => 'products',
+            'taxonomies' => ['categories'],
+        ],
     ],
 
     /*
@@ -82,26 +69,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Snipcart Version
+    | Snipcart Settings
     |--------------------------------------------------------------------------
     |
-    | The Snipcart version you want to use.
+    | Configure any settings that you want to apply to the Snipcart script.
+    | Make sure to set the keys exactly as documented, e.g. 'LoadCSS'.
+    | Available settings: https://docs.snipcart.com/v3/setup/installation#settings
     |
     */
 
-    'version' => '3.0.29',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cart Behaviour
-    |--------------------------------------------------------------------------
-    |
-    | Set this to 'none' to prevent the cart from opening every time
-    | a product is added. Default is 'null'.
-    |
-    */
-
-    'behaviour' => null,
+    'snipcart_settings' => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -138,8 +115,6 @@ return [
     | Define the route where the Snipcart webhook requests will be sent to.
     | Don't forget to add this URL in your Snipcart Dashboard:
     | https://app.snipcart.com/dashboard/webhooks
-    |
-    | Set this to 'null' to remove the route.
     |
     */
 

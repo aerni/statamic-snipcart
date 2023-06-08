@@ -4,97 +4,111 @@ namespace Aerni\Snipcart\Fieldtypes;
 
 use Aerni\Snipcart\Facades\Converter;
 use Aerni\Snipcart\Facades\Dimension;
+use Illuminate\Support\Str;
+use Statamic\Contracts\Entries\Collection;
 use Statamic\Facades\Site;
 use Statamic\Fields\Fieldtype;
+use Statamic\Sites\Site as StatamicSite;
 
 class DimensionFieldtype extends Fieldtype
 {
-    protected $icon = 'integer';
-
     protected function configFieldItems(): array
     {
         return [
-            'options' => [
-                'display' => __('snipcart::fieldtypes.dimension.display'),
-                'instructions' => __('snipcart::fieldtypes.dimension.instructions'),
-                'type' => 'select',
-                'options' => [
-                    'length' => __('snipcart::fieldtypes.dimension.options.length'),
-                    'weight' => __('snipcart::fieldtypes.dimension.options.weight'),
+            [
+                'display' => __('Settings'),
+                'fields' => [
+                    'dimension' => [
+                        'display' => __('snipcart::fieldtypes.dimension.display'),
+                        'instructions' => __('snipcart::fieldtypes.dimension.instructions'),
+                        'type' => 'select',
+                        'options' => [
+                            'length' => __('snipcart::fieldtypes.dimension.options.length'),
+                            'weight' => __('snipcart::fieldtypes.dimension.options.weight'),
+                        ],
+                        'default' => 'length',
+                        'width' => 50,
+                    ],
                 ],
-                'default' => 'length',
-                'width' => 50,
             ],
         ];
     }
 
     /**
      * Preload some data to be available in the vue component.
-     *
-     * @return array
      */
     public function preload(): array
     {
-        return Dimension::from(Site::default())
-            ->type($this->config('options'))
+        return Dimension::from($this->rootSite())
+            ->type($this->config('dimension'))
             ->all();
     }
 
     /**
      * Pre-process the data before it gets sent to the publish page.
-     *
-     * @param string|null $data
-     * @return string|null
      */
-    public function preProcess($data)
+    public function preProcess(mixed $data): ?string
     {
-        return Dimension::from(Site::default())
-            ->type($this->config('options'))
+        return Dimension::from($this->rootSite())
+            ->type($this->config('dimension'))
             ->parse($data);
     }
 
     /**
      * Process the data before it gets saved.
-     *
-     * @param string|null $data
-     * @return string|null
      */
-    public function process($data)
+    public function process(mixed $data): ?string
     {
-        return Dimension::from(Site::default())
-            ->type($this->config('options'))
+        return Dimension::from($this->rootSite())
+            ->type($this->config('dimension'))
             ->parse($data);
     }
 
     /**
      * Process the data before it gets loaded into the view.
-     *
-     * @param int|null $data
-     * @return string|null
      */
-    public function augment($data)
+    public function augment(mixed $data): ?string
     {
-        return $this->convertUnit($this->config('options'), $data);
+        if (! $data) {
+            return null;
+        }
+
+        return $this->convertUnit($data);
     }
 
     /**
      * Convert the entry unit to the site's unit.
-     *
-     * @param string $dimension
-     * @param int|null $data
-     * @return string
      */
-    protected function convertUnit(string $dimension, $data): string
+    protected function convertUnit(int $data): string
     {
-        $entryUnit = $this->field()->parent()->get("{$dimension}_unit") ?? $this->field()->parent()->origin()->get("{$dimension}_unit");
-
-        $siteUnit = Dimension::from(Site::current())
-            ->type($dimension)
+        $rootUnit = Dimension::from($this->rootSite())
+            ->type($this->config('dimension'))
             ->short();
 
-        $conversion = Converter::convert($data, $entryUnit, $siteUnit);
+        $siteUnit = Dimension::from(Site::current())
+            ->type($this->config('dimension'))
+            ->short();
+
+
+        $conversion = Converter::convert($data, $rootUnit, $siteUnit);
         $rounded = round($conversion, 2);
 
         return "{$rounded} {$siteUnit}";
+    }
+
+    /**
+     * Get the entry's root site.
+     */
+    protected function rootSite(): StatamicSite
+    {
+        $parent = $this->field()->parent();
+
+        // Get the site when creating an entry.
+        if ($parent instanceof Collection && Str::contains(request()->getUri(), 'entries')) {
+            return Site::get(collect(request()->segments())->last());
+        }
+
+        // Get the site of an existing entry.
+        return $parent->root()->site();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Aerni\Snipcart\Facades;
 
+use Aerni\Snipcart\Repositories\ConfigRepository;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -14,6 +15,6 @@ class Config extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'Config';
+        return ConfigRepository::class;
     }
 }

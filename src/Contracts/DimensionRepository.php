@@ -22,5 +22,5 @@ interface DimensionRepository
 
     public function name(?string $value): string;
 
-    public function parse(?string $value);
+    public function parse(?string $value): ?string;
 }

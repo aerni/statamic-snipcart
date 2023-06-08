@@ -1,458 +1,690 @@
 title: Product
-sections:
+tabs:
   product:
     display: Product
-    fields:
+    sections:
       -
-        handle: basic_information_section
-        field:
-          type: section
-          instructions: 'Provide the basic product information.'
-          listable: false
-          display: 'Basic Information'
+        display: 'Basic Information'
+        instructions: 'Provide the basic product information.'
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              localizable: true
+              listable: true
+              display: Name
+              instructions: 'The name of this product.'
+              validate:
+                - required
+                - string
+              width: 50
+              input_type: text
+          -
+            handle: price
+            field:
+              type: money
+              localizable: true
+              listable: true
+              display: Price
+              instructions: 'The price of this product.'
+              validate:
+                - required
+                - numeric
+                - 'regex:/^\d+(\.\d{1,2})?$/'
+              width: 50
+          -
+            handle: images
+            field:
+              type: assets
+              mode: grid
+              container: assets
+              restrict: false
+              allow_uploads: true
+              listable: hidden
+              display: Images
+              instructions: 'One or more product images. The first image will show in the cart.'
+              localizable: false
+          -
+            handle: description
+            field:
+              type: textarea
+              localizable: true
+              listable: false
+              instructions: 'A short product description. This will show in the cart.'
+              display: Description
+              character_limit: '150'
       -
-        handle: title
-        field:
-          type: text
-          required: true
-          localizable: true
-          listable: true
-          display: Name
-          instructions: 'The name of this product.'
-          validate:
-            - required
-            - string
-          width: 50
-          input_type: text
+        display: Dimensions
+        instructions: 'The weight is mandatory when using any <a href="https://docs.snipcart.com/v3/setup/shipping#integrated-shipping-providers">integrated shipping provider.</a>'
+        fields:
+          -
+            handle: length
+            field:
+              type: dimension
+              dimension: length
+              listable: false
+              display: Length
+              width: 25
+              localizable: false
+              validate:
+                - 'required_with:width'
+                - 'required_with:height'
+          -
+            handle: width
+            field:
+              type: dimension
+              dimension: length
+              listable: false
+              display: Width
+              width: 25
+              localizable: false
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - 'required_with:length'
+                - 'required_with:height'
+          -
+            handle: height
+            field:
+              type: dimension
+              dimension: length
+              listable: false
+              display: Height
+              width: 25
+              localizable: false
+              validate:
+                - 'required_with:length'
+                - 'required_with:width'
+          -
+            handle: weight
+            field:
+              type: dimension
+              dimension: weight
+              listable: false
+              display: Weight
+              width: 25
+              localizable: false
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - 'required_with_all:length,width,height'
       -
-        handle: price
-        field:
-          type: money
-          localizable: true
-          listable: true
-          display: Price
-          instructions: 'The price of this product.'
-          validate:
-            - required
-            - numeric
-            - 'regex:/^\d+(\.\d{1,2})?$/'
-          width: 50
+        display: 'Digital Good'
+        instructions: 'Sell a digital good. Make sure to <a href="https://app.snipcart.com/dashboard/digital">upload the file</a> in your dashboard.'
+        fields:
+          -
+            handle: file_guid
+            field:
+              input_type: text
+              type: text
+              instructions: 'The file GUID of the digital good.'
+              listable: false
+              display: 'File GUID'
+              localizable: false
+  custom_fields:
+    display: 'Custom Fields'
+    sections:
       -
-        handle: images
-        field:
-          type: assets
-          mode: grid
-          container: assets
-          restrict: false
-          allow_uploads: true
-          listable: hidden
-          display: Images
-          instructions: 'One or more product images. The first image will show in the cart.'
-      -
-        handle: description
-        field:
-          type: textarea
-          localizable: true
-          listable: false
-          instructions: 'A short product description. This will show in the cart.'
-          display: Description
-          character_limit: '150'
-      -
-        handle: variants_section
-        field:
-          type: section
-          instructions: 'A product variant is a combination of multiple variations.'
-          listable: false
-          display: Variants
-      -
-        handle: variations
-        field:
-          fields:
-            -
-              handle: name
-              field:
-                input_type: text
-                type: text
-                listable: false
-                display: Name
-                instructions: 'The name of this variation, eg. Size.'
-                localizable: true
-                validate: required
-            -
-              handle: options
-              field:
-                fields:
-                  -
-                    handle: name
-                    field:
-                      input_type: text
-                      type: text
-                      listable: false
-                      display: Name
-                      instructions: 'The name of this option, eg. Large.'
-                      localizable: true
-                      validate: required
-                  -
-                    handle: price_modifier
-                    field:
-                      type: money
-                      listable: false
-                      display: 'Price Modifier'
-                      instructions: 'Modify the product price for this option. Product Price + Price Modifier = Option Price.'
-                      localizable: true
-                      validate:
-                        - numeric
-                        - 'regex:/^-?\d+(\.\d{1,2})?$/'
-                mode: table
-                reorderable: true
-                type: grid
-                listable: false
-                display: Options
-                instructions: 'Add variation options, eg. Small, Medium, Large.'
-                add_row: 'Add Option'
-                localizable: true
-                validate: required
-          mode: stacked
-          reorderable: true
-          type: grid
-          listable: false
-          display: Variations
-          instructions: 'Add variations for attributes like size or color.'
-          add_row: 'Add Variation'
-          localizable: true
-      -
-        handle: dimensions_section
-        field:
-          type: section
-          instructions: 'The weight is mandatory when using any <a href="https://docs.snipcart.com/v3/setup/shipping#integrated-shipping-providers">integrated shipping provider.</a>'
-          listable: false
-          display: Dimensions
-      -
-        handle: length
-        field:
-          type: dimension
-          options: length
-          listable: false
-          display: Length
-          width: 25
-      -
-        handle: width
-        field:
-          type: dimension
-          options: length
-          listable: false
-          display: Width
-          width: 25
-      -
-        handle: height
-        field:
-          type: dimension
-          options: length
-          listable: false
-          display: Height
-          width: 25
-      -
-        handle: weight
-        field:
-          type: dimension
-          options: weight
-          listable: false
-          display: Weight
-          width: 25
-      -
-        handle: digital_good_section
-        field:
-          type: section
-          listable: false
-          display: 'Digital Good'
-          instructions: 'Sell a digital good. Make sure to <a href="https://app.snipcart.com/dashboard/digital">upload the file</a> in your dashboard.'
-      -
-        handle: file_guid
-        field:
-          input_type: text
-          type: text
-          instructions: 'The file GUID of the digital good.'
-          listable: false
-          display: 'File GUID'
+        display: 'Custom Fields'
+        instructions: 'Let your customers choose the color of this product, make it a gift, or leave a note. [Learn more](https://docs.snipcart.com/v3/setup/products#custom-fields)'
+        fields:
+          -
+            handle: custom_fields
+            field:
+              collapse: false
+              previews: false
+              fullscreen: true
+              sets:
+                custom_fields:
+                  display: 'Custom Fields'
+                  instructions: null
+                  icon: null
+                  sets:
+                    checkbox:
+                      display: Checkbox
+                      instructions: 'Perfect for simple product options'
+                      icon: null
+                      fields:
+                        -
+                          handle: name
+                          field:
+                            input_type: text
+                            type: text
+                            listable: false
+                            display: Name
+                            validate:
+                              - required
+                            localizable: false
+                            instructions_position: above
+                            visibility: visible
+                            antlers: false
+                            hide_display: false
+                            width: 50
+                            instructions: 'The name of this field, eg. Gift.'
+                        -
+                          handle: price_modifier
+                          field:
+                            type: money
+                            listable: false
+                            display: 'Price Modifier'
+                            instructions: 'Modify the total product price.'
+                            localizable: false
+                            validate:
+                              - numeric
+                              - 'regex:/^-?\d+(\.\d{1,2})?$/'
+                            instructions_position: above
+                            visibility: visible
+                            hide_display: false
+                            width: 50
+                        -
+                          handle: checked
+                          field:
+                            default: false
+                            type: toggle
+                            display: Checked
+                            icon: toggle
+                            instructions: 'Check this checkbox by default.'
+                            localizable: false
+                            listable: hidden
+                            instructions_position: above
+                            visibility: visible
+                            hide_display: false
+                            width: 50
+                        -
+                          handle: hidden
+                          field:
+                            default: false
+                            type: toggle
+                            display: Hidden
+                            icon: toggle
+                            instructions: 'Hide this field in the cart.'
+                            localizable: false
+                            listable: hidden
+                            instructions_position: above
+                            visibility: visible
+                            hide_display: false
+                            width: 50
+                    dropdown:
+                      display: Dropdown
+                      instructions: 'Great for product variations'
+                      icon: null
+                      fields:
+                        -
+                          handle: name
+                          field:
+                            input_type: text
+                            type: text
+                            listable: false
+                            display: Name
+                            instructions: 'The name of this field, eg. Size.'
+                            localizable: false
+                            validate: required
+                            instructions_position: above
+                            visibility: visible
+                            antlers: false
+                            hide_display: false
+                            width: 50
+                        -
+                          handle: hidden
+                          field:
+                            default: false
+                            type: toggle
+                            display: Hidden
+                            icon: toggle
+                            instructions: 'Hide this field in the cart.'
+                            localizable: false
+                            listable: hidden
+                            instructions_position: above
+                            visibility: visible
+                            hide_display: false
+                            width: 50
+                        -
+                          handle: options
+                          field:
+                            fields:
+                              -
+                                handle: name
+                                field:
+                                  input_type: text
+                                  type: text
+                                  listable: false
+                                  display: Name
+                                  instructions: 'The name of this option.'
+                                  localizable: true
+                                  validate: required
+                                  width: 25
+                              -
+                                handle: price_modifier
+                                field:
+                                  type: money
+                                  listable: false
+                                  display: 'Price Modifier'
+                                  instructions: 'Modify the total product price.'
+                                  localizable: true
+                                  validate:
+                                    - numeric
+                                    - 'regex:/^-?\d+(\.\d{1,2})?$/'
+                                  width: 25
+                              -
+                                handle: default
+                                field:
+                                  default: false
+                                  type: toggle
+                                  display: Default
+                                  icon: toggle
+                                  localizable: false
+                                  listable: hidden
+                                  instructions_position: above
+                                  visibility: visible
+                                  hide_display: false
+                                  instructions: 'Make this the default selection.'
+                                  width: 50
+                            mode: table
+                            reorderable: true
+                            type: grid
+                            listable: false
+                            display: Options
+                            instructions: 'Add field options like Small, Medium, Large.'
+                            add_row: 'Add Option'
+                            localizable: false
+                            validate:
+                              - required
+                            instructions_position: above
+                            visibility: visible
+                            fullscreen: false
+                            hide_display: false
+                    readonly:
+                      display: Readonly
+                      instructions: 'Show some information in the cart.'
+                      icon: null
+                      fields:
+                        -
+                          handle: name
+                          field:
+                            display: Name
+                            type: text
+                            listable: false
+                            validate:
+                              - required
+                            localizable: false
+                            instructions: 'The name of this field, eg. Information.'
+                            instructions_position: above
+                            visibility: visible
+                            input_type: text
+                            antlers: false
+                            hide_display: false
+                            width: 50
+                        -
+                          handle: text
+                          field:
+                            display: Text
+                            type: textarea
+                            icon: textarea
+                            listable: false
+                            validate:
+                              - required
+                            localizable: false
+                            instructions: 'The text of this field.'
+                            instructions_position: above
+                            visibility: visible
+                            antlers: false
+                            hide_display: false
+                            width: 50
+                        -
+                          handle: price_modifier
+                          field:
+                            type: money
+                            listable: false
+                            display: 'Price Modifier'
+                            localizable: false
+                            validate:
+                              - numeric
+                              - 'regex:/^-?\d+(\.\d{1,2})?$/'
+                            instructions: 'Modify the total product price.'
+                            instructions_position: above
+                            visibility: visible
+                            hide_display: false
+                            width: 50
+                        -
+                          handle: hidden
+                          field:
+                            default: false
+                            type: toggle
+                            display: Hidden
+                            icon: toggle
+                            instructions: 'Hide this field in the cart.'
+                            localizable: false
+                            listable: hidden
+                            instructions_position: above
+                            visibility: visible
+                            hide_display: false
+                            width: 50
+                    text:
+                      display: Text
+                      instructions: 'Perfect for notes and messages'
+                      icon: null
+                      fields:
+                        -
+                          handle: name
+                          field:
+                            input_type: text
+                            type: text
+                            instructions: 'The name of this field, eg. Note.'
+                            listable: false
+                            display: Name
+                            validate: required
+                            width: 50
+                            localizable: false
+                        -
+                          handle: size
+                          field:
+                            options:
+                              small: Small
+                              large: Large
+                            type: button_group
+                            listable: false
+                            display: Size
+                            instructions: 'Choose the size of this field.'
+                            validate: required
+                            default: small
+                            width: 50
+                            localizable: false
+                        -
+                          handle: placeholder
+                          field:
+                            input_type: text
+                            type: text
+                            instructions: 'An optional placeholder.'
+                            listable: false
+                            display: Placeholder
+                            width: 50
+                            localizable: false
+                        -
+                          handle: default
+                          field:
+                            input_type: text
+                            type: text
+                            instructions: 'An optional default value.'
+                            listable: false
+                            display: Default
+                            width: 50
+                            localizable: false
+                        -
+                          handle: required
+                          field:
+                            type: toggle
+                            instructions: 'Make this field required.'
+                            listable: false
+                            display: Required
+                            localizable: false
+              type: replicator
+              display: 'Custom Fields'
+              icon: replicator
+              localizable: false
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: true
   settings:
     display: Settings
-    fields:
+    sections:
       -
-        handle: customer_input_section
-        field:
-          type: section
-          instructions: 'Let your customers provide additional product information in the cart.'
-          listable: false
-          display: 'Customer Input'
+        display: Shipping
+        instructions: 'Customize the shipping options for this product.'
+        fields:
+          -
+            handle: shippable
+            field:
+              type: toggle
+              instructions: 'Activate if you ship this product.'
+              listable: false
+              display: Shippable
+              default: true
+              localizable: false
       -
-        handle: checkboxes
-        field:
-          fields:
-            -
-              handle: label
-              field:
-                input_type: text
-                type: text
-                instructions: 'The label of this checkbox, eg. Gift'
-                listable: false
-                display: Label
-                validate:
-                  - required
-          mode: stacked
-          add_row: 'Add Checkbox'
-          reorderable: true
-          type: grid
-          instructions: 'Perfect for simple options like making a product a gift.'
-          listable: false
-          display: Checkboxes
+        display: Taxes
+        instructions: 'Customize the tax options for this product.'
+        fields:
+          -
+            handle: taxable
+            field:
+              type: toggle
+              instructions: 'Activate if this product is taxable.'
+              listable: false
+              display: Taxable
+              default: true
+              width: 33
+              localizable: false
+          -
+            handle: has_taxes_included
+            field:
+              type: toggle
+              instructions: 'Activate if the price includes taxes.'
+              listable: false
+              display: 'Taxes Included'
+              width: 33
+              localizable: false
+          -
+            handle: taxes
+            field:
+              type: taggable
+              listable: false
+              display: 'Taxes to Apply'
+              instructions: 'Only apply specific taxes.'
+              width: 33
+              localizable: false
       -
-        handle: text_fields
-        field:
-          fields:
-            -
-              handle: label
-              field:
-                input_type: text
-                type: text
-                instructions: 'The label of this field, eg. Gift Note.'
-                listable: false
-                display: Label
-                validate: required
-                width: 50
-            -
-              handle: size
-              field:
-                options:
-                  small: Small
-                  large: Large
-                type: button_group
-                listable: false
-                display: Size
-                instructions: 'Choose the size of this field.'
-                validate: required
-                default: small
-                width: 50
-            -
-              handle: placeholder
-              field:
-                input_type: text
-                type: text
-                instructions: 'An optional placeholder.'
-                listable: false
-                display: Placeholder
-                width: 50
-            -
-              handle: default
-              field:
-                input_type: text
-                type: text
-                instructions: 'An optional default value.'
-                listable: false
-                display: Default
-                width: 50
-            -
-              handle: required
-              field:
-                type: toggle
-                instructions: 'Activate to make this field required.'
-                listable: false
-                display: Required
-          mode: stacked
-          add_row: 'Add Text Field'
-          reorderable: true
-          type: grid
-          listable: false
-          display: 'Text Fields'
-          instructions: 'Perfect for short notes or longer messages.'
+        display: Quantity
+        instructions: 'Customize how the <a href="https://docs.snipcart.com/v3/setup/products#product-quantity">product quantity</a> can be updated.'
+        fields:
+          -
+            handle: stackable
+            field:
+              options:
+                auto: Auto
+                never: Never
+                always: Always
+              default: auto
+              clearable: false
+              multiple: false
+              searchable: false
+              taggable: false
+              push_tags: false
+              cast_booleans: false
+              type: select
+              instructions: 'The stackable setting when adding multiple items of the same product to the cart.'
+              listable: false
+              display: Stackable
+              localizable: false
+          -
+            handle: quantity
+            field:
+              type: integer
+              instructions: 'The default product quantity.'
+              listable: false
+              display: 'Default Quantity'
+              width: 50
+              localizable: false
+          -
+            handle: quantity_step
+            field:
+              type: integer
+              instructions: 'The quantity step in the cart.'
+              listable: false
+              display: 'Quantity Step'
+              width: 50
+              localizable: false
+          -
+            handle: min_quantity
+            field:
+              type: integer
+              instructions: 'The minimum allowed product quantity.'
+              listable: false
+              display: 'Minimum Quantity'
+              width: 50
+              localizable: false
+          -
+            handle: max_quantity
+            field:
+              type: integer
+              instructions: 'The maximum allowed product quantity.'
+              listable: false
+              display: 'Maximum Quantity'
+              width: 50
+              localizable: false
       -
-        handle: additional_information_section
-        field:
-          type: section
-          listable: false
-          display: 'Additional Information'
-          instructions: 'Provide additional product information.'
+        display: 'Additional Information'
+        instructions: 'Provide additional product information.'
+        fields:
+          -
+            handle: metadata
+            field:
+              type: yaml
+              listable: false
+              display: Metadata
+              instructions: 'Send along additional metadata. The data must be provided as valid YAML.'
+              localizable: false
+  inventory:
+    display: Inventory
+    sections:
       -
-        handle: readonly_fields
-        field:
-          fields:
-            -
-              handle: label
-              field:
-                display: Label
-                instructions: 'The label of this field.'
-                type: text
-                listable: false
-                validate:
-                  - required
-            -
-              handle: text
-              field:
-                display: Text
-                instructions: 'The text of this field.'
-                type: textarea
-                icon: textarea
-                listable: false
-                validate:
-                  - required
-          mode: stacked
-          add_row: 'Add Readonly Field'
-          reorderable: true
-          type: grid
-          instructions: 'Show additional product information in the cart.'
-          listable: false
-          display: 'Readonly Fields'
+        display: Stock
+        instructions: 'You can manage the stock in your [Snipcart dashboard](https://app.snipcart.com/dashboard/products).'
+        fields:
+          -
+            handle: stock
+            field:
+              type: integer
+              display: Stock
+              icon: integer
+              localizable: false
+              listable: hidden
+              instructions_position: above
+              visibility: computed
+              hide_display: false
+              instructions: 'The total stock on hand.'
+              width: 50
+          -
+            handle: inventory_management_method
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: 'Management Method'
+              icon: text
+              instructions: 'The selected stock management method.'
+              localizable: false
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: computed
+              hide_display: false
       -
-        handle: metadata
-        field:
-          type: yaml
-          listable: false
-          display: Metadata
-          instructions: 'Send along additional metadata. The data must be provided as valid YAML.'
-      -
-        handle: shipping_section
-        field:
-          type: section
-          instructions: 'Customize the shipping options for this product.'
-          listable: false
-          display: Shipping
-      -
-        handle: shippable
-        field:
-          type: toggle
-          instructions: 'Activate if you ship this product.'
-          listable: false
-          display: Shippable
-          default: true
-      -
-        handle: taxes_section
-        field:
-          type: section
-          listable: false
-          display: Taxes
-          instructions: 'Customize the tax options for this product.'
-      -
-        handle: taxable
-        field:
-          type: toggle
-          instructions: 'Activate if this product is taxable.'
-          listable: false
-          display: Taxable
-          default: true
-          width: 33
-      -
-        handle: has_taxes_included
-        field:
-          type: toggle
-          instructions: 'Activate if the price includes taxes.'
-          listable: false
-          display: 'Taxes Included'
-          width: 33
-      -
-        handle: taxes
-        field:
-          type: taggable
-          listable: false
-          display: 'Taxes to Apply'
-          instructions: 'Only apply specific taxes.'
-          width: 33
-      -
-        handle: quantity_section
-        field:
-          type: section
-          instructions: 'Customize how the <a href="https://docs.snipcart.com/v3/setup/products#product-quantity">product quantity</a> can be updated.'
-          listable: false
-          display: Quantity
-      -
-        handle: stackable
-        field:
-          options:
-            auto: Auto
-            never: Never
-            always: Always
-          default: auto
-          clearable: false
-          multiple: false
-          searchable: false
-          taggable: false
-          push_tags: false
-          cast_booleans: false
-          type: select
-          instructions: 'The stackable setting when adding multiple items of the same product to the cart.'
-          listable: false
-          display: Stackable
-      -
-        handle: quantity
-        field:
-          type: integer
-          instructions: 'The default product quantity.'
-          listable: false
-          display: 'Default Quantity'
-          width: 50
-      -
-        handle: quantity_step
-        field:
-          type: integer
-          instructions: 'The quantity step in the cart.'
-          listable: false
-          display: 'Quantity Step'
-          width: 50
-      -
-        handle: min_quantity
-        field:
-          type: integer
-          instructions: 'The minimum allowed product quantity.'
-          listable: false
-          display: 'Minimum Quantity'
-          width: 50
-      -
-        handle: max_quantity
-        field:
-          type: integer
-          instructions: 'The maximum allowed product quantity.'
-          listable: false
-          display: 'Maximum Quantity'
-          width: 50
+        display: Variants
+        instructions: 'You can manage the product variants in your [Snipcart dashboard](https://app.snipcart.com/dashboard/products).'
+        fields:
+          -
+            handle: variants
+            field:
+              fields:
+                -
+                  handle: stock
+                  field:
+                    type: integer
+                    display: Stock
+                    icon: integer
+                    localizable: false
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                -
+                  handle: variation
+                  field:
+                    fields:
+                      -
+                        handle: name
+                        field:
+                          input_type: text
+                          antlers: false
+                          type: text
+                          display: Name
+                          icon: text
+                          localizable: false
+                          listable: hidden
+                          instructions_position: above
+                          visibility: visible
+                          hide_display: false
+                          width: 50
+                      -
+                        handle: option
+                        field:
+                          input_type: text
+                          antlers: false
+                          type: text
+                          display: Option
+                          icon: text
+                          localizable: false
+                          listable: hidden
+                          instructions_position: above
+                          visibility: visible
+                          hide_display: false
+                          width: 50
+                    mode: table
+                    reorderable: true
+                    fullscreen: true
+                    type: grid
+                    display: Variation
+                    icon: grid
+                    localizable: false
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+              mode: stacked
+              reorderable: true
+              fullscreen: false
+              type: grid
+              display: Variants
+              icon: grid
+              localizable: false
+              listable: hidden
+              instructions_position: above
+              visibility: computed
+              hide_display: true
   sidebar:
     display: Sidebar
-    fields:
+    sections:
       -
-        handle: sku
-        field:
-          type: slug
-          generate: true
-          instructions: 'A unique product identifier.'
-          listable: true
-          display: ID
-          validate:
-            - required
-            - 'unique_entry_value:{collection},{id},{site}'
-      -
-        handle: slug
-        field:
-          type: slug
-          required: true
-          localizable: true
-          generate: true
-          instructions: 'The slug of this product.'
-          listable: hidden
-          display: Slug
-          validate:
-            - required
-            - 'unique_entry_value:{collection},{id},{site}'
-      -
-        handle: categories
-        field:
-          type: terms
-          taxonomies: categories
-          display: Categories
-          mode: select
-          instructions: 'The categories of this product.'
-          listable: hidden
-      -
-        handle: is_snipcart_product
-        field:
-          type: hidden
-          listable: false
-          default: true
-          validate:
-            - required
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              generate: true
+              instructions: 'The slug of this product.'
+              listable: hidden
+              display: Slug
+              validate:
+                - required
+                - 'unique_entry_value:{collection},{id},{site}'
+              from: title
+          -
+            handle: sku
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: ID
+              icon: text
+              instructions: 'The unique product ID.'
+              localizable: false
+              listable: hidden
+              instructions_position: above
+              visibility: computed
+              hide_display: false

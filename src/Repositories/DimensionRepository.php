@@ -2,34 +2,34 @@
 
 namespace Aerni\Snipcart\Repositories;
 
-use Aerni\Snipcart\Contracts\DimensionRepository as DimensionRepositoryContract;
+use Aerni\Snipcart\Contracts\DimensionRepository as Contract;
 use Aerni\Snipcart\Exceptions\SitesNotInSyncException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionTypeException;
 use Aerni\Snipcart\Exceptions\UnsupportedDimensionUnitException;
 use Aerni\Snipcart\Models\Dimension;
+use Doctrine\Inflector\Language;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Pluralizer;
+use Illuminate\Support\Str;
+use Locale;
+use ReflectionClass;
+use Statamic\Facades\Site as SiteApi;
 use Statamic\Sites\Site;
 
-class DimensionRepository implements DimensionRepositoryContract
+class DimensionRepository implements Contract
 {
     /**
      * The site to get the dimension from.
-     *
-     * @var Site
      */
-    protected $site;
+    protected Site $site;
 
     /**
      * The dimension (length/weight)
-     *
-     * @var string
      */
-    protected $dimension;
+    protected string $dimension;
 
     /**
      * Set the site property.
-     *
-     * @param Site $site
      */
     public function from(Site $site): self
     {
@@ -40,9 +40,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Set the dimension property
-     *
-     * @param string $dimension
-     * @return self
      */
     public function type(string $dimension): self
     {
@@ -57,8 +54,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get an array of the unit's data.
-     *
-     * @return array
      */
     public function all(): array
     {
@@ -70,7 +65,9 @@ class DimensionRepository implements DimensionRepositoryContract
 
         $unitSetting = $sites->get($this->site->handle())[$this->dimension];
 
-        $unit = Dimension::where('dimension', $this->dimension)->where('short', $unitSetting)->first();
+        $unit = Dimension::where('dimension', $this->dimension)
+            ->where('short', $unitSetting)
+            ->first();
 
         if (is_null($unit)) {
             throw new UnsupportedDimensionUnitException($this->site->handle(), $this->dimension, $unitSetting);
@@ -81,8 +78,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get a unit value by key.
-     *
-     * @return string
      */
     public function get(string $key): string
     {
@@ -91,8 +86,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get the unit's abbreviation.
-     *
-     * @return string
      */
     public function short(): string
     {
@@ -101,8 +94,6 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get the unit's singular name.
-     *
-     * @return string
      */
     public function singular(): string
     {
@@ -111,37 +102,51 @@ class DimensionRepository implements DimensionRepositoryContract
 
     /**
      * Get the unit's plural name.
-     *
-     * @return string
      */
     public function plural(): string
     {
-        return $this->get('plural');
+        if (! $this->canPluralizeLanguage()) {
+            return $this->get('plural');
+        }
+
+        Pluralizer::useLanguage(Str::of($this->displayLanguage())->slug('-')->lower());
+
+        return Str::plural($this->get('singular'));
     }
 
     /**
      * Get the unit's singular/plural name.
-     *
-     * @param string|null $value
-     * @return string
      */
     public function name(?string $value): string
     {
-        if ($value > 1) {
-            return $this->plural();
-        }
-
-        return $this->singular();
+        return $value > 1
+            ? $this->plural()
+            : $this->singular();
     }
 
     /**
      * Parse the value.
-     *
-     * @param string|null $value
-     * @return string|null
      */
-    public function parse(?string $value)
+    public function parse(?string $value): ?string
     {
         return $value;
+    }
+
+    /**
+     * Determine if the language is supported by Laravel's pluralizer.
+     */
+    protected function canPluralizeLanguage(): bool
+    {
+        $language = Str::of($this->displayLanguage())->slug('_')->upper();
+
+        return (new ReflectionClass(Language::class))->hasConstant($language);
+    }
+
+    /**
+     * Get the display language of the current site.
+     */
+    protected function displayLanguage(): string
+    {
+        return Locale::getDisplayLanguage(SiteApi::current()->shortLocale());
     }
 }

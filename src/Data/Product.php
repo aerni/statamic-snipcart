@@ -2,29 +2,26 @@
 
 namespace Aerni\Snipcart\Data;
 
-use Aerni\Snipcart\Contracts\Product as ProductContract;
+use Aerni\Snipcart\Contracts\Product as Contract;
 use Aerni\Snipcart\Data\Concerns\PreparesProductData;
 use Aerni\Snipcart\Support\Validator;
 use Illuminate\Support\Collection;
-use Statamic\Facades\Entry;
+use Statamic\Entries\Entry;
 use Statamic\Facades\Site;
 
-class Product implements ProductContract
+class Product implements Contract
 {
     use PreparesProductData;
 
-    protected $entry;
-    protected $data;
-    protected $params;
-    protected $variant;
+    protected Collection $data;
+    protected Collection $params;
 
-    public function __construct(string $id)
+    public function __construct(protected Entry $entry)
     {
-        $this->entry = Entry::find($id);
         $this->data = $this->entryData();
     }
 
-    protected function entry(): \Statamic\Entries\Entry
+    protected function entry(): Entry
     {
         return $this->entry;
     }
@@ -34,24 +31,13 @@ class Product implements ProductContract
         return $this->data;
     }
 
-    public function params(Collection $params = null)
+    public function params(Collection $params = null): Collection|self
     {
         if (func_num_args() === 0) {
             return $this->params;
         }
 
         $this->params = Validator::onlyValidAttributes($params);
-
-        return $this;
-    }
-
-    public function variant(array $variations = null)
-    {
-        if (func_num_args() === 0) {
-            return $this->variant ?? collect();
-        }
-
-        $this->variant = collect($variations);
 
         return $this;
     }
@@ -67,7 +53,7 @@ class Product implements ProductContract
 
     protected function toDataCollection(): Collection
     {
-        $data = collect([
+        return collect([
             'name' => $this->name(),
             'id' => $this->id(),
             'price' => $this->price(),
@@ -93,16 +79,14 @@ class Product implements ProductContract
         ])
         ->merge($this->customFields())
         ->merge($this->params())
-        ->filter();
-
-        return Validator::validateAttributes($data);
+        ->filter()
+        ->tap(fn ($data) => Validator::validateAttributes($data));
     }
 
     protected function entryData(): Collection
     {
         return $this->rootEntryData()
-            ->merge($this->localizedEntryData())
-            ->merge(['variations' => $this->entryVariationsWithLocalizedPriceModifiers()]);
+            ->merge($this->localizedEntryData());
     }
 
     protected function rootEntryData(): Collection
@@ -112,51 +96,13 @@ class Product implements ProductContract
 
     protected function localizedEntryData(): Collection
     {
-        $locale = Site::current()->handle();
-
-        return $this->entry()->in($locale)->data()
-            ->only('price');
+        return $this->entry()->data()->only('price');
     }
 
     protected function entries(): Collection
     {
-        return Site::all()->map(function ($locale) {
-            return $this->entry()->in($locale->handle());
-        })->filter();
-    }
-
-    protected function entryVariationsWithLocalizedPriceModifiers(): Collection
-    {
-        return $this->rootEntryVariations()
-            ->replaceRecursive($this->localizedEntryVariationPriceModifiers());
-    }
-
-    protected function entryVariations(): Collection
-    {
-        return $this->rootEntryVariations()
-            ->replaceRecursive($this->localizedEntryVariations());
-    }
-
-    public function rootEntryVariations(): Collection
-    {
-        return collect($this->entry()->root()->get('variations'));
-    }
-
-    protected function localizedEntryVariations(): Collection
-    {
-        $locale = Site::current()->handle();
-
-        return collect($this->entry()->in($locale)->get('variations'));
-    }
-
-    protected function localizedEntryVariationPriceModifiers(): Collection
-    {
-        return $this->localizedEntryVariations()->map(function ($variation) {
-            $options = collect($variation['options'])->map(function ($option) {
-                return collect($option)->only('price_modifier')->all();
-            })->all();
-
-            return ['options' => $options];
-        });
+        return Site::all()
+            ->map(fn ($locale) => $this->entry()->in($locale->handle()))
+            ->filter();
     }
 }

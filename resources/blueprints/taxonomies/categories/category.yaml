@@ -1,33 +1,36 @@
 title: Category
-sections:
+tabs:
   main:
     display: Main
-    fields:
+    sections:
       -
-        handle: title
-        field:
-          type: text
-          required: true
-          localizable: true
-          instructions: 'The name of this product category.'
-          validate:
-            - required
-      -
-        handle: hide_from_snipcart
-        field:
-          type: toggle
-          instructions: 'Activate to hide this category from Snipcart.'
-          listable: hidden
-          display: 'Hide from Snipcart'
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              localizable: true
+              instructions: 'The name of this product category.'
+              validate:
+                - required
+          -
+            handle: hide_from_snipcart
+            field:
+              type: toggle
+              instructions: 'Activate to hide this category from Snipcart.'
+              listable: hidden
+              display: 'Hide from Snipcart'
   sidebar:
     display: Sidebar
-    fields:
+    sections:
       -
-        handle: slug
-        field:
-          type: slug
-          required: true
-          localizable: true
-          instructions: 'The slug of this product category.'
-          validate:
-            - required
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              instructions: 'The slug of this product category.'
+              validate:
+                - required

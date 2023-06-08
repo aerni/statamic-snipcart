@@ -1,24 +1,28 @@
-name: Tests
+name: Run Tests
 
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  php_tests:
-    runs-on: ${{ matrix.os }}
+  test:
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        php: [7.4]
+        php: [8.2, 8.1]
+        laravel: [10.*]
+        stability: [prefer-stable]
+        include:
+          - laravel: 10.*
+            testbench: 8.*
 
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
@@ -26,10 +30,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer validate
-          composer install --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Run PHPUnit
-        run: composer test
+      - name: Run tests
+        run: vendor/bin/phpunit
         env:
           SNIPCART_TEST_KEY: ${{ secrets.SNIPCART_TEST_KEY }}

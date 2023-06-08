@@ -2,8 +2,11 @@
 
 namespace Aerni\Snipcart;
 
-use Aerni\Snipcart\Facades\Config;
-use Aerni\Snipcart\Tags\SnipcartTags;
+use Aerni\Snipcart\Actions\GetInventoryManagementMethod;
+use Aerni\Snipcart\Actions\GetProductId;
+use Aerni\Snipcart\Actions\GetProductStock;
+use Aerni\Snipcart\Actions\GetProductVariants;
+use Statamic\Facades\Collection;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -16,7 +19,6 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $fieldtypes = [
         Fieldtypes\DimensionFieldtype::class,
-        Fieldtypes\StockFieldtype::class,
         Fieldtypes\MoneyFieldtype::class,
     ];
 
@@ -24,45 +26,37 @@ class ServiceProvider extends AddonServiceProvider
         'Aerni\SnipcartWebhooks\Events\OrderCompleted' => [
             'Aerni\Snipcart\Listeners\ClearProductApiCache',
         ],
-        'Statamic\Events\EntryBlueprintFound' => [
-            'Aerni\Snipcart\Listeners\MakeSkuReadOnly',
-        ],
-        'Statamic\Events\EntrySaving' => [
-            'Aerni\Snipcart\Listeners\AddDefaultUnits',
-            'Aerni\Snipcart\Listeners\BuildProductVariants',
-        ],
     ];
 
     protected $modifiers = [
         Modifiers\AddOperator::class,
-        Modifiers\FormatPrice::class,
         Modifiers\StripUnit::class,
     ];
 
     protected $routes = [
-        'web' => __DIR__ . '/../routes/web.php',
-    ];
-
-    protected $scripts = [
-        __DIR__.'/../resources/dist/js/cp.js',
+        'web' => __DIR__.'/../routes/web.php',
     ];
 
     protected $tags = [
         Tags\CurrencyTags::class,
         Tags\LengthTags::class,
         Tags\SnipcartTags::class,
-        Tags\StockTags::class,
         Tags\WeightTags::class,
     ];
 
-    public function boot(): void
-    {
-        parent::boot();
+    protected $vite = [
+        'input' => [
+            'resources/js/cp.js',
+        ],
+        'publicDirectory' => 'resources/dist',
+        'hotFile' => __DIR__.'/../resources/dist/hot',
+    ];
 
-        Statamic::booted(function () {
-            $this->setSnipcartApiConfig();
-            $this->setSnipcartWebhooksConfig();
-        });
+    public function bootAddon(): void
+    {
+        $this->registerSnipcartApiConfig();
+        $this->registerSnipcartWebhooksConfig();
+        $this->registerComputedValues();
 
         Statamic::afterInstalled(function ($command) {
             $command->call('vendor:publish', [
@@ -72,22 +66,10 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
-    public function register(): void
-    {
-        parent::register();
-
-        Statamic::booted(function () {
-            $this->registerRepositories();
-            $this->registerTags();
-        });
-    }
-
     /**
-     * Set the config of the Snipcart API package.
-     *
-     * @return void
+     * Register the config of the Snipcart API package.
      */
-    protected function setSnipcartApiConfig(): void
+    protected function registerSnipcartApiConfig(): void
     {
         $snipcartApiConfig = config('snipcart-api', []);
         $snipcartConfig = config('snipcart', []);
@@ -100,11 +82,9 @@ class ServiceProvider extends AddonServiceProvider
     }
 
     /**
-     * Set the config of the Snipcart Webhooks package.
-     *
-     * @return void
+     * Register the config of the Snipcart Webhooks package.
      */
-    protected function setSnipcartWebhooksConfig(): void
+    protected function registerSnipcartWebhooksConfig(): void
     {
         $snipcartWebhooksConfig = config('snipcart-webhooks', []);
         $snipcartConfig = config('snipcart', []);
@@ -116,36 +96,14 @@ class ServiceProvider extends AddonServiceProvider
         }
     }
 
-    /**
-     * Bind the repositories.
-     *
-     * @return void
-     */
-    protected function registerRepositories(): void
+    protected function registerComputedValues(): void
     {
-        $this->app->bind(\Statamic\Contracts\Entries\EntryRepository::class, Repositories\EntryRepository::class);
-        $this->app->bind('Config', Repositories\ConfigRepository::class);
-        $this->app->bind('Converter', Support\Converter::class);
-        $this->app->bind('Currency', Repositories\CurrencyRepository::class);
-        $this->app->bind('Dimension', Repositories\DimensionRepository::class);
-        $this->app->bind('ProductApi', Repositories\ProductApiRepository::class);
-        $this->app->bind('VariantsBuilder', Data\VariantsBuilder::class);
-    }
-
-    /**
-     * Bind the tags.
-     *
-     * @return void
-     */
-    protected function registerTags(): void
-    {
-        $this->app->bind(SnipcartTags::class, function () {
-            return new SnipcartTags([
-                'key' => Config::apiKey(),
-                'currency' => Config::currency(),
-                'version' => config('snipcart.version'),
-                'behaviour' => config('snipcart.behaviour'),
-            ]);
+        collect(config('snipcart.products'))->each(function ($value) {
+            Collection::computed($value['collection'], 'sku', fn ($entry) => GetProductId::handle($entry));
+            Collection::computed($value['collection'], 'stock', fn ($entry) => GetProductStock::handle($entry));
+            Collection::computed($value['collection'], 'inventory_management_method', fn ($entry) => GetInventoryManagementMethod::handle($entry));
+            Collection::computed($value['collection'], 'variants', fn ($entry) => GetProductVariants::handle($entry));
         });
+
     }
 }

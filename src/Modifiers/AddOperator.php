@@ -9,9 +9,6 @@ class AddOperator extends Modifier
 {
     /**
      * Add + or - operator to a value.
-     *
-     * @param string $value
-     * @return string
      */
     public function index(string $value): string
     {

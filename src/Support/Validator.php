@@ -26,13 +26,10 @@ class Validator
 
     /**
      * Validate the attributes.
-     *
-     * @param Collection $attributes
-     * @return Collection
      */
     public static function validateAttributes(Collection $attributes): Collection
     {
-        if (Self::hasRequiredAttributes($attributes)) {
+        if (self::hasRequiredAttributes($attributes)) {
             return $attributes;
         }
 
@@ -41,14 +38,11 @@ class Validator
 
     /**
      * Filter invalid attributes.
-     *
-     * @param Collection $attributes
-     * @return Collection
      */
     public static function onlyValidAttributes(Collection $attributes): Collection
     {
         return $attributes->map(function ($value, $key) {
-            if (Self::isValidAttributeKey($key) && Self::isValidAttributeValue($value)) {
+            if (self::isValidAttributeKey($key) && self::isValidAttributeValue($value)) {
                 if (is_bool($value)) {
                     return Str::bool($value);
                 }
@@ -60,17 +54,14 @@ class Validator
 
     /**
      * Check if the key is a valid Snipcart attribute key.
-     *
-     * @param string $key
-     * @return bool
      */
     protected static function isValidAttributeKey(string $key): bool
     {
-        if (in_array($key, Self::$requiredAttributes)) {
+        if (in_array($key, self::$requiredAttributes)) {
             return true;
         }
 
-        if (in_array($key, Self::$optionalAttributes)) {
+        if (in_array($key, self::$optionalAttributes)) {
             return true;
         }
 
@@ -83,11 +74,8 @@ class Validator
 
     /**
      * Check if the value is a valid Snipcart attribute value.
-     *
-     * @param mixed $value
-     * @return bool
      */
-    protected static function isValidAttributeValue($value): bool
+    protected static function isValidAttributeValue(mixed $value): bool
     {
         if (is_array($value)) {
             return false;
@@ -102,15 +90,12 @@ class Validator
 
     /**
      * Check if the attributes include all mandatory product attributes.
-     *
-     * @param Collection $attributes
-     * @return bool
      */
     protected static function hasRequiredAttributes(Collection $attributes): bool
     {
-        if ($attributes->has(Self::$requiredAttributes)) {
+        if ($attributes->has(self::$requiredAttributes)) {
             return true;
-        };
+        }
 
         return false;
     }
