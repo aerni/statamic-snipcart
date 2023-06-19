@@ -2,7 +2,7 @@
 ![Statamic](https://flat.badgen.net/badge/Statamic/4.0+/FF269E)
 
 # Snipcart for Statamic
-Snipcart for Statamic makes the setup of your Snipcart shop on Statamic a breeze. [Read the documentation](https://snipcart.docs.michaelaerni.ch) to learn how to install, setup and use this addon. If you're not familiar with Snipcart, make sure to read the official [Snipcart documentation](https://docs.snipcart.com/v3/) to learn how to setup your Snipcart shop.
+Snipcart for Statamic makes the setup of your Snipcart shop on Statamic a breeze. [Read the documentation](https://snipcart.michaelaerni.ch) to learn how to install, setup and use this addon. If you're not familiar with Snipcart, make sure to read the official [Snipcart documentation](https://docs.snipcart.com/v3/) to learn how to setup your Snipcart shop.
 
 ## Features
 
